@@ -6,121 +6,134 @@
     }
 }]*/
 
-import React, { useState } from "react";
-import Button from "./Button";
-import { MDBContainer, MDBRow, MDBCol, MDBBtn } from "mdbreact";
-import Radio from "./Radio";
+import React from "react";
+import {Field, reduxForm} from 'redux-form';
+import {Container, Grid,Typography,Button, Radio, RadioGroup, FormControlLabel,FormControl} from '@material-ui/core';
+/**
+ * 
+ * @param {*} values returns the error that occurred 
+ */
+const validate = values => {
+  const errors = {}
+  const reqFields = ['type','format']
+  reqFields.forEach(field => {
+    if (!values[field]) {
+       errors[field] = 'Required'
+    }
+  })
 
+  if(values.type === "JWT" && values.format === "Header"){
+    errors.format = "Invalid format type for JWT token"
+  }
+  return errors
+}
+
+
+const radioButtonA = ({input , ...rest}) => (
+  
+ <FormControl>
+  <RadioGroup  {...input} {...rest}>
+  <FormControlLabel value="OAuth" control= {<Radio color = "primary"/>} label= "OAuth"/>
+  <FormControlLabel value="JWT" control= {<Radio color = "primary"/>} label= "JWT"/>
+  </RadioGroup>
+ </FormControl>
+
+)
+
+
+const radioButtonB = ({input , ...rest}) => (
+  
+  <FormControl>
+   <RadioGroup  {...input} {...rest}>
+   <FormControlLabel value="Bare" control= {<Radio color = "primary"/>} label= "Bare"/>
+   <FormControlLabel value="Header" control= {<Radio color = "primary"/>} label= "Header"/>
+   <FormControlLabel value="JSON" control= {<Radio color = "primary"/>} label= "JSON"/>
+   <FormControlLabel value="JSON_Compact" control= {<Radio color = "primary"/>} label= "JSON_Compact"/>
+   <FormControlLabel value="Pretty" control= {<Radio color = "primary"/>} label= "Pretty"/>
+   </RadioGroup>
+  </FormControl>
+ 
+ )
+ 
 /**
  *
- * @return {div} returns the page that contains the ability to choose the type
+ * @return {div} returns the page that contains the ability to choose the type and type 
  */
-function Credentials() {
-  const [type, setType] = useState("");
-  const [format, setFormat] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (e.target.format.value === "Header" && e.target.type.value === "JWT") {
-      alert("JWT type and Header format are not allowed!");
-    } else {
-      // send it to scopes
-      return [type, format]; // holding it to remove unused vars error
-    }
-  };
+function Credentials(props) {
+  const {handleSubmit,pristine, reset, submitting} = props;
 
   return (
     <div className="top">
       <div className="shadow-box-example z-depth-2">
-        <MDBContainer>
-          <form onSubmit={handleSubmit}>
-            <MDBCol>
-              {" "}
-              <p className="h5 text-center mb-4">Choose token type </p>
-            </MDBCol>
-            <fieldset id="type">
-              <MDBRow>
-                <MDBCol>
+        <Container>
+          <form onSubmit={handleSubmit}> 
+            <Typography variant = "h5">Choose token type </Typography>
+            <Field name="type" component = {radioButtonA}>
+              <Grid container = "row">
+              <Grid container spacing = {3}>
+                <Grid item xs>
+                  <Radio name = "OAuth" label = "OAuth"/>
+                </Grid> 
+                <Grid item xs>
+                  <Radio name = "JWT" label = "JWT" />
+                </Grid>
+                </Grid>
+                </Grid>
+            </Field>
+            <Typography variant = "h5">Choose token format</Typography>
+            <Field name="format" component = {radioButtonB}>
+              <Grid container = "row">
+                <Grid container spacing = {3}>
+                  <Grid item xs>
                   <Radio
-                    name="type"
-                    value="OAuth"
-                    id="defaultGroupExample1"
-                    onChange={(e) => setType(e.target.value)}
-                  />
-                </MDBCol>
-                <MDBCol>
-                  {" "}
-                  <Radio
-                    name="type"
-                    value="JWT"
-                    id="defaultGroupExample2"
-                    onChange={(e) => setType(e.target.value)}
-                  />
-                </MDBCol>
-              </MDBRow>
-            </fieldset>
-
-            <MDBCol>
-              {" "}
-              <p className="h5 text-center mb-4">Choose token format </p>
-            </MDBCol>
-            <fieldset id="format">
-              <MDBRow>
-                <MDBCol>
-                  {" "}
-                  <Radio
-                    name="format"
                     value="Bare"
-                    id="defaultGroupExample3"
-                    onChange={(e) => setFormat(e.target.value)}
-                  />
-                </MDBCol>
-                <MDBCol>
+                    label="Bare"
+                    >OAuth</Radio>
+                </Grid>
+                <Grid item xs>
                   <Radio
-                    name="format"
-                    value="Header"
-                    id="defaultGroupExample4"
-                    onChange={(e) => setFormat(e.target.value)}
+                    value = "Header"
+                    label = "Header"
                   />
-                </MDBCol>
-              </MDBRow>
-              &nbsp;&nbsp;&nbsp;
-              <MDBRow>
-                <MDBCol>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <div style = {{padding: 30}}>
+              <Grid container = "row">
+                <Grid container spacing = {3}>
+                  <Grid item xs>
                   <Radio
-                    name="format"
-                    value="JSON"
-                    id="defaultGroupExample5"
-                    onChange={(e) => setFormat(e.target.value)}
+                    value = "JSON"
+                    label = "JSON"
+                
                   />
-                </MDBCol>
-                <MDBCol>
+                  </Grid>
+                <Grid item xs>
                   <Radio
-                    name="format"
-                    value="JSON_Compact"
-                    id="defaultGroupExample6"
-                    onChange={(e) => setFormat(e.target.value)}
-                  />{" "}
-                </MDBCol>
-              </MDBRow>
-              &nbsp;&nbsp;&nbsp;
+                    value = "JSON_Compact"
+                    label = "JSON_Compact"
+                  />
+                  </Grid>
+                </Grid>
+              </Grid>
+              </div>
               <div id="next"></div>
-              <MDBCol>
+              <Grid containter = "row">
+                <Grid item xs>
                 <Radio
-                  name="format"
-                  value="Pretty"
-                  id="defaultGroupExample7"
-                  onChange={(e) => setFormat(e.target.value)}
-                />
-              </MDBCol>
-            </fieldset>
+                  value = "Pretty"
+                  label = "Pretty"
+                 />
+                </Grid>
+              </Grid>
+            </Field>
             <div className="btn1">
-              <MDBBtn outline color="info" type="submit">
+              <Button variant = "outlined" color = "primary"  type="submit">
                 Submit
-              </MDBBtn>
+              </Button>
             </div>
           </form>
-        </MDBContainer>
+        </Container>
       </div>
       <div style={{ float: "right" }} className="next">
         <Button name="Next"></Button>
@@ -129,4 +142,7 @@ function Credentials() {
   );
 }
 
-export default Credentials;
+export default reduxForm({
+  form: 'Credentials',
+  validate
+})(Credentials)
