@@ -1,0 +1,35 @@
+*~
+*.py[cod]
+*.egg-info/
+build/
+dist/
+distribute-*
+
+# Test files
+.tox/
+nosetests.xml
+.cache/
+
+# Coverage related
+.coverage
+coverage.xml
+htmlcov/
+
+# Make sure a generated file isn't accidentally committed.
+reduced.pylintrc
+
+# GoLand
+.idea/
+
+# Web
+node_modules
+*.DS_Store
+*.log
+*.env
+npm-debug.log*
+TODOS.txt
+
+# api
+./web/api/.env
+
+.now
