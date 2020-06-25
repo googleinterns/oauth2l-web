@@ -1,11 +1,3 @@
-/* eslint "require-jsdoc": ["error", {
-    "require": {
-        "FunctionDeclaration": true,
-        "MethodDefinition": true,
-        "ClassDeclaration": false
-    }
-}]*/
-
 import React from "react";
 import { Field, reduxForm } from "redux-form";
 import {
@@ -29,11 +21,13 @@ const renderRadioType = ({ input, ...rest }) => (
         value="OAuth"
         control={<Radio color="primary" />}
         label="OAuth"
+        id = "type.oauth"
       />
       <FormControlLabel
         value="JWT"
         control={<Radio color="primary" />}
         label="JWT"
+        id = "type.jwt"
       />
     </RadioGroup>
   </FormControl>
@@ -46,26 +40,31 @@ const renderRadioFormat = ({ input, ...rest }) => (
         value="Bare"
         control={<Radio color="primary" />}
         label="Bare"
+        id = "format.bare"
       />
       <FormControlLabel
         value="Header"
         control={<Radio color="primary" />}
         label="Header"
+        id = "format.header"
       />
       <FormControlLabel
         value="JSON"
         control={<Radio color="primary" />}
         label="JSON"
+        id = "format.json"
       />
       <FormControlLabel
         value="JSON_Compact"
         control={<Radio color="primary" />}
         label="JSON_Compact"
+        id = "format.json_compact"
       />
       <FormControlLabel
         value="Pretty"
         control={<Radio color="primary" />}
         label="Pretty"
+        id = "format.pretty"
       />
     </RadioGroup>
   </FormControl>
@@ -74,10 +73,10 @@ const renderRadioFormat = ({ input, ...rest }) => (
 const useStytle = makeStyles((theme) => ({
   root: {
     flexGrow: 3,
-    margin: theme.spacing(8),
+    margin: theme.spacing(20),
     borderRadius: 5,
     boxShadow: "0 1px 5px ",
-    padding: theme.spacing(8),
+    padding: theme.spacing(10),
   },
   inline: {
     display: "inline",
@@ -91,7 +90,7 @@ const useStytle = makeStyles((theme) => ({
 function Main({ error, handleSubmit }) {
   const classes = useStytle();
   return (
-    <div className={classes.root}>
+    <div className={classes.root} width={{ width: "75%" }}>
       <Container>
         <form onSubmit={handleSubmit(submit)}>
           <Typography variant="h5">Choose token type </Typography>

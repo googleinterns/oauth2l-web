@@ -1,18 +1,11 @@
-/* eslint "require-jsdoc": ["error", {
-    "require": {
-        "FunctionDeclaration": true,
-        "MethodDefinition": true,
-        "ClassDeclaration": false
-    }
-}]*/
-
 import React, { useEffect } from "react";
 import "./App.css";
 import Main from "./components/Main";
 import { Route, HashRouter } from "react-router-dom";
 import Scopes from "./components/Scopes";
 import { getCacheToken } from "./util/apiWrapper";
-import {AppBar} from '@material-ui/core';
+import { AppBar } from "@material-ui/core";
+
 /**
  * @return {HashRouter} returns webapp as a whole
  */
@@ -43,17 +36,17 @@ function App() {
 
   return (
     <HashRouter>
-      <AppBar color= "primary">
-      <div className="App">
-        <img
-          src={"clogo.png"}
-          width="250"
-          alt="This is a logo for Google Cloud"
-        />
-      </div>
+      <AppBar color="primary">
+        <div className="App">
+          <img
+            src={"clogo.png"}
+            width="250"
+            alt="This is a logo for Google Cloud"
+          />
+        </div>
       </AppBar>
-        <Route exact path="/" component={Main} />
-        <Route path="/Scopes" component={Scopes} />>
+      <Route exact path="/" component={Main} />
+      <Route path="/Scopes" component={Scopes} />
     </HashRouter>
   );
 }
