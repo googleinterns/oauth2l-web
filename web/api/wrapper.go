@@ -73,16 +73,16 @@ func allocateMemFile(credential Credential) (descriptor int, err error) {
 	}
 
 	// Map file to memory and assign virtual address
-	address, err := unix.Mmap(descriptor, 0, len(byteArray), unix.PROT_READ, unix.MAP_SHARED)
+	addr, err := unix.Mmap(descriptor, 0, len(byteArray), unix.PROT_READ|unix.PROT_WRITE, unix.MAP_SHARED)
 	if err != nil {
 		return 0, err
 	}
 
 	// Copy credential body into allocated memory
-	copy(address, byteArray)
+	copy(addr, byteArray)
 
 	// Delete data memory mapping as body is now written to memory
-	err = unix.Munmap(address)
+	err = unix.Munmap(addr)
 	if err != nil {
 		return 0, err
 	}
