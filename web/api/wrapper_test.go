@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"reflect"
 	"testing"
-	"io/ioutil"
+
+	"golang.org/x/tools/go/analysis/passes/nilness"
 )
 
 func TestWrapperCommandStructSingleArg(t *testing.T) {
@@ -72,9 +74,9 @@ func TestValidTypeInArgs(t *testing.T) {
 		nil,
 	}
 
-	_, ok := combinedArgs(wrapper)
+	_, err := combinedArgs(wrapper)
 
-	if !ok {
+	if err != nil {
 		t.Errorf("valid types not detected")
 	}
 }
@@ -183,16 +185,25 @@ func TestCredentialFileCreation(t *testing.T) {
 		"type": "code"
 		}`}
 
-	fd, err := allocateMemFile(cred)
+	_, err := allocateMemFile(cred)
 
 	if err != nil {
 		t.Errorf("error creating file")
 	}
+}
 
-	path := getCredentialPath(fd)
+func TestCredentialPath(t *testing.T) {
+	cred := Credential{"credential": `{
+		"client_id": "some",
+		"client_secret": "random",
+		"refresh_token": "test",
+		"type": "code"
+		}`}
 
-	if path == "" {
-		t.Errorf("path not set")
+	path, err := getCredentialPath(cred)
+
+	if err != nil || path == "" {
+		t.Errorf("error generating path")
 	}
 }
 
@@ -204,13 +215,7 @@ func TestCredentialFileContents(t *testing.T) {
 		"type": "code"
 		}`}
 
-	fd, err := allocateMemFile(cred)
-
-	if err != nil {
-		t.Errorf("error creating file")
-	}
-
-	path := getCredentialPath(fd)
+	path, err := getCredentialPath(cred)
 
 	fileBytes, err := ioutil.ReadFile(path)
 	
