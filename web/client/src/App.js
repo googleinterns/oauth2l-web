@@ -9,7 +9,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import Credentials from "./components/Credentials";
-import {Container,Grid } from '@material-ui/core';
+import { Container, Grid } from "@material-ui/core";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Scopes from "./components/Scopes";
 import Button from "./components/Button";
@@ -46,22 +46,21 @@ function App() {
   return (
     <HashRouter>
       <div className="App">
-             <img
-              src={"clogo.png"}
-              width="250"
-              alt="This is a logo for Google Cloud"
-            />{" "}
-         <Route exact path="/" component={Credentials} />{" "}
+        <img
+          src={"clogo.png"}
+          width="250"
+          alt="This is a logo for Google Cloud"
+        />{" "}
+        <Route exact path="/" component={Credentials} />{" "}
         <Route path="/Scopes" component={Scopes} />{" "}
-        
         <Container>
           <Grid>
-              <div style={{ float: "right" }} className="next">
-                {" "}
-                <NavLink to="/Scopes">
-                  <Button name="Next"> </Button>{" "}
-                </NavLink>{" "}
-              </div>{" "}
+            <div style={{ float: "right" }} className="next">
+              {" "}
+              <NavLink to="/Scopes">
+                <Button name="Next"> </Button>{" "}
+              </NavLink>{" "}
+            </div>{" "}
           </Grid>
         </Container>{" "}
       </div>{" "}
