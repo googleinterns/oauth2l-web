@@ -1,5 +1,9 @@
 import { SubmissionError } from "redux-form";
 
+/**
+ *
+ * @param {*} values obtains the values that were submitted in the form and verifies that it's not blank
+ */
 function submit(values) {
   if (!values.type) {
     throw new SubmissionError({
@@ -12,12 +16,6 @@ function submit(values) {
     throw new SubmissionError({
       format: "No type selected",
       _error: "Submission failed",
-    });
-  }
-  if (values.type === "JWT" && values.format === "Header") {
-    throw new SubmissionError({
-      format: "Format not allowed",
-      _error: "JWT Token does not have Header format",
     });
   }
 }

@@ -10,7 +10,6 @@ import React from "react";
 import { Field, reduxForm } from "redux-form";
 import {
   Container,
-  Grid,
   Typography,
   Button,
   Radio,
@@ -20,6 +19,8 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import submit from "./submit";
+import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const renderRadioType = ({ input, ...rest }) => (
   <FormControl>
@@ -39,7 +40,7 @@ const renderRadioType = ({ input, ...rest }) => (
 );
 
 const renderRadioFormat = ({ input, ...rest }) => (
-  <FormControl component="fieldset">
+  <FormControl>
     <RadioGroup {...input} {...rest}>
       <FormControlLabel
         value="Bare"
@@ -85,9 +86,9 @@ const useStytle = makeStyles((theme) => ({
 
 /**
  *
- * @return {div} returns the page that contains the ability to choose the type and type
+ * @return {div} returns the page that contains the ability to choose the type and format
  */
-function Credentials({ error, handleSubmit, pristine, reset, submitting }) {
+function Main({ error, handleSubmit }) {
   const classes = useStytle();
   return (
     <div className={classes.root}>
@@ -106,12 +107,30 @@ function Credentials({ error, handleSubmit, pristine, reset, submitting }) {
         </form>
       </Container>
       <div style={{ float: "right" }} className="next">
-        <Button name="Next"></Button>
+        <NavLink to="/Scopes">
+          <Button variant="contained" color="primary">
+            {" "}
+            Next
+          </Button>
+        </NavLink>
       </div>
     </div>
   );
 }
 
 export default reduxForm({
-  form: "Credentials",
-})(Credentials);
+  form: "Main",
+})(Main);
+
+renderRadioType.propTypes = {
+  input: PropTypes.string,
+};
+
+renderRadioFormat.propTypes = {
+  input: PropTypes.string,
+};
+
+Main.propTypes = {
+  error: PropTypes.string,
+  handleSubmit: PropTypes.func,
+};

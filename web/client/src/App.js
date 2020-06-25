@@ -8,13 +8,11 @@
 
 import React, { useEffect } from "react";
 import "./App.css";
-import Credentials from "./components/Credentials";
-import { Container, Grid } from "@material-ui/core";
-import { Route, NavLink, HashRouter } from "react-router-dom";
+import Main from "./components/Main";
+import { Route, HashRouter } from "react-router-dom";
 import Scopes from "./components/Scopes";
-import Button from "./components/Button";
 import { getCacheToken } from "./util/apiWrapper";
-
+import {AppBar} from '@material-ui/core';
 /**
  * @return {HashRouter} returns webapp as a whole
  */
@@ -45,25 +43,17 @@ function App() {
 
   return (
     <HashRouter>
+      <AppBar color= "primary">
       <div className="App">
         <img
           src={"clogo.png"}
           width="250"
           alt="This is a logo for Google Cloud"
-        />{" "}
-        <Route exact path="/" component={Credentials} />{" "}
-        <Route path="/Scopes" component={Scopes} />{" "}
-        <Container>
-          <Grid>
-            <div style={{ float: "right" }} className="next">
-              {" "}
-              <NavLink to="/Scopes">
-                <Button name="Next"> </Button>{" "}
-              </NavLink>{" "}
-            </div>{" "}
-          </Grid>
-        </Container>{" "}
-      </div>{" "}
+        />
+      </div>
+      </AppBar>
+        <Route exact path="/" component={Main} />
+        <Route path="/Scopes" component={Scopes} />>
     </HashRouter>
   );
 }
