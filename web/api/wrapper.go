@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -24,25 +25,22 @@ type Credential map[string]interface{}
 // Execute will capture output of OAuth2l CLI using command args
 func (wc WrapperCommand) Execute() (output string, err error) {
 	// combinedArgs used to represent command arguments in an array
-	args, ok := combinedArgs(wc)
+	args, err := combinedArgs(wc)
+
+	if err != nil {
+		return "", err
+	}
 
 	// Check if credential is provided to include in oauth2l command
 	if wc.Credential != nil {
-		// Gets a file descriptor for a memory allocated credential file
-		descriptor, err := allocateMemFile(wc.Credential)
+		// Symlink path to memory file
+		path, err := getCredentialPath(wc.Credential)
 
 		if err != nil {
 			return "", err
 		}
 
-		// Symlink path to memory file
-		path := getCredentialPath(descriptor)
-
 		args = append(args, "--credentials", path)
-	}
-
-	if !ok {
-		return "", fmt.Errorf("invalid type found in args")
 	}
 
 	// Execute command and capture output
@@ -52,16 +50,12 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 	// Convert byteBuffer to string and remove newline character
 	output = strings.TrimSuffix(string(byteBuffer), "\n")
 	
-	return
+	return output, err
 }
 
 func allocateMemFile(credential Credential) (descriptor int, err error) {
 	// Init cred with credential body
 	cred := credential["credential"]
-
-	if err != nil {
-		return 0, err
-	}
 
 	byteArray := []byte(cred.(string))
 
@@ -97,12 +91,21 @@ func allocateMemFile(credential Credential) (descriptor int, err error) {
 	return descriptor, nil
 }
 
-func getCredentialPath(descriptor int) (path string) {
-	return fmt.Sprintf("/proc/self/fd/%d", descriptor)
+func getCredentialPath(credential Credential) (path string, err error) {
+	// Gets a file descriptor for a memory allocated credential file
+	descriptor, err := allocateMemFile(credential)
+
+	if err != nil {
+		return "", err
+	}
+
+	path = fmt.Sprintf("/proc/self/fd/%d", descriptor)
+
+	return path, nil
 }
 
 // Returns args in flattened array
-func combinedArgs(wc WrapperCommand) (combinedArgs []string, ok bool) {
+func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
 	combinedArgs = append(combinedArgs, wc.RequestType)
 
 	for flag, value := range wc.Args {
@@ -119,8 +122,8 @@ func combinedArgs(wc WrapperCommand) (combinedArgs []string, ok bool) {
 				combinedArgs = append(combinedArgs, subValue.(string))
 			}
 		default:
-			return nil, false
+			return nil, errors.New("invalid type found in args")
 		}
 	}
-	return combinedArgs, true
+	return combinedArgs, nil
 }
