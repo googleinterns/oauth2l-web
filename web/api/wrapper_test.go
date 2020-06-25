@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"reflect"
 	"testing"
-
-	"golang.org/x/tools/go/analysis/passes/nilness"
 )
 
 func TestWrapperCommandStructSingleArg(t *testing.T) {
