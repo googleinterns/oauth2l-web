@@ -5,8 +5,6 @@ const rootReducers = combineReducers({
   form: formReducer,
 });
 
-const store = createStore(
-  rootReducers
-);
+const store = createStore(rootReducers);
 
 export default store;

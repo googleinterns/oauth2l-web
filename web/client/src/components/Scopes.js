@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MDBContainer, MDBCol, MDBBtn, MDBInput } from "mdbreact";
 
 /**
- * @return {div} returns page the has the ability to choose scopes to use
+ * @return {div} returns page that has the ability to choose scopes to use
  */
 function Scopes() {
   const [scopes, setScopes] = useState([]);

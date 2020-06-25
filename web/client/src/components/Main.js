@@ -21,13 +21,13 @@ const renderRadioType = ({ input, ...rest }) => (
         value="OAuth"
         control={<Radio color="primary" />}
         label="OAuth"
-        id = "type.oauth"
+        id="type.oauth"
       />
       <FormControlLabel
         value="JWT"
         control={<Radio color="primary" />}
         label="JWT"
-        id = "type.jwt"
+        id="type.jwt"
       />
     </RadioGroup>
   </FormControl>
@@ -40,31 +40,31 @@ const renderRadioFormat = ({ input, ...rest }) => (
         value="Bare"
         control={<Radio color="primary" />}
         label="Bare"
-        id = "format.bare"
+        id="format.bare"
       />
       <FormControlLabel
         value="Header"
         control={<Radio color="primary" />}
         label="Header"
-        id = "format.header"
+        id="format.header"
       />
       <FormControlLabel
         value="JSON"
         control={<Radio color="primary" />}
         label="JSON"
-        id = "format.json"
+        id="format.json"
       />
       <FormControlLabel
         value="JSON_Compact"
         control={<Radio color="primary" />}
         label="JSON_Compact"
-        id = "format.json_compact"
+        id="format.json_compact"
       />
       <FormControlLabel
         value="Pretty"
         control={<Radio color="primary" />}
         label="Pretty"
-        id = "format.pretty"
+        id="format.pretty"
       />
     </RadioGroup>
   </FormControl>
