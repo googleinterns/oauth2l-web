@@ -24,7 +24,7 @@ type Credential map[string]interface{}
 
 // Execute will capture output of OAuth2l CLI using command args
 func (wc WrapperCommand) Execute() (output string, err error) {
-	// combinedArgs used to represent command arguments in an array
+	// combinedArgs used to represent command arguments in flattened array
 	args, err := combinedArgs(wc)
 
 	if err != nil {
@@ -53,7 +53,6 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 	return output, err
 }
 
-// Returns args in flattened array
 func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
 	combinedArgs = append(combinedArgs, wc.RequestType)
 
@@ -77,8 +76,8 @@ func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
 	return combinedArgs, nil
 }
 
-// Gets a file descriptor for a memory allocated credential file
 func getCredentialPath(credential Credential) (path string, err error) {
+	// Gets a file descriptor for a memory allocated credential file
 	descriptor, err := allocateMemFile(credential)
 
 	if err != nil {
@@ -90,8 +89,8 @@ func getCredentialPath(credential Credential) (path string, err error) {
 	return path, nil
 }
 
-// Init cred with credential body
 func allocateMemFile(credential Credential) (descriptor int, err error) {
+	// Init cred with credential body
 	cred := credential["credential"]
 
 	byteArray := []byte(cred.(string))
