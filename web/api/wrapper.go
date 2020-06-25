@@ -53,8 +53,45 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 	return output, err
 }
 
+// Returns args in flattened array
+func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
+	combinedArgs = append(combinedArgs, wc.RequestType)
+
+	for flag, value := range wc.Args {
+		combinedArgs = append(combinedArgs, flag)
+		
+		// Assert args are of accepted types
+		switch value := value.(type) {
+		case []string:
+			combinedArgs = append(combinedArgs, value...)
+		case string:
+			combinedArgs = append(combinedArgs, value)
+		case []interface{}:
+			for _, subValue := range value {
+				combinedArgs = append(combinedArgs, subValue.(string))
+			}
+		default:
+			return nil, errors.New("invalid type found in args")
+		}
+	}
+	return combinedArgs, nil
+}
+
+// Gets a file descriptor for a memory allocated credential file
+func getCredentialPath(credential Credential) (path string, err error) {
+	descriptor, err := allocateMemFile(credential)
+
+	if err != nil {
+		return "", err
+	}
+
+	path = fmt.Sprintf("/proc/self/fd/%d", descriptor)
+
+	return path, nil
+}
+
+// Init cred with credential body
 func allocateMemFile(credential Credential) (descriptor int, err error) {
-	// Init cred with credential body
 	cred := credential["credential"]
 
 	byteArray := []byte(cred.(string))
@@ -89,41 +126,4 @@ func allocateMemFile(credential Credential) (descriptor int, err error) {
 
 	// Returns file descriptor
 	return descriptor, nil
-}
-
-func getCredentialPath(credential Credential) (path string, err error) {
-	// Gets a file descriptor for a memory allocated credential file
-	descriptor, err := allocateMemFile(credential)
-
-	if err != nil {
-		return "", err
-	}
-
-	path = fmt.Sprintf("/proc/self/fd/%d", descriptor)
-
-	return path, nil
-}
-
-// Returns args in flattened array
-func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
-	combinedArgs = append(combinedArgs, wc.RequestType)
-
-	for flag, value := range wc.Args {
-		combinedArgs = append(combinedArgs, flag)
-		
-		// Assert args are of accepted types
-		switch value := value.(type) {
-		case []string:
-			combinedArgs = append(combinedArgs, value...)
-		case string:
-			combinedArgs = append(combinedArgs, value)
-		case []interface{}:
-			for _, subValue := range value {
-				combinedArgs = append(combinedArgs, subValue.(string))
-			}
-		default:
-			return nil, errors.New("invalid type found in args")
-		}
-	}
-	return combinedArgs, nil
 }
