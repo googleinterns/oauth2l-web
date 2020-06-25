@@ -21,11 +21,8 @@ function Credentials() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (e.target.format.value === "Header" && e.target.type.value === "JWT") {
-      alert("JWT type and Header format are not allowed!");
-    } else {
-      // send it to scopes
-      return [type, format]; // holding it to remove unused vars error
+     // send it to scopes
+    return [type, format]; // holding it to remove unused vars error
     }
   };
 
