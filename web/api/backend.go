@@ -26,8 +26,11 @@ type Claims struct {
 var jwtKey = []byte(os.Getenv("SECRET_KEY"))
 var creds WrapperCommand
 
-// TokenHandler to create the Token
-func TokenHandler(w http.ResponseWriter, r *http.Request) {
+// CredentialsHandler takes as input a json body with the parts of the command
+//to be executed and a json body representing the uploaded credentials.json file and returns
+// a created jwt token that will be sent to the front end and cached for reused if needed
+//returns a 401 status if jwt token cannot be created
+func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 	if (*&r).Method == "OPTIONS" {
 		return
@@ -48,9 +51,9 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Declare the expiration time of the token
-	// here, we have kept it as 5 minutes
+	// here, we have kept it as 24 minutes
 	expirationTime := time.Now().Add(1440 * time.Minute)
-	// Create the JWT claims, which includes the username and expiry time
+	// Create the JWT claims, which includes the uploaded credentials json body and expiry time
 	claims := &Claims{
 		UploadCredentials: creds.Credential,
 
@@ -61,19 +64,21 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Declare the token with the algorithm used for signing, and the claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedCredentials := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Create the JWT string
-	tokenString, err := token.SignedString(jwtKey)
+	credentialsString, err := signedCredentials.SignedString(jwtKey)
 	if err != nil {
 		// If there is an error in creating the JWT return an internal server error
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	io.WriteString(w, `{"token":"`+tokenString+`"}`)
+	io.WriteString(w, `{"token":"`+credentialsString+`"}`)
 
 }
 
-// AuthHandler checks if token is valid. Returning a 401 status to the client if it is not valid.
+// AuthHandler checks if the token specified in the authorization bearer of the http request
+// is valid, or not expired and created by the web server.
+// Returning a 401 status if token is not valid.
 func AuthHandler(next http.Handler) http.Handler {
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
@@ -84,8 +89,11 @@ func AuthHandler(next http.Handler) http.Handler {
 	return jwtMiddleware.Handler(next)
 }
 
-//NoTokenHandler for the case when a cached token is not used
-func NoTokenHandler(w http.ResponseWriter, r *http.Request) {
+//NoCredentialsHandler for the case when a token is not used.
+// Takes as input a json body with the parts of the command to be executed
+func NoCredentialsHandler(w http.ResponseWriter, r *http.Request) {
+	//cacheCreds is initialized so that it will not tamper with the global variable creds that would
+	//already be intialized when the user uploads the credentials.json file in the frontend.
 	var cacheCreds WrapperCommand
 	err := json.NewDecoder(r.Body).Decode(&cacheCreds)
 	if err != nil {
@@ -94,12 +102,12 @@ func NoTokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	creds = cacheCreds
-	OkHandler(w, r)
+	ExecuteWrapperHandler(w, r)
 
 }
 
-//OkHandler function to test is token in valid
-func OkHandler(w http.ResponseWriter, r *http.Request) {
+//ExecuteWrapperHandler will invoke the wrapper. Returns a 401 status if command is bad
+func ExecuteWrapperHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	newWrapperCommand := &WrapperCommand{
 		RequestType: creds.RequestType,
@@ -128,13 +136,13 @@ func main() {
 	router := mux.NewRouter()
 	fmt.Println("Authorization Playground")
 
-	router.HandleFunc("/token", TokenHandler)
+	router.HandleFunc("/createtoken", CredentialsHandler)
 
-	router.Handle("/auth", AuthHandler(http.HandlerFunc(OkHandler)))
+	router.Handle("/auth", AuthHandler(http.HandlerFunc(ExecuteWrapperHandler)))
 
-	router.HandleFunc("/notoken", NoTokenHandler)
+	router.HandleFunc("/notoken", NoCredentialsHandler)
 
-	srv := &http.Server{
+	var srv = &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:8080",
 		WriteTimeout: 15 * time.Second,
