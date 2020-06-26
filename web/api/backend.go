@@ -136,11 +136,11 @@ func main() {
 	router := mux.NewRouter()
 	fmt.Println("Authorization Playground")
 
-	router.HandleFunc("/createtoken", CredentialsHandler)
+	router.HandleFunc("/credentials", CredentialsHandler)
 
 	router.Handle("/auth", AuthHandler(http.HandlerFunc(ExecuteWrapperHandler)))
 
-	router.HandleFunc("/notoken", NoCredentialsHandler)
+	router.HandleFunc("/nocredentials", NoCredentialsHandler)
 
 	var srv = &http.Server{
 		Handler:      router,
