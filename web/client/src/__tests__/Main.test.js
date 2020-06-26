@@ -4,7 +4,6 @@ import Adapter from "enzyme-adapter-react-16";
 
 import Main from "../components/Main";
 
-
 Enzyme.configure({ adapter: new Adapter() });
 
 // test applications use-cases from user's pov. Users access information on a web page and interact with available controls
