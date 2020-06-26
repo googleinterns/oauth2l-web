@@ -3,6 +3,7 @@ import Enzyme, { mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
 import Main from "../components/Main";
+import {createShallow} from '@material-ui/core/test-utils'
 
 Enzyme.configure({ adapter: new Adapter() });
 

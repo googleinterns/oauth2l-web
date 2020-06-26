@@ -8,11 +8,11 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  makeStyles,
 } from "@material-ui/core";
 import submit from "./submit";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
+
 
 const renderRadioType = ({ input, ...rest }) => (
   <FormControl>
@@ -70,27 +70,16 @@ const renderRadioFormat = ({ input, ...rest }) => (
   </FormControl>
 );
 
-const useStytle = makeStyles((theme) => ({
-  root: {
-    flexGrow: 3,
-    margin: theme.spacing(20),
-    borderRadius: 5,
-    boxShadow: "0 1px 5px ",
-    padding: theme.spacing(10),
-  },
-  inline: {
-    display: "inline",
-  },
-}));
+
 
 /**
  *
  * @return {div} returns the page that contains the ability to choose the type and format
  */
 function Main({ error, handleSubmit }) {
-  const classes = useStytle();
+
   return (
-    <div className={classes.root} width={{ width: "75%" }}>
+    <div width={{ width: "75%" }}>
       <Container>
         <form onSubmit={handleSubmit(submit)}>
           <Typography variant="h5">Choose token type </Typography>
