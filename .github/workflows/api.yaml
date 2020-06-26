@@ -17,7 +17,4 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Test
-      run: go test ./web/api 
-      env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        VALID_TOKEN: ${{ secrets.VALID_TOKEN }}
+      run: go test ./web/api
