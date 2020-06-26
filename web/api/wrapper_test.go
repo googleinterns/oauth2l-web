@@ -17,7 +17,7 @@ func TestWrapperCommandStructSingleArg(t *testing.T) {
 		Credential{},
 	}
 
-	if wrapper.RequestType != expectedRequest {
+	if wrapper.CommandType != expectedRequest {
 		t.Errorf("expected request value incorrect")
 	}
 
@@ -36,7 +36,7 @@ func TestWrapperCommandStructManyArgs(t *testing.T) {
 		Credential{},
 	}
 
-	if wrapper.RequestType != expectedRequest {
+	if wrapper.CommandType != expectedRequest {
 		t.Errorf("expected request value incorrect")
 	}
 
@@ -83,7 +83,7 @@ func TestJSONValidTypeInArgs(t *testing.T) {
 	wrapper := WrapperCommand{}
 
 	jsonString := []byte(`{
-        "requesttype": "fetch",
+        "commandType": "fetch",
         "args": {
             "--scope": ["cloud-platform","userinfo.email"]
 		},
@@ -103,7 +103,7 @@ func TestJSONInvalidTypeInArgs(t *testing.T) {
 	wrapper := WrapperCommand{}
 
 	jsonString := []byte(`{
-        "requesttype": "fetch",
+        "commandType": "fetch",
         "args": {
             "--scope": 2
 		},
@@ -123,7 +123,7 @@ func TestJSONValueInArgs(t *testing.T) {
 	wrapper := WrapperCommand{}
 
 	jsonString := []byte(`{
-        "requesttype": "fetch",
+        "commandType": "fetch",
         "args": {
             "--scope": ["cloud-platform", "userinfo.email"]
 		},
