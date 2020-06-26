@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -131,7 +130,7 @@ func setupResponse(w *http.ResponseWriter, req *http.Request) {
 
 func main() {
 	router := mux.NewRouter()
-	fmt.Println("Authorization Playground")
+	log.Println("Authorization Playground")
 
 	router.HandleFunc("/credentials", CredentialsHandler)
 	router.Handle("/auth", AuthHandler(http.HandlerFunc(ExecuteWrapperHandler)))
