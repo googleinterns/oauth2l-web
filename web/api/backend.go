@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -17,29 +16,29 @@ import (
 )
 
 // Claims object that will be encoded to a JWT.
-// We add jwt.StandardClaims as an embedded type, to provide fields like expiry time
+// We add jwt.StandardClaims as an embedded type, to provide fields like expiry time.
 type Claims struct {
 	UploadCredentials map[string]interface{}
 	jwt.StandardClaims
 }
 
-var jwtKey = []byte(os.Getenv("SECRET_KEY"))
+var jwtKey = []byte("my_secret_key")
 var creds WrapperCommand
 
 // CredentialsHandler takes as input a json body with the parts of the command
-//to be executed and a json body representing the uploaded credentials.json file and returns
+// to be executed and a json body representing the uploaded credentials.json file and returns
 // a created jwt token that will be sent to the front end and cached for reused if needed
-//returns a 401 status if jwt token cannot be created
+// returns a 401 status if jwt token cannot be created.
 func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
 	setupResponse(&w, r)
 	if (*&r).Method == "OPTIONS" {
 		return
 	}
 
-	// Get the JSON body and decode into credentials
+	// Get the JSON body and decode into credentials.
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
-		// If the structure of the body is wrong, return an HTTP error
+		// If the structure of the body is wrong, return an HTTP error.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -51,24 +50,23 @@ func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Declare the expiration time of the token
-	// here, we have kept it as 24 minutes
+	// here, we have kept it as 1 day.
 	expirationTime := time.Now().Add(1440 * time.Minute)
-	// Create the JWT claims, which includes the uploaded credentials json body and expiry time
+	// Create the JWT claims, which includes the uploaded credentials json body and expiry time.
 	claims := &Claims{
 		UploadCredentials: creds.Credential,
-
 		StandardClaims: jwt.StandardClaims{
-			// In JWT, the expiry time is expressed as unix milliseconds
+			// In JWT, the expiry time is expressed as unix milliseconds.
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 
-	// Declare the token with the algorithm used for signing, and the claims
+	// Declare the token with the algorithm used for signing, and the claims.
 	signedCredentials := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Create the JWT string
 	credentialsString, err := signedCredentials.SignedString(jwtKey)
 	if err != nil {
-		// If there is an error in creating the JWT return an internal server error
+		// If there is an error in creating the JWT return an internal server error.
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -89,28 +87,27 @@ func AuthHandler(next http.Handler) http.Handler {
 	return jwtMiddleware.Handler(next)
 }
 
-//NoCredentialsHandler for the case when a token is not used.
-// Takes as input a json body with the parts of the command to be executed
+// NoCredentialsHandler for the case when a token is not used.
+// Takes as input a json body with the parts of the command to be executed.
 func NoCredentialsHandler(w http.ResponseWriter, r *http.Request) {
-	//cacheCreds is initialized so that it will not tamper with the global variable creds that would
-	//already be intialized when the user uploads the credentials.json file in the frontend.
+	// cacheCreds is initialized so that it will not tamper with the global variable creds that would
+	// already be intialized when the user uploads the credentials.json file in the frontend.
 	var cacheCreds WrapperCommand
 	err := json.NewDecoder(r.Body).Decode(&cacheCreds)
 	if err != nil {
-		// If the structure of the body is wrong, return an HTTP error
+		// If the structure of the body is wrong, return an HTTP error.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	creds = cacheCreds
 	ExecuteWrapperHandler(w, r)
-
 }
 
-//ExecuteWrapperHandler will invoke the wrapper. Returns a 401 status if command is bad
+// ExecuteWrapperHandler will invoke the wrapper. Returns a 401 status if command is bad.
 func ExecuteWrapperHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	newWrapperCommand := &WrapperCommand{
-		RequestType: creds.RequestType,
+		CommandType: creds.CommandType,
 		Args:        creds.Args,
 	}
 	for k := range newWrapperCommand.Args {
@@ -137,9 +134,7 @@ func main() {
 	fmt.Println("Authorization Playground")
 
 	router.HandleFunc("/credentials", CredentialsHandler)
-
 	router.Handle("/auth", AuthHandler(http.HandlerFunc(ExecuteWrapperHandler)))
-
 	router.HandleFunc("/nocredentials", NoCredentialsHandler)
 
 	var srv = &http.Server{
