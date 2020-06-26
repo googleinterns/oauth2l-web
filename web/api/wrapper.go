@@ -11,7 +11,7 @@ import (
 
 // WrapperCommand represents components necessary for OAuth2l request
 type WrapperCommand struct {
-	RequestType string
+	CommandType string
 	Args
 	Credential
 }
@@ -22,7 +22,8 @@ type Args map[string]interface{}
 // Credential type used for storing JSON-formatted credentials
 type Credential map[string]interface{}
 
-// Execute will capture output of OAuth2l CLI using command args
+// Execute invokes OAuth2l CLI with the arguments from WrapperCommand.
+// The output of the CLI is captured and returned as a string.
 func (wc WrapperCommand) Execute() (output string, err error) {
 	// combinedArgs used to represent command arguments in flattened array
 	args, err := combinedArgs(wc)
@@ -53,8 +54,13 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 	return output, err
 }
 
+// Accepted argument types are string, []string, and []interface{}
+// Examples:
+// 		   string: "test"
+// 	     []string: ["test1", "test2"]
+// 	[]interface{}: [{0: "test1"}, {1: "test2"}] - this is the default JSON decoded format
 func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
-	combinedArgs = append(combinedArgs, wc.RequestType)
+	combinedArgs = append(combinedArgs, wc.CommandType)
 
 	for flag, value := range wc.Args {
 		combinedArgs = append(combinedArgs, flag)
@@ -77,7 +83,9 @@ func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
 }
 
 func getCredentialPath(credential Credential) (path string, err error) {
-	// Gets a file descriptor for a memory allocated credential file
+	// Gets a file descriptor for a memory allocated credential file.
+	// Memory allocation is used rather than disk space to improve security
+	// (e.g. a delete operation fails to remove a credential from the disk).
 	descriptor, err := allocateMemFile(credential)
 
 	if err != nil {
