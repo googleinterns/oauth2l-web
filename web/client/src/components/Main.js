@@ -13,7 +13,6 @@ import submit from "./submit";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 
-
 const renderRadioType = ({ input, ...rest }) => (
   <FormControl>
     <RadioGroup {...input} {...rest}>
@@ -70,14 +69,11 @@ const renderRadioFormat = ({ input, ...rest }) => (
   </FormControl>
 );
 
-
-
 /**
  *
  * @return {div} returns the page that contains the ability to choose the type and format
  */
 function Main({ error, handleSubmit }) {
-
   return (
     <div width={{ width: "75%" }}>
       <Container>
