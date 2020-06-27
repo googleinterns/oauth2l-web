@@ -20,8 +20,7 @@ export default function MaterialUI(props) {
       },
     })
   );
-  console.log(theme.palette.background.default);
-  console.log(theme.palette.text.primary);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
