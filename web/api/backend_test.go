@@ -118,7 +118,6 @@ func TestTokenHandlerNoCredentials(t *testing.T) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
 	}
-
 }
 
 func TestTokenHandlerEmptyUploadCredentials(t *testing.T) {
@@ -178,7 +177,6 @@ func TestTokenHandlerNoCreation(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
-
 }
 
 func TestTokenHandlerValidWithCreation(t *testing.T) {
