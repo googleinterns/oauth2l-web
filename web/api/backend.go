@@ -8,27 +8,19 @@ import (
 	"strings"
 	"time"
 
-	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 
 	"github.com/gorilla/mux"
 )
 
-// Claims object that will be encoded to a JWT.
-// We add jwt.StandardClaims as an embedded type, to provide fields like expiry time.
-type Claims struct {
-	UploadCredentials map[string]interface{}
-	jwt.StandardClaims
-}
-
 var jwtKey = []byte("my_secret_key")
-var creds WrapperCommand
 
 // CredentialsHandler takes as input a json body with the parts of the command
 // to be executed and a json body representing the uploaded credentials.json file and returns
 // a created jwt token that will be sent to the front end and cached for reused if needed
 // returns a 401 status if jwt token cannot be created.
 func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
+	var creds WrapperCommand
 	setupResponse(&w, r)
 	if (*&r).Method == "OPTIONS" {
 		return
@@ -76,38 +68,56 @@ func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
 // AuthHandler checks if the token specified in the authorization bearer of the http request
 // is valid, or not expired and created by the web server.
 // Returning a 401 status if token is not valid.
-func AuthHandler(next http.Handler) http.Handler {
-	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		},
-		SigningMethod: jwt.SigningMethodHS256,
+func AuthHandler(w http.ResponseWriter, r *http.Request) {
+	// Extracting the token from the Request Header.
+	credentialTokenString := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+
+	//Verifying the token by checking the signing method.
+	credentialToken, err := jwt.Parse(credentialTokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		return jwtKey, nil
 	})
-	return jwtMiddleware.Handler(next)
+
+	//Validating the token.
+	if _, ok := credentialToken.Claims.(jwt.MapClaims); ok && credentialToken.Valid {
+		var creds WrapperCommand
+		err := json.NewDecoder(r.Body).Decode(&creds)
+		if err != nil {
+			// If the structure of the body is wrong, return an HTTP error.
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		response := ExecuteWrapper(creds)
+		io.WriteString(w, `{"response":"`+response+`"}`)
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		io.WriteString(w, err.Error())
+	}
 }
 
 // NoCredentialsHandler for the case when a token is not used.
 // Takes as input a json body with the parts of the command to be executed.
 func NoCredentialsHandler(w http.ResponseWriter, r *http.Request) {
-	// cacheCreds is initialized so that it will not tamper with the global variable creds that would
-	// already be intialized when the user uploads the credentials.json file in the frontend.
-	var cacheCreds WrapperCommand
-	err := json.NewDecoder(r.Body).Decode(&cacheCreds)
+	var creds WrapperCommand
+	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
 		// If the structure of the body is wrong, return an HTTP error.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	creds = cacheCreds
-	ExecuteWrapperHandler(w, r)
+	response := ExecuteWrapper(creds)
+	io.WriteString(w, `{"response":"`+response+`"}`)
 }
 
-// ExecuteWrapperHandler will invoke the wrapper. Returns a 401 status if command is bad.
-func ExecuteWrapperHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+// ExecuteWrapper takes as an input a WrapperCommand object and will
+// invoke the wrapper and return a string that is the OAuth2l response
+func ExecuteWrapper(wc WrapperCommand) string {
 	newWrapperCommand := &WrapperCommand{
-		CommandType: creds.CommandType,
-		Args:        creds.Args,
+		CommandType: wc.CommandType,
+		Args:        wc.Args,
 	}
 	for k := range newWrapperCommand.Args {
 		if !strings.Contains(k, "--") {
@@ -117,9 +127,9 @@ func ExecuteWrapperHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	response, err := newWrapperCommand.Execute()
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		return err.Error()
 	}
-	io.WriteString(w, `{"response":"`+response+`"}`)
+	return response
 }
 
 func setupResponse(w *http.ResponseWriter, req *http.Request) {
@@ -133,7 +143,7 @@ func main() {
 	log.Println("Authorization Playground")
 
 	router.HandleFunc("/credentials", CredentialsHandler)
-	router.Handle("/auth", AuthHandler(http.HandlerFunc(ExecuteWrapperHandler)))
+	router.HandleFunc("/auth", AuthHandler)
 	router.HandleFunc("/nocredentials", NoCredentialsHandler)
 
 	var srv = &http.Server{
