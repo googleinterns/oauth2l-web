@@ -1,29 +1,33 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/styles';
 import { Paper, CssBaseline } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { cyan } from '@material-ui/core/colors';
-import { Head } from '../'
+import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
+import { Head, Footer } from '../'
+import "../../styles/layout.css"
 
 export default function MaterialUI(props) {
-    const { elements } = props;
+    const { children } = props;
 
-    const theme = createMuiTheme({
+    const theme = responsiveFontSizes(createMuiTheme({
         palette: {
-            type: 'light',
-            primary: cyan,
-            secondary: cyan
+            type: 'dark',
+            primary: blue,
+            secondary: {
+                main: '#ce93d8'
+            }
         }
-    })
-
+    }))
+    console.log(theme.palette.background.default)
+    console.log(theme.palette.text.primary)
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Head />
             <div className="root">
-                <Paper className="paper">{elements}</Paper>
+                <Paper className="paper">{children}</Paper>
             </div>
-            {/* <Footer /> */}
+            <Footer />
         </ThemeProvider>
     );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialUI from './components/layouts/Material'
+import MaterialUI from "./components/layouts/Material";
 // import "./App.css";
 // import Main from "./components/Main";
 // import { Route, HashRouter } from "react-router-dom";
