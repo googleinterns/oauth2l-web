@@ -1,5 +1,6 @@
 import React from "react";
 import MaterialUI from "./components/layouts/Material";
+import { TokenFormat } from "./components"
 // import "./App.css";
 // import Main from "./components/Main";
 // import { Route, HashRouter } from "react-router-dom";
@@ -48,11 +49,9 @@ function App() {
     //   <Route exact path="/" component={Main} />
     //   <Route path="/Scopes" component={Scopes} />
     // </HashRouter>
-    <div>
-      <MaterialUI>
-        <h1>Make a token!</h1>
-      </MaterialUI>
-    </div>
+    <MaterialUI>
+      <TokenFormat />
+    </MaterialUI>
   );
 }
 
