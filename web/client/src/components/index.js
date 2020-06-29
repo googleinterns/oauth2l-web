@@ -1,5 +1,7 @@
 import Head from "./Head";
 import Footer from "./Footer";
-import TokenFormat from "./form/TokenFormat"
+import TokenForm from "./form/TokenForm";
+import TokenType from "./form/TokenType";
+import TokenScopes from "./form/TokenScopes";
 
-export { Head, Footer, TokenFormat };
+export { Head, Footer, TokenForm, TokenScopes, TokenType };
