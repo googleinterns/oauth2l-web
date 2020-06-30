@@ -8,8 +8,10 @@ export default function TokenType() {
   return (
     <div>
       <Box className="form-box">
-        <Typography variant="h5">Choose token type </Typography>
-        <Field name="tokenType" component={RadioGroup}>
+        <div className="form-text">
+          <Typography variant="h5">Choose token type </Typography>
+        </div>
+        <Field name="tokenType" row component={RadioGroup}>
           <FormControlLabel
             value="OAuth"
             control={<Radio color="primary" />}
@@ -25,8 +27,10 @@ export default function TokenType() {
         </Field>
       </Box>
       <Box className="form-box">
-        <Typography variant="h5">Choose token format</Typography>
-        <Field name="tokenFormat" component={RadioGroup}>
+        <div className="form-text">
+          <Typography variant="h5">Choose token format</Typography>
+        </div>
+        <Field name="tokenFormat" row component={RadioGroup}>
           <FormControlLabel
             value="Bare"
             control={<Radio color="primary" />}

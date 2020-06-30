@@ -7,8 +7,8 @@ import { Head } from "..";
 import "../../styles/layout.css";
 
 export default function MaterialUI(props) {
-  const { children } = props;
-
+  const { children, paperClass } = props;
+  console.log(paperClass);
   const theme = responsiveFontSizes(
     createMuiTheme({
       palette: {
@@ -26,7 +26,7 @@ export default function MaterialUI(props) {
       <CssBaseline />
       <Head />
       <div className="root">
-        <Paper className="paper">{children}</Paper>
+        <Paper className={paperClass}>{children}</Paper>
       </div>
     </ThemeProvider>
   );

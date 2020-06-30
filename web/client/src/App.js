@@ -10,14 +10,23 @@ function App() {
   return (
     <Grid container>
       <Grid item xs>
-        <MaterialUI>
+        <MaterialUI paperClass="paper-top">
           <TokenForm />
         </MaterialUI>
       </Grid>
       <Grid item xs>
-        <MaterialUI>
-          <h2>Replace with token tester!</h2>
-        </MaterialUI>
+        <Grid container direction="column">
+          <Grid item xs>
+            <MaterialUI paperClass="paper-top">
+              <h2>Replace with token tester!</h2>
+            </MaterialUI>
+          </Grid>
+          <Grid item xs>
+            <MaterialUI paperClass="paper-bottom">
+              <h2>Replace with http request module!</h2>
+            </MaterialUI>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

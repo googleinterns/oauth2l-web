@@ -1,3 +1,8 @@
 .form-box {
   padding-bottom: 2rem;
+  margin-right: 0rem;
+}
+
+.form-text {
+  padding-bottom: .75rem;
 }

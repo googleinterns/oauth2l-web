@@ -8,8 +8,17 @@ export default function TokenScopes() {
   return (
     <div>
       <Box className="form-box">
-        <Typography variant="h5">Enter scopes</Typography>
-        <Field fullWidth name="tokenScopes" component={TextField} />
+        <div className="form-text">
+          <Typography variant="h5">Enter scopes</Typography>
+        </div>
+        <Field
+          multiline
+          fullWidth
+          variant="outlined"
+          label="Scopes"
+          name="tokenScopes"
+          component={TextField}
+        />
       </Box>
     </div>
   );
