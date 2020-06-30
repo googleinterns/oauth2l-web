@@ -26,25 +26,16 @@ export default function TokenForm() {
         console.log("values", values);
       }}
     >
-      <FormikStep
+      <TokenType
         validationSchema={object({
           tokenType: string().required("Must select a token type"),
           tokenFormat: string().required("Must select a token format"),
         })}
         label="Type"
-      >
-        <TokenType />
-      </FormikStep>
-      <FormikStep label="Scopes">
-        <TokenScopes />
-      </FormikStep>
+      />
+      <TokenScopes label="Scopes" />
     </FormikStepper>
   );
-}
-
-export function FormikStep(props) {
-  const { children } = props;
-  return <>{children}</>;
 }
 
 export function FormikStepper(props) {
@@ -61,6 +52,7 @@ export function FormikStepper(props) {
   return (
     <Formik
       {...props}
+      validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
