@@ -9,7 +9,7 @@ export default function TokenScopes() {
     <div>
       <Box className="form-box">
         <Typography variant="h5">Enter scopes</Typography>
-        <Field fullWidth name="scopes" component={TextField} />
+        <Field fullWidth name="tokenScopes" component={TextField} />
       </Box>
     </div>
   );

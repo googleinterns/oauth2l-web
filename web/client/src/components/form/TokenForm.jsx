@@ -17,7 +17,8 @@ export default function TokenForm() {
     <FormikStepper
       initialValues={{
         tokenType: "",
-        TokenFormat: "",
+        tokenFormat: "",
+        tokenScopes: "",
       }}
       onSubmit={async (values) => {
         await sleep(3000);
