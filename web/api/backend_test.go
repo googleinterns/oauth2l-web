@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestAuthHandlerValid(t *testing.T) {
+func TestHandlerAuthenticateCredentialsTokenValid(t *testing.T) {
 	jsonStr := []byte(`{
         "commandtype":"fetch",
         "args":{
@@ -42,7 +42,7 @@ func TestAuthHandlerValid(t *testing.T) {
 	}
 }
 
-func TestUseTokenWithoutToken(t *testing.T) {
+func TestHandlerUseTokenWithoutToken(t *testing.T) {
 	jsonStr := []byte(`{
         "commandtype":"fetch",
         "args":{
@@ -79,7 +79,7 @@ func TestUseTokenWithoutToken(t *testing.T) {
 	}
 }
 
-func TestUseTokenWithEmptyToken(t *testing.T) {
+func TestHandlerUseTokenWithEmptyToken(t *testing.T) {
 	jsonStr := []byte(`{
         "commandtype":"fetch",
         "args":{
@@ -117,7 +117,7 @@ func TestUseTokenWithEmptyToken(t *testing.T) {
 	}
 }
 
-func TestUseTokenWithExpiredToken(t *testing.T) {
+func TestHandlerUseTokenWithExpiredToken(t *testing.T) {
 	jsonStr := []byte(`{
         "commandtype":"curl",
         "args":{
@@ -155,7 +155,7 @@ func TestUseTokenWithExpiredToken(t *testing.T) {
 	}
 }
 
-func TestUseTokenWithTokenSignatureInvalid(t *testing.T) {
+func TestHandlerUseTokenWithTokenSignatureInvalid(t *testing.T) {
 	jsonStr := []byte(`{
         "commandtype":"curl",
         "args":{
@@ -195,7 +195,7 @@ func TestUseTokenWithTokenSignatureInvalid(t *testing.T) {
 	}
 }
 
-func TestCacheTokenWithNoCredentials(t *testing.T) {
+func TestHandlerCacheTokenWithNoCredentials(t *testing.T) {
 
 	jsonStr := []byte(`{
         "commandtype":"curl",
@@ -228,7 +228,7 @@ func TestCacheTokenWithNoCredentials(t *testing.T) {
 	}
 }
 
-func TestCacheTokenEmptyCredentials(t *testing.T) {
+func TestHandlerCacheTokenEmptyCredentials(t *testing.T) {
 	jsonStr := []byte(`{
         "commandtype":"curl",
         "args":{
@@ -276,6 +276,99 @@ func TestHandlerCreateCredentialsToken(t *testing.T) {
       "type": "authorized_user"
     },
     "cachetoken": true,
+    "usetoken":false
+	}`)
+
+	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(Handler)
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+}
+
+func TestHandlerCreateCredentialsTokenWithNoCredentials(t *testing.T) {
+
+	jsonStr := []byte(`{
+        "commandtype":"curl",
+        "args":{
+            "scope":["cloud-platform","userinfo.email"]
+		},
+    "cachetoken": true,
+    "usetoken":false
+	}`)
+
+	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(Handler)
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusBadRequest {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestHandlerCreateCredentialsTokenWithEmptyCredentials(t *testing.T) {
+
+	jsonStr := []byte(`{
+        "commandtype":"curl",
+        "args":{
+            "scope":["cloud-platform","userinfo.email"]
+		},
+        "credential": {},
+    "cachetoken": true,
+    "usetoken":false
+	}`)
+
+	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(Handler)
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusBadRequest {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestHandlerNoCreateCredentialsTokenNoUseToken(t *testing.T) {
+
+	jsonStr := []byte(`{
+        "commandtype":"curl",
+        "args":{
+            "scope":["cloud-platform","userinfo.email"]
+		},
+        "credential": {
+      "quota_project_id": "delays-or-traffi-1569131153704",
+      "refresh_token": "1//0dFSxxi4NOTl2CgYIARAAGA0SNwF-L9Ira5YTnnFer1GCZBToGkwmVMAounGai_x4CgHwMAFgFNBsPSK5hBwxfpGn88u3roPrRcQ",
+      "type": "authorized_user"
+    },
+    "cachetoken": false,
     "usetoken":false
 	}`)
 
