@@ -9,22 +9,55 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-
 	"github.com/gorilla/mux"
 )
 
-// Claims object that will be encoded to a JWT.
+//Request struct represents the request that the backend will recieve.
+type Request struct {
+	CommandType string
+	Args
+	Credential
+	CacheToken bool
+	UseToken   bool
+	Token      string
+}
+
+// Claims object that represents the claims (or the information about the token) of the JWT.
 // We add jwt.StandardClaims as an embedded type, to provide fields like expiry time.
 type Claims struct {
-	UploadCredentials map[string]interface{}
+	credentials map[string]interface{}
 	jwt.StandardClaims
 }
 
+// secret key to make the credentials token
 var jwtKey = []byte("my_secret_key")
 
-// InvokeWrapper takes as an input a WrapperCommand object and will
-// invoke the wrapper and return a string that is the OAuth2l response
-func InvokeWrapper(wc WrapperCommand) string {
+// SetupResponseHeaders sets up the headers for the response.
+func SetupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+}
+
+// AuthenticateCredentialsToken takes as input a string representing the credentials token specified in the request body and checks if
+// the credentials token is valid. It returns the credentials body stored in the credentials token if credentials token is valid. Otherwise, it returns an error.
+func AuthenticateCredentialsToken(credentialTokenString string) (map[string]interface{}, error) {
+	// new claims object to use to parse through the token and map the token claims to the new object.
+	claims := &Claims{}
+
+	// Validating token and mapping the token claims to the claims object.
+	_, err := jwt.ParseWithClaims(credentialTokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return claims.credentials, nil
+}
+
+// WrapperExecutor takes as an input a WrapperCommand object and will
+// invoke the wrapper and return a string that is the OAuth2l response.
+func WrapperExecutor(wc WrapperCommand) string {
 	// Adding dashes to the arguments to match the OAuth2l format.
 	for k := range wc.Args {
 		if !strings.Contains(k, "--") {
@@ -32,123 +65,125 @@ func InvokeWrapper(wc WrapperCommand) string {
 			delete(wc.Args, k)
 		}
 	}
-	response, err := wc.Execute()
+	// Calling the wrapper.
+	CMDresponse, err := wc.Execute()
 	if err != nil {
 		return err.Error()
 	}
-	return response
+	return CMDresponse
 }
 
-func setupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-}
-
-// CredentialsHandler takes as input a json body with the parts of the command
-// to be executed and a json body representing the uploaded credentials.json file and returns
-// a created jwt token that will be sent to the front end and cached for reused if needed
-// returns a 401 status if jwt token cannot be created.
-func CredentialsHandler(w http.ResponseWriter, r *http.Request) {
-	var cmd WrapperCommand
-	setupResponseHeaders(&w, r)
-	if (*&r).Method == "OPTIONS" {
-		return
-	}
-
-	// Get the JSON body and decode into credentials.
-	err := json.NewDecoder(r.Body).Decode(&cmd)
-	if err != nil {
-		// If the structure of the body is wrong, return an HTTP error.
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	if len(cmd.Credential) == 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, `{"error":"cannot make token without credentials"}`)
-		return
-	}
-
-	// Declare the expiration time of the token
-	// here, we have kept it as 1 day.
+// CreateCredentialsToken takes as input a representiation of the uplodaded credentials json body and returns a token using the
+// credentials json body as the payload.
+func CreateCredentialsToken(Credentials map[string]interface{}) (string, error) {
+	// Declare the expiration time of the token. Here, we have kept it as 1 day.
 	expirationTime := time.Now().Add(1440 * time.Minute)
 	// Create the JWT claims, which includes the uploaded credentials json body and expiry time.
 	claims := &Claims{
-		UploadCredentials: cmd.Credential,
+		credentials: Credentials,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds.
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
-
 	// Declare the token with the algorithm used for signing, and the claims.
-	signedCredentials := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// Create the JWT string
-	credentialsString, err := signedCredentials.SignedString(jwtKey)
-	if err != nil {
-		// If there is an error in creating the JWT return an internal server error.
-		w.WriteHeader(http.StatusInternalServerError)
+	signedCredentialsToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// Create the credentials token string.
+	credentialsTokenString, err := signedCredentialsToken.SignedString(jwtKey)
+	return credentialsTokenString, err
+}
+
+// Handler takes as input a json body with the parts of the command
+// to be executed and a json body representing the uploaded credentials.json file and returns
+// a created jwt token that will be sent to the front end and cached for reused if needed
+// returns a 400 status if the credentials token cannot be created or there is not enough information
+// to extract the credentials file needed or a 401 status if the credentials token cannot be validated.
+func Handler(w http.ResponseWriter, r *http.Request) {
+	// Request object to store information about request.
+	var requestBody Request
+
+	// Setting up reponse Headers.
+	SetupResponseHeaders(&w, r)
+	if (*&r).Method == "OPTIONS" {
 		return
 	}
-	io.WriteString(w, `{"token":"`+credentialsString+`"}`)
 
-}
-
-// AuthHandler checks if the token specified in the authorization header of the http request
-// is valid, Returns a 401 status if token is not valid.
-func AuthHandler(w http.ResponseWriter, r *http.Request) {
-	// Extracting the token from the Request Header.
-	credentialTokenString := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
-
-	//Verifying the token by checking the signing method.
-	credentialToken, err := jwt.Parse(credentialTokenString, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect:
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			w.WriteHeader(http.StatusBadRequest)
-		}
-		return jwtKey, nil
-	})
-
-	//Validating the token.
-	if _, ok := credentialToken.Claims.(jwt.MapClaims); ok && credentialToken.Valid {
-		var cmd WrapperCommand
-		err := json.NewDecoder(r.Body).Decode(&cmd)
-		if err != nil {
-			// If the structure of the body is wrong, return an HTTP error.
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		response := InvokeWrapper(cmd)
-		io.WriteString(w, `{"response":"`+response+`"}`)
-	} else {
-		w.WriteHeader(http.StatusUnauthorized)
-		io.WriteString(w, err.Error())
-	}
-}
-
-// NoCredentialsHandler for the case when a token is not used.
-// Takes as input a json body with the parts of the command to be executed.
-func NoCredentialsHandler(w http.ResponseWriter, r *http.Request) {
-	var cmd WrapperCommand
-	err := json.NewDecoder(r.Body).Decode(&cmd)
+	// Get the JSON body and decode into requestBody.
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
 		// If the structure of the body is wrong, return an HTTP error.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	response := InvokeWrapper(cmd)
-	io.WriteString(w, `{"response":"`+response+`"}`)
+
+	// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
+	if (requestBody.UseToken && len(requestBody.Token) == 0) || (len(requestBody.Credential) == 0) {
+		w.WriteHeader(http.StatusBadRequest)
+		if requestBody.UseToken {
+			io.WriteString(w, "missing token file")
+		} else {
+			io.WriteString(w, "missing credentials file")
+		}
+		return
+	}
+
+	// Authenticating the token if requestBody.useToken=true and using credentials body in the token as the
+	// credentials attribute in the WrapperCommand object.
+	// Otherwise use the requestBody.Credentials as the credentials attribute in WrapperCommand object.
+	creds := make(map[string]interface{})
+	if requestBody.UseToken {
+		creds, err = AuthenticateCredentialsToken(requestBody.Token)
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			io.WriteString(w, err.Error())
+			return
+		}
+	} else {
+		creds = requestBody.Credential
+	}
+
+	// WrapperCommand object that will inputted into the wrapper.
+	cmd := WrapperCommand{
+		CommandType: requestBody.CommandType,
+		Args:        requestBody.Args,
+		Credential:  creds,
+	}
+	// Getting the response from the OAuth2l.
+	CMDresponse := WrapperExecutor(cmd)
+
+	// Getting a string representing the token created by the backend using the uploaded credentials file.
+	credentialsToken := ""
+	//creating the token.
+	if requestBody.CacheToken {
+		credentialsToken, err = CreateCredentialsToken(creds)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			io.WriteString(w, err.Error())
+			return
+		}
+	}
+
+	// Writing response in json format.
+	in := []byte(`{"OAuth2l Response":"` + CMDresponse + `", "Token":"` + credentialsToken + `"}`)
+	var raw map[string]interface{}
+	if err := json.Unmarshal(in, &raw); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+		return
+	}
+	out, err := json.Marshal(raw)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+		return
+	}
+	w.Write(out)
 }
 
 func main() {
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
-
-	router.HandleFunc("/credentials", CredentialsHandler)
-	router.HandleFunc("/auth", AuthHandler)
-	router.HandleFunc("/nocredentials", NoCredentialsHandler)
-
+	router.HandleFunc("/", Handler)
 	var srv = &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:8080",
