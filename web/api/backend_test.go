@@ -263,41 +263,7 @@ func TestCacheTokenEmptyCredentials(t *testing.T) {
 
 }
 
-func TestHandlerWithNoCacheTokenandNoUseToken(t *testing.T) {
-	jsonStr := []byte(`{
-        "commandtype":"curl",
-        "args":{
-            "scope":["cloud-platform","userinfo.email"]
-		},
-        "credential": {
-      "quota_project_id": "delays-or-traffi-1569131153704",
-      "refresh_token": "1//0dFSxxi4NOTl2CgYIARAAGA0SNwF-L9Ira5YTnnFer1GCZBToGkwmVMAounGai_x4CgHwMAFgFNBsPSK5hBwxfpGn88u3roPrRcQ",
-      "type": "authorized_user"
-    },
-    "cachetoken": false,
-    "usetoken":false,
-    "token":""
-	}`)
-
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(Handler)
-
-	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
-	// directly and pass in our Request and ResponseRecorder.
-	handler.ServeHTTP(rr, req)
-
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-}
-
-func TestHandlerCreateTOken(t *testing.T) {
+func TestHandlerCreateCredentialsToken(t *testing.T) {
 
 	jsonStr := []byte(`{
         "commandtype":"curl",
