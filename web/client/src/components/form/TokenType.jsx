@@ -46,10 +46,10 @@ export default function TokenType() {
             id="format.json"
           />
           <FormControlLabel
-            value="JSON_Compact"
+            value="JSON Compact"
             control={<Radio color="primary" />}
-            label="JSON_Compact"
-            id="format.json_compact"
+            label="JSON Compact"
+            id="format.jsonCompact"
           />
           <FormControlLabel
             value="Pretty"
