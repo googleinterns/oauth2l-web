@@ -28,7 +28,6 @@ export default function MaterialUI(props) {
       <div className="root">
         <Paper className="paper">{children}</Paper>
       </div>
-      <Footer />
     </ThemeProvider>
   );
 }

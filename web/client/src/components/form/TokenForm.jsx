@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
-import { Button, Stepper, Step, StepLabel, Grid, CircularProgress } from "@material-ui/core";
+import {
+  Button,
+  Stepper,
+  Step,
+  StepLabel,
+  Grid,
+  CircularProgress,
+} from "@material-ui/core";
 import { TokenType, TokenScopes } from "../";
 
 const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
@@ -50,7 +57,10 @@ export function FormikStepper(props) {
         <Form>
           <Stepper alternativeLabel activeStep={step}>
             {childrenArray.map((child, index) => (
-              <Step key={child.props.label} completed={step > index || completed}>
+              <Step
+                key={child.props.label}
+                completed={step > index || completed}
+              >
                 <StepLabel>{child.props.label}</StepLabel>
               </Step>
             ))}
@@ -71,7 +81,9 @@ export function FormikStepper(props) {
             ) : null}
             <Grid item>
               <Button
-                startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
+                startIcon={
+                  isSubmitting ? <CircularProgress size="1rem" /> : null
+                }
                 disabled={isSubmitting}
                 color="primary"
                 variant="contained"
