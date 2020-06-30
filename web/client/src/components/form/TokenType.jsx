@@ -4,6 +4,9 @@ import { Field } from "formik";
 import { FormControlLabel, Radio, Typography, Box } from "@material-ui/core";
 import "../../styles/form.css";
 
+/**
+ * @return {div} containing form fields for adding token type and format
+ */
 export default function TokenType() {
   return (
     <div>

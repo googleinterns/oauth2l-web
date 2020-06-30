@@ -10,9 +10,13 @@ import {
 } from "@material-ui/core";
 import { TokenType, TokenScopes } from "../";
 import { object, string } from "yup";
+import PropTypes from "prop-types";
 
 const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
 
+/**
+ * @return {FormikStepper} component using Formik for creating a token
+ */
 export default function TokenForm() {
   return (
     <FormikStepper
@@ -21,9 +25,8 @@ export default function TokenForm() {
         tokenFormat: "",
         tokenScopes: "",
       }}
-      onSubmit={async (values) => {
+      onSubmit={async () => {
         await sleep(3000);
-        console.log("values", values);
       }}
     >
       <TokenType
@@ -38,6 +41,10 @@ export default function TokenForm() {
   );
 }
 
+/**
+ * @param {Object} props include children nodes and onSubmit function for rendering forms
+ * @return {Formik} component for showing one child form at a time
+ */
 export function FormikStepper(props) {
   const { children } = props;
   const childrenArray = React.Children.toArray(children);
@@ -111,3 +118,8 @@ export function FormikStepper(props) {
     </Formik>
   );
 }
+
+FormikStepper.propTypes = {
+  children: PropTypes.node,
+  onSubmit: PropTypes.func,
+};

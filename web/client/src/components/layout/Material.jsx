@@ -4,11 +4,16 @@ import { Paper, CssBaseline } from "@material-ui/core";
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { blue } from "@material-ui/core/colors";
 import { Head } from "..";
+import PropTypes from "prop-types";
 import "../../styles/layout.css";
 
+/**
+ * @param {Object} props include children nodes and CSS class for Paper component
+ * @return {ThemeProvider} wrapping children nodes in a Material UI theme
+ */
 export default function MaterialUI(props) {
   const { children, paperClass } = props;
-  console.log(paperClass);
+
   const theme = responsiveFontSizes(
     createMuiTheme({
       palette: {
@@ -31,3 +36,8 @@ export default function MaterialUI(props) {
     </ThemeProvider>
   );
 }
+
+MaterialUI.propTypes = {
+  children: PropTypes.node,
+  paperClass: PropTypes.string,
+};
