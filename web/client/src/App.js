@@ -1,13 +1,12 @@
 import React from "react";
 import MaterialUI from "./components/layout/Material";
 import { TokenForm } from "./components";
-import { Grid } from "@material-ui/core"
+import { Grid } from "@material-ui/core";
 
 /**
  * @return {MaterialUI} themed app
  */
 function App() {
-
   return (
     <Grid container>
       <Grid item xs>

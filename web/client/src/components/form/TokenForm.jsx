@@ -9,6 +9,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { TokenType, TokenScopes } from "../";
+import { object, string } from "yup";
 
 const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
 
@@ -25,10 +26,25 @@ export default function TokenForm() {
         console.log("values", values);
       }}
     >
-      <TokenType label="Type" />
-      <TokenScopes label="Scopes" />
+      <FormikStep
+        validationSchema={object({
+          tokenType: string().required("Must select a token type"),
+          tokenFormat: string().required("Must select a token format"),
+        })}
+        label="Type"
+      >
+        <TokenType />
+      </FormikStep>
+      <FormikStep label="Scopes">
+        <TokenScopes />
+      </FormikStep>
     </FormikStepper>
   );
+}
+
+export function FormikStep(props) {
+  const { children } = props;
+  return <>{children}</>;
 }
 
 export function FormikStepper(props) {
