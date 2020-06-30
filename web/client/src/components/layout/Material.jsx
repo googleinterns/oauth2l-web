@@ -3,7 +3,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { Paper, CssBaseline } from "@material-ui/core";
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { blue } from "@material-ui/core/colors";
-import { Head } from "../";
+import { Head } from "..";
 import "../../styles/layout.css";
 
 export default function MaterialUI(props) {

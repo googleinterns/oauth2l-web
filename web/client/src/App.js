@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialUI from "./components/layouts/Material";
+import MaterialUI from "./components/layout/Material";
 import { TokenForm } from "./components";
 import { Grid } from "@material-ui/core"
 
