@@ -1,0 +1,21 @@
+.button-info {
+  margin-left: 0.2rem;
+}
+
+.invalid-icon {
+  margin-bottom: 1rem;
+}
+
+.validation-message {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+.validation-message-div {
+  margin-top: 1rem;
+}
+
+.validation-message-box {
+  width: "auto";
+  height: 10rem;
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import MaterialUI from "./components/layout/Material";
-import { TokenForm } from "./components";
+import { TokenForm, UseToken } from "./components";
 import { Grid } from "@material-ui/core";
 
 /**
@@ -18,7 +18,7 @@ function App() {
         <Grid container direction="column">
           <Grid item xs>
             <MaterialUI paperClass="paper-top">
-              <h2>Replace with token tester!</h2>
+              <UseToken />
             </MaterialUI>
           </Grid>
           <Grid item xs>
