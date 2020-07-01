@@ -17,8 +17,9 @@ import "../../styles/form.css";
  */
 export default function TokenCredentials() {
   const [credFormat, setCredFormat] = useState("file");
-  const [file, setFile] = useState(null);
+  const [fileContent, setFileContent] = useState("");
   const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleCredFormat = (e) => {
     setCredFormat(e.currentTarget.value);
@@ -28,13 +29,35 @@ export default function TokenCredentials() {
     const wrongFormat = e.currentTarget.files[0].type !== "application/json";
 
     if (wrongFormat) {
+      setErrorMsg("Invalid file format, please use a .json file!");
       setError(true);
     } else {
       setError(false);
-      setFile(e.currentTarget.files[0]);
+      readFile(e.currentTarget.files[0]);
     }
 
     console.log(e.currentTarget.files[0]);
+  };
+
+  const readFile = (file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      validateJSON(reader.result);
+    };
+    reader.readAsText(file);
+  };
+
+  const validateJSON = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (error) {
+      setErrorMsg("Unable to parse JSON!");
+      setError(true);
+      return;
+    }
+
+    setFileContent(str);
+    console.log(str);
   };
 
   return (
@@ -63,6 +86,7 @@ export default function TokenCredentials() {
               id="uploadCredential"
               name="uploadCredential"
               type="file"
+              accept=".json"
               onChange={handleFile}
             />
             <Button color="secondary" variant="contained" component="span">
@@ -70,9 +94,9 @@ export default function TokenCredentials() {
             </Button>
           </label>
           <div className="form-alert">
-            {!error && (
+            {error && (
               <Alert variant="outlined" severity="error">
-                Invalid file format, please use a .json file!
+                {errorMsg}
               </Alert>
             )}
           </div>
