@@ -28,10 +28,9 @@ export default function TokenForm() {
       }}
       onSubmit={async (values) => {
         await sleep(3000);
-        console.log(values)
+        console.log(values);
       }}
     >
-      <TokenCredentials label="Credentials" />
       <TokenType
         validationSchema={object({
           tokenType: string().required("Must select a token type"),
@@ -40,6 +39,7 @@ export default function TokenForm() {
         label="Type"
       />
       <TokenScopes label="Scopes" />
+      <TokenCredentials label="Credentials" />
     </FormikStepper>
   );
 }
@@ -84,7 +84,7 @@ export function FormikStepper(props) {
               </Step>
             ))}
           </Stepper>
-          {cloneElement(currentChild, {setFieldValue})}
+          {cloneElement(currentChild, { setFieldValue })}
           <Grid container spacing={2}>
             {step > 0 ? (
               <Grid item>
