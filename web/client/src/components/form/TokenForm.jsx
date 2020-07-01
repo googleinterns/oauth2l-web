@@ -38,8 +38,14 @@ export default function TokenForm() {
         })}
         label="Type"
       />
-      <TokenScopes label="Scopes" />
-      <TokenCredentials label="Credentials" />
+      <TokenScopes validationSchema={object({
+          tokenScopes: string().required().min(1, "Must include scopes!"),
+        })}
+        label="Scopes" />
+      <TokenCredentials validationSchema={object({
+          tokenCredentials: string().required().min(1, "Must include credential!"),
+        })}
+        label="Credentials" />
     </FormikStepper>
   );
 }
@@ -53,7 +59,6 @@ export function FormikStepper(props) {
   const childrenArray = React.Children.toArray(children);
   const [step, setStep] = useState(0);
   const currentChild = childrenArray[step];
-  const [completed, setCompleted] = useState(false);
 
   const isLastStep = () => {
     return step === childrenArray.length - 1;
@@ -66,7 +71,6 @@ export function FormikStepper(props) {
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
-          setCompleted(true);
         } else {
           setStep((currStep) => currStep + 1);
         }
@@ -78,7 +82,7 @@ export function FormikStepper(props) {
             {childrenArray.map((child, index) => (
               <Step
                 key={child.props.label}
-                completed={step > index || completed}
+                completed={step > index || isLastStep()}
               >
                 <StepLabel>{child.props.label}</StepLabel>
               </Step>
