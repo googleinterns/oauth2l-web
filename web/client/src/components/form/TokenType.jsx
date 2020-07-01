@@ -2,12 +2,15 @@ import React from "react";
 import { RadioGroup } from "formik-material-ui";
 import { Field } from "formik";
 import { FormControlLabel, Radio, Typography, Box } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import "../../styles/form.css";
 
 /**
  * @return {div} containing form fields for adding token type and format
  */
-export default function TokenType() {
+export default function TokenType(props) {
+  const { errors } = props;
+
   return (
     <div>
       <Box className="form-box">
@@ -28,6 +31,13 @@ export default function TokenType() {
             id="type.jwt"
           />
         </Field>
+        <div className="form-alert">
+            {errors.tokenType && (
+              <Alert variant="outlined" severity="error">
+                {errors.tokenType}
+              </Alert>
+            )}
+          </div>
       </Box>
       <Box className="form-box">
         <div className="form-text">
@@ -65,6 +75,13 @@ export default function TokenType() {
             id="format.pretty"
           />
         </Field>
+        <div className="form-alert">
+            {errors.tokenFormat && (
+              <Alert variant="outlined" severity="error">
+                {errors.tokenFormat}
+              </Alert>
+            )}
+          </div>
       </Box>
     </div>
   );

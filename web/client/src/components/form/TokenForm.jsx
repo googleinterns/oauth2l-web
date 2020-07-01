@@ -18,6 +18,8 @@ const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
  * @return {FormikStepper} component using Formik for creating a token
  */
 export default function TokenForm() {
+  const [secondLabel, setLabel] = useState("")
+
   return (
     <FormikStepper
       initialValues={{
@@ -30,6 +32,14 @@ export default function TokenForm() {
         await sleep(3000);
         console.log(values);
       }}
+      setSecondLabel={(value) => {
+        if (value === "OAuth") {
+          setLabel("Scopes");
+        } else if (value === "JWT") {
+          setLabel("Audience")
+        }
+        
+      }}
     >
       <TokenType
         validationSchema={object({
@@ -39,11 +49,11 @@ export default function TokenForm() {
         label="Type"
       />
       <TokenScopes validationSchema={object({
-          tokenScopes: string().required().min(1, "Must include scopes!"),
+          tokenScopes: string().required("Must include scopes").min(1, "Must include scopes"),
         })}
-        label="Scopes" />
+        label={secondLabel} />
       <TokenCredentials validationSchema={object({
-          tokenCredentials: string().required().min(1, "Must include credential!"),
+          tokenCredentials: string().required("Must include credential!").min(1, "Must include credential!"),
         })}
         label="Credentials" />
     </FormikStepper>
@@ -72,11 +82,14 @@ export function FormikStepper(props) {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
         } else {
+          if (step === 0) {
+            props.setSecondLabel(values.tokenType);
+          }
           setStep((currStep) => currStep + 1);
         }
       }}
     >
-      {({ isSubmitting, setFieldValue }) => (
+      {({ isSubmitting, setFieldValue, errors }) => (
         <Form>
           <Stepper alternativeLabel activeStep={step}>
             {childrenArray.map((child, index) => (
@@ -88,7 +101,7 @@ export function FormikStepper(props) {
               </Step>
             ))}
           </Stepper>
-          {cloneElement(currentChild, { setFieldValue })}
+          {cloneElement(currentChild, { setFieldValue, errors })}
           <Grid container spacing={2}>
             {step > 0 ? (
               <Grid item>
