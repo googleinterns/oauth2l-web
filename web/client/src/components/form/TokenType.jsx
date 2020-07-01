@@ -9,8 +9,8 @@ import "../../styles/form.css";
  * @return {div} containing form fields for adding token type and format
  */
 export default function TokenType(props) {
-  const { errors } = props;
-
+  const { errors, touched } = props;
+  
   return (
     <div>
       <Box className="form-box">
@@ -32,7 +32,7 @@ export default function TokenType(props) {
           />
         </Field>
         <div className="form-alert">
-            {errors.tokenType && (
+            {errors.tokenType && touched.tokenType && (
               <Alert variant="outlined" severity="error">
                 {errors.tokenType}
               </Alert>
@@ -76,7 +76,7 @@ export default function TokenType(props) {
           />
         </Field>
         <div className="form-alert">
-            {errors.tokenFormat && (
+            {errors.tokenFormat && touched.tokenFormat && (
               <Alert variant="outlined" severity="error">
                 {errors.tokenFormat}
               </Alert>
