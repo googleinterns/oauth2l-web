@@ -18,7 +18,7 @@ const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
  * @return {FormikStepper} component using Formik for creating a token
  */
 export default function TokenForm() {
-  const [secondLabel, setLabel] = useState("")
+  const [secondLabel, setLabel] = useState("");
 
   return (
     <FormikStepper
@@ -36,9 +36,8 @@ export default function TokenForm() {
         if (value === "OAuth") {
           setLabel("Scopes");
         } else if (value === "JWT") {
-          setLabel("Audience")
+          setLabel("Audience");
         }
-        
       }}
     >
       <TokenType
@@ -48,14 +47,22 @@ export default function TokenForm() {
         })}
         label="Type"
       />
-      <TokenScopes validationSchema={object({
-          tokenScopes: string().required(`Must include ${secondLabel.toLowerCase()}`),
+      <TokenScopes
+        validationSchema={object({
+          tokenScopes: string().required(
+            `Must include ${secondLabel.toLowerCase()}`
+          ),
         })}
-        label={secondLabel} />
-      <TokenCredentials validationSchema={object({
-          tokenCredentials: string().required("Must include credential!").min(1, "Must include credential!"),
+        label={secondLabel}
+      />
+      <TokenCredentials
+        validationSchema={object({
+          tokenCredentials: string()
+            .required("Must include credential!")
+            .min(1, "Must include credential!"),
         })}
-        label="Credentials" />
+        label="Credentials"
+      />
     </FormikStepper>
   );
 }

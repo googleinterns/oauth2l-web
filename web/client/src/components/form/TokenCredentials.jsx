@@ -29,20 +29,20 @@ export default function TokenCredentials(props) {
   };
 
   const handleFile = (e) => {
-      if (e.currentTarget.files.length > 0) {
-        setSuccess(false);
-        const wrongFormat = e.currentTarget.files[0].type !== "application/json";
-    
-        if (wrongFormat) {
-          setErrorMsg("Invalid file format, please use a .json file!");
-          setError(true);
-        } else {
-          setError(false);
-          readFile(e.currentTarget.files[0]);
-        }
-    
-        console.log(e.currentTarget.files[0]);
+    if (e.currentTarget.files.length > 0) {
+      setSuccess(false);
+      const wrongFormat = e.currentTarget.files[0].type !== "application/json";
+
+      if (wrongFormat) {
+        setErrorMsg("Invalid file format, please use a .json file!");
+        setError(true);
+      } else {
+        setError(false);
+        readFile(e.currentTarget.files[0]);
       }
+
+      console.log(e.currentTarget.files[0]);
+    }
   };
 
   const readFile = (file) => {
@@ -57,7 +57,7 @@ export default function TokenCredentials(props) {
     try {
       JSON.parse(str);
     } catch (error) {
-        setSuccess(false);
+      setSuccess(false);
       setErrorMsg("Unable to parse JSON!");
       setError(true);
       return;
@@ -111,22 +111,24 @@ export default function TokenCredentials(props) {
           color="secondary"
           label="Paste credential in JSON format"
           name="tokenCredentials"
-          onKeyUp={(e) => {validateJSON(e.target.value)}}
+          onKeyUp={(e) => {
+            validateJSON(e.target.value);
+          }}
           component={TextField}
         />
       ) : null}
       <div className="form-alert">
-            {error && (
-              <Alert variant="outlined" severity="error">
-                {errorMsg}
-              </Alert>
-            )}
-            {success && (
-              <Alert variant="outlined" severity="success">
-                Credential ready!
-              </Alert>
-            )}
-          </div>
+        {error && (
+          <Alert variant="outlined" severity="error">
+            {errorMsg}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="outlined" severity="success">
+            Credential ready!
+          </Alert>
+        )}
+      </div>
     </Box>
   );
 }

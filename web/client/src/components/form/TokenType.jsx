@@ -10,7 +10,7 @@ import "../../styles/form.css";
  */
 export default function TokenType(props) {
   const { errors, touched } = props;
-  
+
   return (
     <div>
       <Box className="form-box">
@@ -32,12 +32,12 @@ export default function TokenType(props) {
           />
         </Field>
         <div className="form-alert">
-            {errors.tokenType && touched.tokenType && (
-              <Alert variant="outlined" severity="error">
-                {errors.tokenType}
-              </Alert>
-            )}
-          </div>
+          {errors.tokenType && touched.tokenType && (
+            <Alert variant="outlined" severity="error">
+              {errors.tokenType}
+            </Alert>
+          )}
+        </div>
       </Box>
       <Box className="form-box">
         <div className="form-text">
@@ -76,12 +76,12 @@ export default function TokenType(props) {
           />
         </Field>
         <div className="form-alert">
-            {errors.tokenFormat && touched.tokenFormat && (
-              <Alert variant="outlined" severity="error">
-                {errors.tokenFormat}
-              </Alert>
-            )}
-          </div>
+          {errors.tokenFormat && touched.tokenFormat && (
+            <Alert variant="outlined" severity="error">
+              {errors.tokenFormat}
+            </Alert>
+          )}
+        </div>
       </Box>
     </div>
   );
