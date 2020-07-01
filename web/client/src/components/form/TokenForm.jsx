@@ -8,7 +8,7 @@ import {
   Grid,
   CircularProgress,
 } from "@material-ui/core";
-import { TokenType, TokenScopes } from "../";
+import { TokenType, TokenScopes, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
 
@@ -29,6 +29,7 @@ export default function TokenForm() {
         await sleep(3000);
       }}
     >
+      <TokenCredentials label="Credentials" />
       <TokenType
         validationSchema={object({
           tokenType: string().required("Must select a token type"),
