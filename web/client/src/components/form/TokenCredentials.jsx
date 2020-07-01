@@ -15,15 +15,17 @@ import "../../styles/form.css";
 /**
  * @return {Box} containing form fields for adding scopes
  */
-export default function TokenCredentials() {
+export default function TokenCredentials(props) {
   const [credFormat, setCredFormat] = useState("file");
-  const [fileContent, setFileContent] = useState("");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [success, setSuccess] = useState(false);
 
+  const { setFieldValue } = props;
+
   const handleCredFormat = (e) => {
-    setCredFormat(e.currentTarget.value);
+      const format = e.currentTarget.value;
+    setCredFormat(format);
   };
 
   const handleFile = (e) => {
@@ -59,8 +61,7 @@ export default function TokenCredentials() {
     }
 
     setSuccess(true);
-    setFileContent(str);
-    console.log(str);
+    setFieldValue("tokenCredentials", str);
   };
 
   return (
@@ -114,10 +115,12 @@ export default function TokenCredentials() {
           multiline
           rows={15}
           fullWidth
+          error
           variant="outlined"
           color="secondary"
           label="Paste credential in JSON format"
           name="tokenCredentials"
+          onChange={validateJSON}
           component={TextField}
         />
       ) : null}

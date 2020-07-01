@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, cloneElement } from "react";
 import { Formik, Form } from "formik";
 import {
   Button,
@@ -24,9 +24,11 @@ export default function TokenForm() {
         tokenType: "",
         tokenFormat: "",
         tokenScopes: "",
+        tokenCredentials: "",
       }}
-      onSubmit={async () => {
+      onSubmit={async (values) => {
         await sleep(3000);
+        console.log(values)
       }}
     >
       <TokenCredentials label="Credentials" />
@@ -70,7 +72,7 @@ export function FormikStepper(props) {
         }
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, setFieldValue }) => (
         <Form>
           <Stepper alternativeLabel activeStep={step}>
             {childrenArray.map((child, index) => (
@@ -82,7 +84,7 @@ export function FormikStepper(props) {
               </Step>
             ))}
           </Stepper>
-          {currentChild}
+          {cloneElement(currentChild, {setFieldValue})}
           <Grid container spacing={2}>
             {step > 0 ? (
               <Grid item>
