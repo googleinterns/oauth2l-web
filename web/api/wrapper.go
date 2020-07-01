@@ -50,7 +50,7 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 
 	// Convert byteBuffer to string and remove newline character
 	output = strings.TrimSuffix(string(byteBuffer), "\n")
-	
+
 	return output, err
 }
 
@@ -64,7 +64,7 @@ func combinedArgs(wc WrapperCommand) (combinedArgs []string, err error) {
 
 	for flag, value := range wc.Args {
 		combinedArgs = append(combinedArgs, flag)
-		
+
 		// Assert args are of accepted types
 		switch value := value.(type) {
 		case []string:
