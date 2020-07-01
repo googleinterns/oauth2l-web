@@ -20,12 +20,14 @@ export default function TokenCredentials() {
   const [fileContent, setFileContent] = useState("");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleCredFormat = (e) => {
     setCredFormat(e.currentTarget.value);
   };
 
   const handleFile = (e) => {
+    setSuccess(false);
     const wrongFormat = e.currentTarget.files[0].type !== "application/json";
 
     if (wrongFormat) {
@@ -56,6 +58,7 @@ export default function TokenCredentials() {
       return;
     }
 
+    setSuccess(true);
     setFileContent(str);
     console.log(str);
   };
@@ -97,6 +100,11 @@ export default function TokenCredentials() {
             {error && (
               <Alert variant="outlined" severity="error">
                 {errorMsg}
+              </Alert>
+            )}
+            {success && (
+              <Alert variant="outlined" severity="success">
+                Credential ready!
               </Alert>
             )}
           </div>
