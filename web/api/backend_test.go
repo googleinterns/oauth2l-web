@@ -25,7 +25,7 @@ func TestHandlerAuthenticateCredentialsTokenValid(t *testing.T) {
     "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVcGxvYWRDcmVkZW50aWFscyI6eyJxdW90YV9wcm9qZWN0X2lkIjoiZGVsYXlzLW9yLXRyYWZmaS0xNTY5MTMxMTUzNzA0IiwicmVmcmVzaF90b2tlbiI6IjEvLzBkRlN4eGk0Tk9UbDJDZ1lJQVJBQUdBMFNOd0YtTDlJcmE1WVRubkZlcjFHQ1pCVG9Ha3dtVk1Bb3VuR2FpX3g0Q2dId01BRmdGTkJzUFNLNWhCd3hmcEduODh1M3JvUHJSY1EiLCJ0eXBlIjoiYXV0aG9yaXplZF91c2VyIn0sImV4cCI6OTIyMzM3MTk3NDcxOTE3OTAwN30.qV78DszW3-c9g3LdT8uxOkgeufHg51QUhB2FjG2HmBY"
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func TestHandlerUseTokenWithoutToken(t *testing.T) {
     "usetoken":true
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -95,7 +95,7 @@ func TestHandlerUseTokenWithEmptyToken(t *testing.T) {
     "token":""
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -133,7 +133,7 @@ func TestHandlerUseTokenWithExpiredToken(t *testing.T) {
     "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVcGxvYWRDcmVkZW50aWFscyI6eyJxdW90YV9wcm9qZWN0X2lkIjoiZGVsYXlzLW9yLXRyYWZmaS0xNTY5MTMxMTUzNzA0IiwicmVmcmVzaF90b2tlbiI6IjEvLzBkRlN4eGk0Tk9UbDJDZ1lJQVJBQUdBMFNOd0YtTDlJcmE1WVRubkZlcjFHQ1pCVG9Ha3dtVk1Bb3VuR2FpX3g0Q2dId01BRmdGTkJzUFNLNWhCd3hmcEduODh1M3JvUHJSY1EiLCJ0eXBlIjoiYXV0aG9yaXplZF91c2VyIn0sImV4cCI6MTU5MzQ1OTk2MH0.jOHLb8x5G0aFyEo9DlNRfOddqPznxQB72f634KDTH9s"
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -171,7 +171,7 @@ func TestHandlerUseTokenWithTokenSignatureInvalid(t *testing.T) {
     "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVcGxvYWRDcmVkZW50aWFscyI6eyJxdW90YV9wcm9qZWN0X2lkIjoiZGVsYXlzLW9yLXRyYWZmaS0xNTY5MTMxMTUzNzA0IiwicmVmcmVzaF90b2tlbiI6IjEvLzBkRlN4eGk0Tk9UbDJDZ1lJQVJBQUdBMFNOd0YtTDlJcmE1WVRubkZlcjFHQ1pCVG9Ha3dtVk1Bb3VuR2FpX3g0Q2dId01BRmdGTkJzUFNLNWhCd3hmcEduODh1M3JvUHJSY1EiLCJ0eXBlIjoiYXV0aG9yaXplZF91c2VyIn0sImV4cCI6MTU5MzQ1OTk2MH0.jOHLb8x5G0aFyEo9DlNRfOddqPznxQB72f634KDTI9s"
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,7 +206,7 @@ func TestHandlerCacheTokenWithNoCredentials(t *testing.T) {
     "usetoken":false
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -239,7 +239,7 @@ func TestHandlerCacheTokenEmptyCredentials(t *testing.T) {
     "usetoken":false
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -279,7 +279,7 @@ func TestHandlerCreateCredentialsToken(t *testing.T) {
     "usetoken":false
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -308,7 +308,7 @@ func TestHandlerCreateCredentialsTokenWithNoCredentials(t *testing.T) {
     "usetoken":false
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -338,7 +338,7 @@ func TestHandlerCreateCredentialsTokenWithEmptyCredentials(t *testing.T) {
     "usetoken":false
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -372,7 +372,7 @@ func TestHandlerNoCreateCredentialsTokenNoUseToken(t *testing.T) {
     "usetoken":false
 	}`)
 
-	req, err := http.NewRequest("GET", "/", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
 	}
