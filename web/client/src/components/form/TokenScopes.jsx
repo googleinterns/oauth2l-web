@@ -7,17 +7,19 @@ import "../../styles/form.css";
 /**
  * @return {Box} containing form fields for adding scopes
  */
-export default function TokenScopes() {
+export default function TokenScopes(props) {
+  const { label } = props;
+
   return (
     <Box className="form-box">
       <div className="form-text">
-        <Typography variant="h5">Enter scopes</Typography>
+        <Typography variant="h5">Enter {label.toLowerCase()}</Typography>
       </div>
       <Field
         multiline
         fullWidth
         variant="outlined"
-        label="Scopes"
+        label={label}
         name="tokenScopes"
         component={TextField}
       />

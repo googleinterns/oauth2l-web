@@ -49,7 +49,7 @@ export default function TokenForm() {
         label="Type"
       />
       <TokenScopes validationSchema={object({
-          tokenScopes: string().required("Must include scopes").min(1, "Must include scopes"),
+          tokenScopes: string().required(`Must include ${secondLabel.toLowerCase()}`),
         })}
         label={secondLabel} />
       <TokenCredentials validationSchema={object({
@@ -89,7 +89,7 @@ export function FormikStepper(props) {
         }
       }}
     >
-      {({ isSubmitting, setFieldValue, errors }) => (
+      {({ isSubmitting, setFieldValue, errors, touched }) => (
         <Form>
           <Stepper alternativeLabel activeStep={step}>
             {childrenArray.map((child, index) => (
@@ -101,7 +101,7 @@ export function FormikStepper(props) {
               </Step>
             ))}
           </Stepper>
-          {cloneElement(currentChild, { setFieldValue, errors })}
+          {cloneElement(currentChild, { setFieldValue, errors, touched })}
           <Grid container spacing={2}>
             {step > 0 ? (
               <Grid item>
