@@ -9,18 +9,19 @@ import "../../styles/form.css";
 import ValidateToken from "./ValidateToken";
 
 /**
- * @return {div} containing section for the option of using a token
+ * @return {div} containing section for the option of using a token.
  */
 export default function UseToken() {
-  const [isPreviewShown, setPreviewShown] = useState(false);
+  const [useToken, setUseToken] = useState(false);
 
-  const handlePreview = (e) => {
+  // Handler to allow users to input a token if use token is toggled.
+  const showTokenInput = (e) => {
     e.preventDefault();
 
-    if (isPreviewShown) {
-      setPreviewShown(false); // Here we change state
+    if (useToken) {
+      setUseToken(false);
     } else {
-      setPreviewShown(true); // Here we change state
+      setUseToken(true);
     }
   };
 
@@ -30,13 +31,14 @@ export default function UseToken() {
         <Typography variant="h4">Submit Your Own Token</Typography>
       </div>
       <div>
+        {/* Toggle for users to indicate whether they want to use a token. */}
         <FormGroup>
           <FormControlLabel
-            control={<Switch onChange={handlePreview} color="primary" />}
+            control={<Switch onChange={showTokenInput} color="primary" />}
             label="Use Token"
           />
         </FormGroup>
-        {isPreviewShown && <ValidateToken styele={{ marginTop: "1rem" }} />}
+        {useToken && <ValidateToken style={{ marginTop: "1rem" }} />}
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ import "../../styles/validation.css";
 import InfoIcon from "@material-ui/icons/Info";
 
 /**
- * @return {Formik} containing form fields for addding/validating token
+ * @return {Formik} containing form fields for addding/validating token.
  */
 export default function ValidateToken() {
   const [valid, setValid] = useState(false);
@@ -25,13 +25,13 @@ export default function ValidateToken() {
   const [info, setInfo] = useState("");
   const [wantInfo, setWantInfo] = useState(false);
   const [errMessage, setErrMessage] = useState("");
-  const [credsToken, setCredsToken] = useState("");
+  const [credentialsToken, setCredentialsToken] = useState("");
 
   /**
    *
-   * @param {event} e handler for when the token info button is clicked.
+   * @param {event} e handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
    */
-  function handleClick(e) {
+  function getTokenInfo(e) {
     e.preventDefault();
     setWantInfo(true);
     const requestOptions = {
@@ -40,7 +40,7 @@ export default function ValidateToken() {
       body: JSON.stringify({
         commandtype: "info",
         args: {
-          token: credsToken,
+          token: credentialsToken,
         },
         credential: {
           quota_project_id: "delays-or-traffi-1569131153704",
@@ -50,7 +50,7 @@ export default function ValidateToken() {
         },
         cachetoken: false,
         usetoken: true,
-        token: credsToken,
+        token: credentialsToken,
       }),
     };
     fetch("http://localhost:8080/", requestOptions)
@@ -69,8 +69,11 @@ export default function ValidateToken() {
       initialValues={{ token: "" }}
       onSubmit={async (values) => {
         await new Promise((resolve) => setTimeout(resolve, 500));
+        // Indicated the a token was inputted and is ready to be submitted.
         setCompleted(true);
-        setCredsToken(values["token"]);
+        // Sets the credentialsToken to be the inputted token so that it can be used in the future is user wants the information of the token.
+        setCredentialsToken(values["token"]);
+        // JSON body for the request
         const requestOptions = {
           method: "POST",
           body: JSON.stringify({
@@ -89,14 +92,17 @@ export default function ValidateToken() {
             token: values["token"],
           }),
         };
+        // Sending the Request
         fetch("http://localhost:8080/", requestOptions).then(
           async (response) => {
             await response;
+            // Indicating whether or not the token was valid of not.
             if (!response.ok) {
               setValid(false);
             } else {
               setValid(true);
             }
+            // Outputting error message if there is an error.
             response.text().then(function (data) {
               if (response.stats !== 200) {
                 setErrMessage(data);
@@ -105,6 +111,7 @@ export default function ValidateToken() {
           }
         );
       }}
+      // Schema that prevents user from submitting if a token is not inputted.
       validationSchema={object({
         token: string().required("Must have a token"),
       })}
@@ -116,13 +123,13 @@ export default function ValidateToken() {
             alignItems="flex-start"
             justify="flex-end"
             direction="row"
-            // s
           >
+            {/* Indicated whether the token is valid or not. */}
             {completed && valid && (
               <div>
                 {" "}
                 <CheckCircleIcon color="primary" />
-                <IconButton className="button-info" onClick={handleClick}>
+                <IconButton className="button-info" onClick={getTokenInfo}>
                   <InfoIcon />
                 </IconButton>
               </div>
@@ -134,6 +141,7 @@ export default function ValidateToken() {
             )}
           </Grid>
           <div>
+            {/* Input box where users will input the token to be used. */}
             <Form>
               <Box className="form-box">
                 <TextField
@@ -164,6 +172,7 @@ export default function ValidateToken() {
               </Grid>
             </Form>
           </div>
+          {/* Box where token info will appear if users chooses to display it, */}
           {wantInfo && (
             <div className="validation-message-div">
               <Box
@@ -182,6 +191,7 @@ export default function ValidateToken() {
               </Box>
             </div>
           )}
+          {/* Box where error will appear if token cannot be validated, */}
           {!valid && completed && (
             <div className="validation-message-div">
               <Box
