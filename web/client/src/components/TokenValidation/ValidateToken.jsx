@@ -42,6 +42,12 @@ export default function ValidateToken() {
         args: {
           token: credsToken,
         },
+        credential: {
+          quota_project_id: "delays-or-traffi-1569131153704",
+          refresh_token:
+            "1//0dFSxxi4NOTl2CgYIARAAGA0SNwF-L9Ira5YTnnFer1GCZBToGkwmVMAounGai_x4CgHwMAFgFNBsPSK5hBwxfpGn88u3roPrRcQ",
+          type: "authorized_user",
+        },
         cachetoken: false,
         usetoken: true,
         token: credsToken,
@@ -50,7 +56,9 @@ export default function ValidateToken() {
     fetch("http://localhost:8080/", requestOptions)
       .then(async (response) => {
         await response;
-        setInfo(response);
+        response.text().then(function (data) {
+          setInfo(data);
+        });
       })
       .catch((error) => {
         setInfo(error.toString());
@@ -65,29 +73,37 @@ export default function ValidateToken() {
         setCredsToken(values["token"]);
         const requestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             commandtype: "fetch",
             args: {
               scope: ["cloud-platform", "userinfo.email"],
+            },
+            credential: {
+              quota_project_id: "delays-or-traffi-1569131153704",
+              refresh_token:
+                "1//0dFSxxi4NOTl2CgYIARAAGA0SNwF-L9Ira5YTnnFer1GCZBToGkwmVMAounGai_x4CgHwMAFgFNBsPSK5hBwxfpGn88u3roPrRcQ",
+              type: "authorized_user",
             },
             cachetoken: false,
             usetoken: true,
             token: values["token"],
           }),
         };
-        fetch("http://localhost:8080/", requestOptions)
-          .then(async (response) => {
+        fetch("http://localhost:8080/", requestOptions).then(
+          async (response) => {
             await response;
             if (!response.ok) {
-              setValid(true);
+              setValid(false);
             } else {
               setValid(true);
             }
-          })
-          .catch((error) => {
-            setErrMessage(error.toString());
-          });
+            response.text().then(function (data) {
+              if (response.stats !== 200) {
+                setErrMessage(data);
+              }
+            });
+          }
+        );
       }}
       validationSchema={object({
         token: string().required("Must have a token"),
