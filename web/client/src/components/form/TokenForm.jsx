@@ -8,7 +8,7 @@ import {
   Grid,
   CircularProgress,
 } from "@material-ui/core";
-import { TokenType, TokenScopes, TokenCredentials } from "../";
+import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
 
@@ -19,6 +19,7 @@ const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
  */
 export default function TokenForm() {
   const [secondLabel, setLabel] = useState("");
+  const [tokenType, setTokenType] = useState("");
 
   return (
     <FormikStepper
@@ -26,6 +27,7 @@ export default function TokenForm() {
         tokenType: "",
         tokenFormat: "",
         tokenScopes: "",
+        tokenAudience: "",
         tokenCredentials: "",
       }}
       onSubmit={async (values) => {
@@ -33,6 +35,7 @@ export default function TokenForm() {
         console.log(values);
       }}
       setSecondLabel={(value) => {
+        setTokenType(value);
         if (value === "OAuth") {
           setLabel("Scopes");
         } else if (value === "JWT") {
@@ -47,11 +50,15 @@ export default function TokenForm() {
         })}
         label="Type"
       />
-      <TokenScopes
+      <TokenAccess
         validationSchema={object({
-          tokenScopes: string().required(
-            `Must include ${secondLabel.toLowerCase()}`
-          ),
+          ...(tokenType === "OAuth" ? 
+          {tokenScopes: string().required(
+            `Must include scopes}`
+          )} : tokenType === "JWT" ? 
+          {tokenAudience: string().required(
+            `Must include audience}`
+          )} : {})
         })}
         label={secondLabel}
       />

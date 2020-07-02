@@ -7,7 +7,7 @@ import "../../styles/form.css";
 /**
  * @return {Box} containing form fields for adding scopes
  */
-export default function TokenScopes(props) {
+export default function TokenAccess(props) {
   const { label } = props;
 
   return (
@@ -20,7 +20,7 @@ export default function TokenScopes(props) {
         fullWidth
         variant="outlined"
         label={label}
-        name="tokenScopes"
+        name={`token${label}`}
         component={TextField}
       />
     </Box>
