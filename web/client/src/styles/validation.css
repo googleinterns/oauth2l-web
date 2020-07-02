@@ -6,16 +6,10 @@
   margin-bottom: 1rem;
 }
 
-.validation-message {
-  margin-top: 1rem;
-  margin-left: 1rem;
-}
-
 .validation-message-div {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
-.validation-message-box {
-  width: "auto";
-  height: 10rem;
+.token-validation-component {
+  margin-top: 1rem;
 }

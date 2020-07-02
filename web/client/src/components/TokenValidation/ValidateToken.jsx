@@ -7,14 +7,13 @@ import {
   Button,
   CircularProgress,
   IconButton,
-  Typography,
 } from "@material-ui/core";
 import { object, string } from "yup";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
+import InfoIcon from "@material-ui/icons/Info";
 import "../../styles/form.css";
 import "../../styles/validation.css";
-import InfoIcon from "@material-ui/icons/Info";
 
 /**
  * @return {Formik} containing form fields for addding/validating token.
@@ -22,10 +21,10 @@ import InfoIcon from "@material-ui/icons/Info";
 export default function ValidateToken() {
   const [valid, setValid] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [info, setInfo] = useState("");
-  const [wantInfo, setWantInfo] = useState(false);
-  const [errMessage, setErrMessage] = useState("");
   const [credentialsToken, setCredentialsToken] = useState("");
+  const [wantInfo, setWantInfo] = useState(false);
+  const [info, setInfo] = useState("");
+  const [errMessage, setErrMessage] = useState("");
 
   /**
    *
@@ -93,8 +92,8 @@ export default function ValidateToken() {
           }),
         };
         // Sending the Request
-        fetch("http://localhost:8080/", requestOptions).then(
-          async (response) => {
+        fetch("http://localhost:8080/", requestOptions)
+          .then(async (response) => {
             await response;
             // Indicating whether or not the token was valid of not.
             if (!response.ok) {
@@ -108,8 +107,10 @@ export default function ValidateToken() {
                 setErrMessage(data);
               }
             });
-          }
-        );
+          })
+          .catch((error) => {
+            setErrMessage(error.toString());
+          });
       }}
       // Schema that prevents user from submitting if a token is not inputted.
       validationSchema={object({
@@ -175,38 +176,36 @@ export default function ValidateToken() {
           {/* Box where token info will appear if users chooses to display it, */}
           {wantInfo && (
             <div className="validation-message-div">
-              <Box
-                className="validation-message-box"
-                border={1}
-                bgcolor="background.paper"
-                m="1"
-                borderColor="text.secondary"
-              >
-                {" "}
-                <div className="validation-message">
-                  <Typography variant="h5" gutterBottom>
-                    {info}
-                  </Typography>
-                </div>
-              </Box>
+              <form noValidate autoComplete="off">
+                <TextField
+                  multiline
+                  fullWidth
+                  variant="outlined"
+                  label="Info"
+                  value={info}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </form>
             </div>
           )}
-          {/* Box where error will appear if token cannot be validated, */}
+          {/* TextField where error will appear if token cannot be validated, */}
           {!valid && completed && (
             <div className="validation-message-div">
-              <Box
-                className="validation-message-box"
-                border={1}
-                bgcolor="background.paper"
-                m="1"
-                borderColor="text.disabled"
-              >
-                <div className="validation-message">
-                  <Typography variant="h5" gutterBottom>
-                    {errMessage}
-                  </Typography>
-                </div>
-              </Box>
+              <form noValidate autoComplete="off">
+                <TextField
+                  multiline
+                  fullWidth
+                  variant="outlined"
+                  label="Error"
+                  value={errMessage}
+                  error
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </form>
             </div>
           )}
         </div>

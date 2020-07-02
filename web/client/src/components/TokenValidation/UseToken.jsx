@@ -5,8 +5,9 @@ import {
   FormControlLabel,
   Switch,
 } from "@material-ui/core";
-import "../../styles/form.css";
 import ValidateToken from "./ValidateToken";
+import "../../styles/form.css";
+import "../../styles/validation.css";
 
 /**
  * @return {div} containing section for the option of using a token.
@@ -16,8 +17,6 @@ export default function UseToken() {
 
   // Handler to allow users to input a token if use token is toggled.
   const showTokenInput = (e) => {
-    e.preventDefault();
-
     if (useToken) {
       setUseToken(false);
     } else {
@@ -38,7 +37,7 @@ export default function UseToken() {
             label="Use Token"
           />
         </FormGroup>
-        {useToken && <ValidateToken style={{ marginTop: "1rem" }} />}
+        {useToken && <ValidateToken className="token-validation-component" />}
       </div>
     </div>
   );
