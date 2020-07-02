@@ -3,9 +3,11 @@ import { RadioGroup } from "formik-material-ui";
 import { Field } from "formik";
 import { FormControlLabel, Radio, Typography, Box } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import PropTypes from "prop-types";
 import "../../styles/form.css";
 
 /**
+ * @param {Object} props contains validation errors and touched values representing if a field has been changed
  * @return {div} containing form fields for adding token type and format
  */
 export default function TokenType(props) {
@@ -86,3 +88,8 @@ export default function TokenType(props) {
     </div>
   );
 }
+
+TokenType.propTypes = {
+  errors: PropTypes.object,
+  touched: PropTypes.object,
+};

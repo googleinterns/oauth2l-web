@@ -10,9 +10,11 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { TextField } from "formik-material-ui";
+import PropTypes from "prop-types";
 import "../../styles/form.css";
 
 /**
+ * @param {Object} props contains setFieldValue function for updating credential field manually
  * @return {Box} containing form fields for adding scopes
  */
 export default function TokenCredentials(props) {
@@ -40,8 +42,6 @@ export default function TokenCredentials(props) {
         setError(false);
         readFile(e.currentTarget.files[0]);
       }
-
-      console.log(e.currentTarget.files[0]);
     }
   };
 
@@ -132,3 +132,7 @@ export default function TokenCredentials(props) {
     </Box>
   );
 }
+
+TokenCredentials.propTypes = {
+  setFieldValue: PropTypes.func,
+};

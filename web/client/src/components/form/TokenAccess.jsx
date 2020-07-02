@@ -2,9 +2,11 @@ import React from "react";
 import { Field } from "formik";
 import { Typography, Box } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
+import PropTypes from "prop-types";
 import "../../styles/form.css";
 
 /**
+ * @param {Object} props contains field label to set form label
  * @return {Box} containing form fields for adding scopes
  */
 export default function TokenAccess(props) {
@@ -26,3 +28,7 @@ export default function TokenAccess(props) {
     </Box>
   );
 }
+
+TokenAccess.propTypes = {
+  label: PropTypes.string,
+};

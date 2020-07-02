@@ -30,9 +30,8 @@ export default function TokenForm() {
         tokenAudience: "",
         tokenCredentials: "",
       }}
-      onSubmit={async (values) => {
+      onSubmit={async () => {
         await sleep(3000);
-        console.log(values);
       }}
       setSecondLabel={(value) => {
         setTokenType(value);
@@ -52,13 +51,11 @@ export default function TokenForm() {
       />
       <TokenAccess
         validationSchema={object({
-          ...(tokenType === "OAuth" ? 
-          {tokenScopes: string().required(
-            `Must include scopes}`
-          )} : tokenType === "JWT" ? 
-          {tokenAudience: string().required(
-            `Must include audience}`
-          )} : {})
+          ...(tokenType === "OAuth"
+            ? { tokenScopes: string().required(`Must include scopes}`) }
+            : tokenType === "JWT"
+            ? { tokenAudience: string().required(`Must include audience}`) }
+            : {}),
         })}
         label={secondLabel}
       />
@@ -156,4 +153,5 @@ export function FormikStepper(props) {
 FormikStepper.propTypes = {
   children: PropTypes.node,
   onSubmit: PropTypes.func,
+  setSecondLabel: PropTypes.func,
 };
