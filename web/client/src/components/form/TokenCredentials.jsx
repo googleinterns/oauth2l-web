@@ -26,8 +26,7 @@ export default function TokenCredentials(props) {
   const { setFieldValue } = props;
 
   const handleCredFormat = (e) => {
-    const format = e.currentTarget.value;
-    setCredFormat(format);
+    setCredFormat(e.currentTarget.value);
   };
 
   const handleFile = (e) => {
@@ -36,7 +35,7 @@ export default function TokenCredentials(props) {
       const wrongFormat = e.currentTarget.files[0].type !== "application/json";
 
       if (wrongFormat) {
-        setErrorMsg("Invalid file format, please use a .json file!");
+        setErrorMsg("Invalid file format, please use a .json file");
         setError(true);
       } else {
         setError(false);
@@ -58,7 +57,7 @@ export default function TokenCredentials(props) {
       JSON.parse(str);
     } catch (error) {
       setSuccess(false);
-      setErrorMsg("Unable to parse JSON!");
+      setErrorMsg("Unable to parse JSON");
       setError(true);
       return;
     }
