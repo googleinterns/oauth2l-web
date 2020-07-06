@@ -1,6 +1,6 @@
 import React from "react";
 import MaterialUI from "./components/layout/Material";
-import { TokenForm, UseToken } from "./components";
+import { TokenForm, ValidateToken } from "./components";
 import { Grid } from "@material-ui/core";
 
 /**
@@ -18,7 +18,7 @@ function App() {
         <Grid container direction="column">
           <Grid item xs>
             <MaterialUI paperClass="paper-top">
-              <UseToken />
+              <ValidateToken />
             </MaterialUI>
           </Grid>
           <Grid item xs>
