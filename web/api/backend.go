@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"reflect"
 	"strings"
 	"time"
 
@@ -118,7 +117,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
-	if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
+	if (requestBody.UseToken && len(requestBody.Token) == 0) || (len(requestBody.Credential) == 0) {
 		w.WriteHeader(http.StatusBadRequest)
 		if requestBody.UseToken {
 			io.WriteString(w, "missing token file")
@@ -145,18 +144,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Putting the credentials file into a json format so to match with the format of the wrapper.
 	credsJSON, _ := json.Marshal(creds)
-	credsString := map[string]interface{}{
-		"credential": string(credsJSON),
-	}
-	if reflect.DeepEqual(requestBody.CommandType, "test") || reflect.DeepEqual(requestBody.CommandType, "info") {
-		credsString = nil
-	}
 
 	// WrapperCommand object that will inputted into the wrapper.
 	cmd := WrapperCommand{
 		CommandType: requestBody.CommandType,
 		Args:        requestBody.Args,
-		Credential:  credsString,
+		Credential: map[string]interface{}{
+			"credential": string(credsJSON),
+		},
 	}
 	// Getting the response from the OAuth2l.
 	CMDresponse := WrapperExecutor(cmd)
