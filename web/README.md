@@ -30,7 +30,7 @@ The requirements needed to run the web application are:
 First clone the repository using the following command:
 
 ```bash
-$ git clone https://github.com/google/oauth2l
+$ git clone https://github.com/googleinterns/oauth2l-web
 ```
 Then go into your `oauth2l` directory and install the `go` libraries used in the application. 
 ```bash
