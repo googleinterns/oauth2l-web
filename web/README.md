@@ -32,9 +32,9 @@ First clone the repository using the following command:
 ```bash
 $ git clone https://github.com/googleinterns/oauth2l-web
 ```
-Then go into your `oauth2l` directory and install the `go` libraries used in the application. 
+Then go into your `oauth2l-web` directory and install the `go` libraries used in the application. 
 ```bash
-$ cd oauth2l
+$ cd oauth2l-web
 $ go get
 ```
 Go into the `web/client` directory and install the libaries used for the front-end.
