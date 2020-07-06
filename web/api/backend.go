@@ -145,7 +145,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Putting the credentials file into a json format so to match with the format of the wrapper.
 	credsJSON, _ := json.Marshal(creds)
-<<<<<<< HEAD
 	credsString := map[string]interface{}{
 		"credential": string(credsJSON),
 	}
@@ -153,20 +152,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if (reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
 		credsString = nil
 	}
-=======
->>>>>>> 2875a0ab6ac7d25b379a20bb0cf2e57fc9332f3e
 
 	// WrapperCommand object that will inputted into the wrapper.
 	cmd := WrapperCommand{
 		CommandType: requestBody.CommandType,
 		Args:        requestBody.Args,
-<<<<<<< HEAD
 		Credential:  credsString,
-=======
-		Credential: map[string]interface{}{
-			"credential": string(credsJSON),
-		},
->>>>>>> 2875a0ab6ac7d25b379a20bb0cf2e57fc9332f3e
 	}
 	// Getting the response from the OAuth2l.
 	CMDresponse := WrapperExecutor(cmd)
