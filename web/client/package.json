@@ -9,14 +9,15 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
     "eslint-config-jest-enzyme": "^7.1.2",
+    "formik": "^2.1.4",
+    "formik-material-ui": "^2.0.1",
     "mdbreact": "^4.27.0",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
-    "redux": "^4.0.5",
-    "redux-form": "^8.3.6"
+    "yup": "^0.29.1"
   },
   "scripts": {
     "start": "react-scripts start",
