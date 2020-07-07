@@ -118,6 +118,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// If command type is test or token, credentials are not necessary
 	if !(reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
 		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
 		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
@@ -153,6 +154,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		"credential": string(credsJSON),
 	}
 
+	// If the command type is test or info, credsString needs to be nil in order for wrapper to work properly
 	if (reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
 		credsString = nil
 	}
