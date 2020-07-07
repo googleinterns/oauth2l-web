@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Form, Formik } from "formik";
 import {
   Box,
@@ -32,31 +33,26 @@ export default function ValidateToken() {
    */
   function getTokenInfo(e) {
     e.preventDefault();
+    // To indicate the the info about the token is wanted
     setWantInfo(true);
+    // Body for the request.
     const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        commandtype: "info",
-        args: {
-          token: credsToken,
-        },
-        cachetoken: false,
-        usetoken: false,
-        token: "",
-      }),
+      commandtype: "info",
+      args: {
+        token: credsToken,
+      },
+      cachetoken: false,
+      usetoken: false,
+      token: "",
     };
-    fetch("http://localhost:8080/", requestOptions).then(async (response) => {
-      await response;
-      response.text().then(function (data) {
-        if (response.status !== 200) {
-          setInfo("Could not get info. Error: " + data);
-        } else {
-          // console.log(JSON.parse(data))
-          setInfo(data);
-        }
+    // Sending the request.
+    axios
+      .post("http://localhost:8080/", requestOptions)
+      .then(async (response) => {
+        const endofResponse = response.data.indexOf("}");
+        // Setting info to be displayed as the OAuth2l Response from the command.
+        setInfo(response.data.substring(22, endofResponse));
       });
-    });
   }
 
   return (
@@ -68,34 +64,28 @@ export default function ValidateToken() {
         setCompleted(true);
         // Sets the credentialsToken to be the inputted token so that it can be used in the future is user wants the information of the token.
         setCredsToken(values["token"]);
-        // JSON body for the request
+        // JSON body for the request.
         const requestOptions = {
-          method: "POST",
-          body: JSON.stringify({
-            commandtype: "test",
-            args: {
-              token: values["token"],
-            },
-            cachetoken: false,
-            usetoken: false,
-            token: "",
-          }),
+          commandtype: "test",
+          args: {
+            token: values["token"],
+          },
+          cachetoken: false,
+          usetoken: false,
+          token: "",
         };
+
         // Sending the Request
-        fetch("http://localhost:8080/", requestOptions).then(
-          async (response) => {
-            await response;
-            // Indicating whether or not the token was valid of not.
-            response.text().then(function (data) {
-              const resp = JSON.parse(data)["OAuth2l Response"];
-              if (resp === "1") {
-                setValid(false);
-              } else {
-                setValid(true);
-              }
-            });
-          }
-        );
+        axios
+          .post("http://localhost:8080/", requestOptions)
+          .then(async (response) => {
+            // displaying wether the token in valid or not.
+            if (response.data["OAuth2l Response"] === "0") {
+              setValid(true);
+            } else {
+              setValid(false);
+            }
+          });
       }}
       // Schema that prevents user from submitting if a token is not inputted.
       validationSchema={object({
