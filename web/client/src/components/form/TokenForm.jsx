@@ -79,6 +79,7 @@ export function FormikStepper(props) {
   const { children } = props;
   const childrenArray = React.Children.toArray(children);
   const [step, setStep] = useState(0);
+  const [done, setDone] = useState(false);
   const currentChild = childrenArray[step];
 
   const isLastStep = () => {
@@ -92,6 +93,7 @@ export function FormikStepper(props) {
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
+          setDone(true);
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
@@ -104,10 +106,7 @@ export function FormikStepper(props) {
         <Form>
           <Stepper alternativeLabel activeStep={step}>
             {childrenArray.map((child, index) => (
-              <Step
-                key={child.props.label}
-                completed={step > index || isLastStep()}
-              >
+              <Step key={child.props.label} completed={step > index || done}>
                 <StepLabel>{child.props.label}</StepLabel>
               </Step>
             ))}
