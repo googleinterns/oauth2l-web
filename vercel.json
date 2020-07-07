@@ -1,10 +1,10 @@
 {
   "version": 2,
   "builds": [
-    { "src": "/web/api/backend.go", "use": "@now/go" },
+    { "src": "/web/api/backend.go", "use": "@vercel/go" },
     {
       "src": "/web/client/package.json",
-      "use": "@now/static-build",
+      "use": "@vercel/static-build",
       "config": {
         "distDir": "build"
       }
