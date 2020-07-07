@@ -124,9 +124,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// JSON Body representing the credentials attribute with the following format: "credentials":{"scopes":[],...}
 	// This is so to match with how the wrapper class will save the credentials file to memory.
 	credsString := make(map[string]interface{})
+	credsString = nil
 
 	// If command type is test or token, credentials are not necessary
-	if !(reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) || (reflect.DeepEqual(requestBody.CommandType, "reset")) {
+	if !(reflect.DeepEqual(requestBody.CommandType, "test")) && !(reflect.DeepEqual(requestBody.CommandType, "info")) && !(reflect.DeepEqual(requestBody.CommandType, "reset")) {
 		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
 		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
 			w.WriteHeader(http.StatusBadRequest)
@@ -158,11 +159,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		credsString = map[string]interface{}{
 			"credential": string(credsJSON),
 		}
-	}
-
-	// If the command type is test or info, credsString needs to be nil in order for wrapper to work properly
-	if (reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
-		credsString = nil
 	}
 
 	// WrapperCommand object that will inputted into the wrapper.
