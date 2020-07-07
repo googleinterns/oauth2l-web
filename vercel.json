@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "alias": "oauth2l.now.sh",
   "builds": [
     { "src": "/web/api/backend.go", "use": "@now/go" },
     {
