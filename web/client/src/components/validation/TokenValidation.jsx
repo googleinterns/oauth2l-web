@@ -41,12 +41,6 @@ export default function ValidateToken() {
         args: {
           token: credsToken,
         },
-        credential: {
-          quota_project_id: "delays-or-traffi-1569131153704",
-          refresh_token:
-            "1//0dFSxxi4NOTl2CgYIARAAGA0SNwF-L9Ira5YTnnFer1GCZBToGkwmVMAounGai_x4CgHwMAFgFNBsPSK5hBwxfpGn88u3roPrRcQ",
-          type: "authorized_user",
-        },
         cachetoken: false,
         usetoken: false,
         token: "",
@@ -81,12 +75,6 @@ export default function ValidateToken() {
             commandtype: "test",
             args: {
               token: values["token"],
-            },
-            credential: {
-              quota_project_id: "delays-or-traffi-1569131153704",
-              refresh_token:
-                "1//0dFSxxi4NOTl2CgYIARAAGA0SNwF-L9Ira5YTnnFer1GCZBToGkwmVMAounGai_x4CgHwMAFgFNBsPSK5hBwxfpGn88u3roPrRcQ",
-              type: "authorized_user",
             },
             cachetoken: false,
             usetoken: false,
