@@ -89,7 +89,7 @@ export default function ValidateToken() {
             response.text().then(function (data) {
               const resp = JSON.parse(data)["OAuth2l Response"];
               if (resp === "1") {
-                setValid(true);
+                setValid(false);
               } else {
                 setValid(true);
               }
