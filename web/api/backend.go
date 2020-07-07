@@ -114,18 +114,21 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// If the structure of the body is wrong, return an HTTP error.
 		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, "Unable to Parse JSON")
 		return
 	}
 
-	// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
-	if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
-		w.WriteHeader(http.StatusBadRequest)
-		if requestBody.UseToken {
-			io.WriteString(w, "missing token file")
-		} else {
-			io.WriteString(w, "missing credentials file")
+	if !(reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
+		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
+		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
+			w.WriteHeader(http.StatusBadRequest)
+			if requestBody.UseToken {
+				io.WriteString(w, "missing token file")
+			} else {
+				io.WriteString(w, "missing credentials file")
+			}
+			return
 		}
-		return
 	}
 
 	// Authenticating the token if requestBody.useToken=true and using uploadCredentials body in the token as the
@@ -145,6 +148,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Putting the credentials file into a json format so to match with the format of the wrapper.
 	credsJSON, _ := json.Marshal(creds)
+
 	credsString := map[string]interface{}{
 		"credential": string(credsJSON),
 	}
