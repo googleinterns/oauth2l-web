@@ -456,3 +456,32 @@ func TestHandlerTestCommand(t *testing.T) {
 
 	}
 }
+
+func TestHandlerInfoCommand(t *testing.T) {
+
+	jsonStr := []byte(`{
+        "commandtype":"test",
+        "args":{
+            "token":"ya29.justkiddingmadethisoneup"
+		},
+    "cachetoken": false,
+    "usetoken":false
+	}`)
+
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(Handler)
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+}
