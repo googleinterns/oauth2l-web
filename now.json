@@ -2,8 +2,9 @@
   "version": 2,
   "alias": "oauth2l.now.sh",
   "builds": [
+    { "src": "/web/api/backend.go", "use": "@now/go" },
     {
-      "src": "/client/package.json",
+      "src": "/web/client/package.json",
       "use": "@now/static-build",
       "config": {
         "distDir": "build"
@@ -14,25 +15,25 @@
     {
       "src": "/static/(.*)",
       "headers": { "cache-control": "s-maxage=31536000,immutable" },
-      "dest": "/client/static/$1"
+      "dest": "/web/client/static/$1"
     },
-    { "src": "/favicon.ico", "dest": "/client/favicon.ico" },
-    { "src": "/asset-manifest.json", "dest": "/client/asset-manifest.json" },
-    { "src": "/manifest.json", "dest": "/manifest.json" },
-    { "src": "/precache-manifest.(.*)", "dest": "/client/precache-manifest.$1" },
+    { "src": "/favicon.ico", "dest": "/web/client/favicon.ico" },
+    { "src": "/asset-manifest.json", "dest": "/web/client/asset-manifest.json" },
+    { "src": "/manifest.json", "dest": "/web/client/manifest.json" },
+    { "src": "/precache-manifest.(.*)", "dest": "/web/client/precache-manifest.$1" },
     {
       "src": "/service-worker.js",
       "headers": { "cache-control": "s-maxage=0" },
-      "dest": "/client/src/service-worker.js"
+      "dest": "/web/client/src/service-worker.js"
     },
     {
       "src": "/clogo.png",
-      "dest": "/client/clogo.png"
+      "dest": "/web/client/clogo.png"
     },
     {
       "src": "/(.*)",
       "headers": { "cache-control": "s-maxage=0" },
-      "dest": "/client/index.html"
+      "dest": "/web/client/index.html"
     }
   ]
 }
