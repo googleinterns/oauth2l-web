@@ -13,6 +13,10 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/web/api/backend.go"
+    },
+    {
       "src": "/static/(.*)",
       "headers": { "cache-control": "s-maxage=31536000,immutable" },
       "dest": "/web/client/static/$1"
