@@ -1,0 +1,17 @@
+.root {
+  width: auto;
+  margin-left: 4rem;
+  margin-right: 4rem;
+  background-color: #303030;
+  color: #ffffff;
+}
+
+.paper-top {
+  margin-top: 8rem;
+  padding: 3rem;
+}
+
+.paper-bottom {
+  margin-top: 4rem;
+  padding: 3rem;
+}

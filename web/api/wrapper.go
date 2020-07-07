@@ -45,7 +45,7 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 	}
 
 	// Execute command and capture output
-	command := exec.Command("oauth2l", args...)
+	command := exec.Command("./binaries/oauth2l", args...)
 	byteBuffer, err := command.Output()
 
 	// Convert byteBuffer to string and remove newline character
