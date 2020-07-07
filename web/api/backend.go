@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -33,7 +33,7 @@ type Claims struct {
 var jwtKey = []byte("my_secret_key")
 
 // SetupResponseHeaders sets up the headers for the response.
-func SetupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
+func setupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
@@ -103,7 +103,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	var requestBody Request
 
 	// Setting up reponse Headers.
-	SetupResponseHeaders(&w, r)
+	setupResponseHeaders(&w, r)
 	if (*&r).Method == "OPTIONS" {
 		return
 	}
@@ -175,7 +175,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
-	router.HandleFunc("/", Handler)
+	router.HandleFunc("/api", Handler)
 	var srv = &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:8080",
