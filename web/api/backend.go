@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"reflect"
 	"strings"
 	"time"
 
@@ -113,45 +114,62 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// If the structure of the body is wrong, return an HTTP error.
 		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, "Unable to Parse JSON")
 		return
 	}
 
-	// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
-	if (requestBody.UseToken && len(requestBody.Token) == 0) || (len(requestBody.Credential) == 0) {
-		w.WriteHeader(http.StatusBadRequest)
-		if requestBody.UseToken {
-			io.WriteString(w, "missing token file")
-		} else {
-			io.WriteString(w, "missing credentials file")
-		}
-		return
-	}
-
-	// Authenticating the token if requestBody.useToken=true and using uploadCredentials body in the token as the
-	// uploadCredentials attribute in the WrapperCommand object.
-	// Otherwise use the requestBody.Credentials as the uploadCredentials attribute in WrapperCommand object.
+	// JSON BODY representing the credentials attribute to be used (i.e. either the credentials found in the token or inputted).
 	creds := make(map[string]interface{})
-	if requestBody.UseToken {
-		creds, err = AuthenticateCredentialsToken(requestBody.Token)
-		if err != nil {
-			w.WriteHeader(http.StatusUnauthorized)
-			io.WriteString(w, err.Error())
+
+	// JSON Body representing the credentials attribute with the following format: "credentials":{"scopes":[],...}
+	// This is so to match with how the wrapper class will save the credentials file to memory.
+	credsString := make(map[string]interface{})
+
+	// If command type is test or token, credentials are not necessary
+	if !(reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) || (reflect.DeepEqual(requestBody.CommandType, "reset")) {
+		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
+		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
+			w.WriteHeader(http.StatusBadRequest)
+			if requestBody.UseToken {
+				io.WriteString(w, "missing token file")
+			} else {
+				io.WriteString(w, "missing credentials file")
+			}
 			return
 		}
-	} else {
-		creds = requestBody.Credential
+
+		// Authenticating the token if requestBody.useToken=true and using uploadCredentials body in the token as the
+		// uploadCredentials attribute in the WrapperCommand object.
+		// Otherwise use the requestBody.Credentials as the uploadCredentials attribute in WrapperCommand object.
+		if requestBody.UseToken {
+			creds, err = AuthenticateCredentialsToken(requestBody.Token)
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				io.WriteString(w, err.Error())
+				return
+			}
+		} else {
+			creds = requestBody.Credential
+		}
+
+		// Putting the credentials file into a json format so to match with the format of the wrapper.
+		credsJSON, _ := json.Marshal(creds)
+
+		credsString = map[string]interface{}{
+			"credential": string(credsJSON),
+		}
 	}
 
-	// Putting the credentials file into a json format so to match with the format of the wrapper.
-	credsJSON, _ := json.Marshal(creds)
+	// If the command type is test or info, credsString needs to be nil in order for wrapper to work properly
+	if (reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
+		credsString = nil
+	}
 
 	// WrapperCommand object that will inputted into the wrapper.
 	cmd := WrapperCommand{
 		CommandType: requestBody.CommandType,
 		Args:        requestBody.Args,
-		Credential: map[string]interface{}{
-			"credential": string(credsJSON),
-		},
+		Credential:  credsString,
 	}
 	// Getting the response from the OAuth2l.
 	CMDresponse := WrapperExecutor(cmd)
