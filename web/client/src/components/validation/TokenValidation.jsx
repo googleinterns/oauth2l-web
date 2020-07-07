@@ -50,7 +50,7 @@ export default function ValidateToken() {
       .post("http://localhost:8080/", requestOptions)
       .then(async (response) => {
         const endofResponse = response.data.indexOf("}");
-        // Setting info to be displayed as the OAuth2l Response from the command.
+        // Setting info that will be displayed as the OAuth2l Response from the command.
         setInfo(response.data.substring(22, endofResponse));
       });
   }
@@ -60,9 +60,9 @@ export default function ValidateToken() {
       initialValues={{ token: "" }}
       onSubmit={async (values) => {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        // Indicated the a token was inputted and is ready to be submitted.
+        // Indicated that a token was inputted and is ready to be submitted.
         setCompleted(true);
-        // Sets the credentialsToken to be the inputted token so that it can be used in the future is user wants the information of the token.
+        // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
         setCredsToken(values["token"]);
         // JSON body for the request.
         const requestOptions = {
@@ -79,7 +79,6 @@ export default function ValidateToken() {
         axios
           .post("http://localhost:8080/", requestOptions)
           .then(async (response) => {
-            // displaying wether the token in valid or not.
             if (response.data["OAuth2l Response"] === "0") {
               setValid(true);
             } else {
@@ -151,7 +150,7 @@ export default function ValidateToken() {
                   </Button>
                 </Grid>
               </Form>
-              {/* Box where token info will appear if users chooses to display it, */}
+              {/* Box where token info will appear if users chooses to display it. */}
               {wantInfo && (
                 <div className="validation-message-div">
                   <form noValidate autoComplete="off">
