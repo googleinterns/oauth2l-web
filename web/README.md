@@ -6,7 +6,7 @@ The OAuth2l Authentication Playground is a web application where users can inter
 The Authentication Playground was designed to provide an intuitive and functional interface that will improve the experience for users interested in using the OAuth2l without being restricted to the CLI. The application is built on top of the OAuth2l, which allows it to inherit all its functionality and be adapted to fit future updates as well.
 
 ## Build Status
-![GITHUB-BADGE](https://github.com/googleinterns/oauth2l-web/workflows/api/badge.svg)
+![GITHUB-BADGE](https://github.com/googleinterns/oauth2l-web/workflows/api/badge.svg) ![GITHUB-BADGE](https://github.com/googleinterns/oauth2l-web/workflows/client/badge.svg)
 
  ## Architecture
 This application is built using  [React.JS](https://reactjs.org) on the frontend, themed with the [Material-UI](https://material-ui.com) library and uses [Go](https://golang.org) for the backend.
