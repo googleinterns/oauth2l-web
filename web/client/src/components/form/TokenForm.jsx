@@ -62,8 +62,8 @@ export default function TokenForm() {
       <TokenCredentials
         validationSchema={object({
           tokenCredentials: string()
-            .required("Must include credential!")
-            .min(1, "Must include credential!"),
+            .required("Must include credential")
+            .min(1, "Must include credential"),
         })}
         label="Credentials"
       />
