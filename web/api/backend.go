@@ -126,7 +126,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	credsString := make(map[string]interface{})
 
 	// If command type is test or token, credentials are not necessary
-	if !(reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) {
+	if !(reflect.DeepEqual(requestBody.CommandType, "test")) || (reflect.DeepEqual(requestBody.CommandType, "info")) || (reflect.DeepEqual(requestBody.CommandType, "reset")) {
 		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
 		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
 			w.WriteHeader(http.StatusBadRequest)
