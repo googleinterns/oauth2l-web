@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
 import { getCacheToken } from "../../util/apiWrapper";
 
 /**
+ * @param {param} props passes a callback function that sends the token back to the parent
  * @return {FormikStepper} component using Formik for creating a token
  */
 export default function TokenForm(props) {
@@ -21,7 +22,7 @@ export default function TokenForm(props) {
   const [tokenType, setTokenType] = useState("");
   /**
    *
-   * @param {*} token is the token that is being sent to the parent component
+   * @param {string} token variable that holds the token
    */
   function sendToken(token) {
     props.parentCallback(token);
@@ -185,4 +186,8 @@ FormikStepper.propTypes = {
   children: PropTypes.node,
   onSubmit: PropTypes.func,
   setSecondLabel: PropTypes.func,
+};
+
+TokenForm.propTypes = {
+  parentCallback: PropTypes.func,
 };

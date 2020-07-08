@@ -18,7 +18,7 @@ export default function TokenDisplay({ token }) {
         </CardContent>
       </Card>
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" disabled={copy}>
           Copy to Clipboard
         </Button>
       </CopyToClipboard>
