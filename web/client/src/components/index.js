@@ -5,4 +5,11 @@ import TokenAccess from "./form/TokenAccess";
 import TokenCredentials from "./form/TokenCredentials";
 import ValidateToken from "./validation/TokenValidation";
 
-export { Head, TokenForm, TokenAccess, TokenType, TokenCredentials, ValidateToken };
+export {
+  Head,
+  TokenForm,
+  TokenAccess,
+  TokenType,
+  TokenCredentials,
+  ValidateToken,
+};
