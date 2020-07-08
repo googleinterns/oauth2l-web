@@ -148,7 +148,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Authenticating the token if requestBody.useToken=true and using uploadCredentials body in the token as the
+		// Authenticating the token if requestBody.useToken is true and using uploadCredentials body in the token as the
 		// uploadCredentials attribute in the WrapperCommand object.
 		// Otherwise use the requestBody.Credentials as the uploadCredentials attribute in WrapperCommand object.
 		if requestBody.UseToken {
