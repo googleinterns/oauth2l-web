@@ -11,16 +11,21 @@ import {
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
-
-const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
+import { getCacheToken } from "../../util/apiWrapper";
 
 /**
  * @return {FormikStepper} component using Formik for creating a token
  */
-export default function TokenForm() {
+export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
-
+  /**
+   *
+   * @param {*} token is the token that is being sent to the parent component
+   */
+  function sendToken(token) {
+    props.parentCallback(token);
+  }
   return (
     <FormikStepper
       initialValues={{
@@ -30,8 +35,35 @@ export default function TokenForm() {
         tokenAudience: "",
         tokenCredentials: "",
       }}
-      onSubmit={async () => {
-        await sleep(3000);
+      onSubmit={async (values) => {
+        const tokenCred = JSON.parse(values.tokenCredentials);
+        let finalCredentials;
+        if (tokenCred["web"] !== undefined) {
+          finalCredentials = tokenCred["web"];
+        } else {
+          finalCredentials = tokenCred;
+        }
+        let userScopes;
+        if (!values.tokenScopes) {
+          userScopes = values.tokenAudience;
+        } else {
+          userScopes = values.tokenScopes;
+        }
+        const Body = {
+          commandtype: "fetch",
+          args: {
+            scope: [userScopes],
+          },
+          credential: {
+            quota_project_id: finalCredentials["project_id"],
+            type: "authorized_user",
+          },
+          cachetoken: true,
+          usetoken: false,
+        };
+        const response = await getCacheToken(Body);
+        const Token = response["data"]["Token"];
+        sendToken(Token);
       }}
       setSecondLabel={(value) => {
         setTokenType(value);
