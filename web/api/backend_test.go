@@ -101,7 +101,7 @@ func TestHandlerUseTokenWithoutToken(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
 	}
-	expected := "missing token file "
+	expected := "MISSING TOKEN FILE "
 	if strings.Contains(rr.Body.String(), expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
@@ -139,7 +139,7 @@ func TestHandlerUseTokenWithEmptyToken(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
 	}
-	expected := "missing token file "
+	expected := "MISSING TOKEN FILE "
 	if strings.Contains(rr.Body.String(), expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
@@ -177,7 +177,7 @@ func TestHandlerUseTokenWithExpiredToken(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusUnauthorized)
 	}
-	expected := "Token is expired "
+	expected := " TOKEN IS EXPIRED BY "
 	if strings.Contains(rr.Body.String(), expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
@@ -217,7 +217,7 @@ func TestHandlerUseTokenWithTokenSignatureInvalid(t *testing.T) {
 			status, http.StatusUnauthorized)
 	}
 
-	expected := "signature is invalid "
+	expected := "SIGNATURE IS INVALID "
 	if reflect.DeepEqual(rr.Body.String(), expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
@@ -250,7 +250,7 @@ func TestHandlerCacheTokenWithNoCredentials(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
 	}
-	expected := "missing credentials file"
+	expected := "MISSING CREDENTIALS FILE"
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
@@ -284,7 +284,7 @@ func TestHandlerCacheTokenEmptyCredentials(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
 	}
-	expected := "missing credentials file"
+	expected := "MISSING CREDENTIALS FILE"
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
