@@ -69,8 +69,7 @@ export default function ValidateToken() {
       usetoken: false,
     };
     // Sending the request.
-    axios
-      .post("http://localhost:8080/", requestOptions)
+    axios.post("http://localhost:8080/", requestOptions);
   }
 
   return (
@@ -112,26 +111,26 @@ export default function ValidateToken() {
       {({ handleChange, errors, touched, isSubmitting }) => (
         <div>
           <div className="form-text" style={{ marginBottom: "1rem" }}>
-          <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="flex-start"
-          > 
-            <Grid item xs>
-            <Typography variant="h4">Validate Token</Typography>
-            </Grid>
-            <Grid item xs>
-            <Button
-        variant="contained"
-        color="primary"
-        startIcon={<RefreshIcon />}
-        style = {{float:"right"}}
-        onClick={resetToken}
-      >
-        reset
-      </Button>
-            </Grid>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="flex-start"
+            >
+              <Grid item xs>
+                <Typography variant="h4">Validate Token</Typography>
+              </Grid>
+              <Grid item xs>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<RefreshIcon />}
+                  style={{ float: "right" }}
+                  onClick={resetToken}
+                >
+                  reset
+                </Button>
+              </Grid>
             </Grid>
           </div>
           <div>
