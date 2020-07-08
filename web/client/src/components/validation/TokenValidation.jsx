@@ -9,9 +9,12 @@ import {
   CircularProgress,
   IconButton,
   Typography,
+  Collapse,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { object, string } from "yup";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from "@material-ui/icons/Cancel";
 import InfoIcon from "@material-ui/icons/Info";
 import RefreshIcon from "@material-ui/icons/Refresh";
@@ -27,6 +30,12 @@ export default function ValidateToken() {
   const [credsToken, setCredsToken] = useState("");
   const [wantInfo, setWantInfo] = useState(false);
   const [info, setInfo] = useState("");
+  const [resetSuccess, setResetSuccess] = useState(false);
+  const [resetError, setResetError] = useState(false);
+  const [resetOpen, setResetOpen] = useState(true);
+  const [errorOpen, setErrorOpen] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
 
   /**
    *
@@ -53,6 +62,10 @@ export default function ValidateToken() {
         const endofResponse = response.data.indexOf("}");
         // Setting info that will be displayed as the OAuth2l Response from the command.
         setInfo(response.data.substring(22, endofResponse));
+      })
+      .catch(function (error) {
+        setErrorOpen(true);
+        setHasError(true);
       });
   }
 
@@ -62,6 +75,7 @@ export default function ValidateToken() {
    */
   function resetToken(e) {
     e.preventDefault();
+    setResetOpen(true);
     // Body for the request.
     const requestOptions = {
       commandtype: "reset",
@@ -69,7 +83,17 @@ export default function ValidateToken() {
       usetoken: false,
     };
     // Sending the request.
-    axios.post("http://localhost:8080/", requestOptions);
+    axios
+      .post("http://localhost:8080/", requestOptions)
+      .then(async (response) => {
+        if (response.status === 200) {
+          setResetSuccess(true);
+        }
+      })
+      .catch(function (error) {
+        setResetError(true);
+        setErrMessage(error.toString());
+      });
   }
 
   return (
@@ -101,6 +125,11 @@ export default function ValidateToken() {
             } else {
               setValid(false);
             }
+          })
+          .catch(function (error) {
+            setErrorOpen(true);
+            setHasError(true);
+            setErrMessage(error.toString());
           });
       }}
       // Schema that prevents user from submitting if a token is not inputted.
@@ -110,7 +139,7 @@ export default function ValidateToken() {
     >
       {({ handleChange, errors, touched, isSubmitting }) => (
         <div>
-          <div className="form-text" style={{ marginBottom: "1rem" }}>
+          <div className="form-text validation">
             <Grid
               container
               direction="row"
@@ -125,13 +154,59 @@ export default function ValidateToken() {
                   variant="contained"
                   color="primary"
                   startIcon={<RefreshIcon />}
-                  style={{ float: "right" }}
                   onClick={resetToken}
+                  className="button-reset"
                 >
                   reset
                 </Button>
               </Grid>
             </Grid>
+            {/* Alert for reset success. */}
+            {resetSuccess && (
+              <Collapse in={resetOpen} className="collapse-reset">
+                <Alert
+                  variant="outlined"
+                  severity="success"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setResetOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                >
+                  Reset Success!
+                </Alert>
+              </Collapse>
+            )}
+            {/* Alert for reset failure. */}
+            {resetError && (
+              <Collapse in={resetOpen} className="collapse-reset">
+                <Alert
+                  variant="outlined"
+                  severity="error"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setResetOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                >
+                  {errMessage}
+                </Alert>
+              </Collapse>
+            )}
           </div>
           <div>
             <Grid
@@ -203,6 +278,31 @@ export default function ValidateToken() {
                     />
                   </form>
                 </div>
+              )}
+            </div>
+            <div>
+              {/* Alert for error in fetching request. */}
+              {hasError && (
+                <Collapse in={errorOpen} className="collapse-reset">
+                  <Alert
+                    variant="outlined"
+                    severity="error"
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setErrorOpen(false);
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                  >
+                    {errMessage}
+                  </Alert>
+                </Collapse>
               )}
             </div>
           </div>
