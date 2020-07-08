@@ -14,6 +14,7 @@ import { object, string } from "yup";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import InfoIcon from "@material-ui/icons/Info";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import "../../styles/form.css";
 import "../../styles/validation.css";
 
@@ -55,6 +56,23 @@ export default function ValidateToken() {
       });
   }
 
+  /**
+   *
+   * @param {event} e handler for when the token reset button is clicked. Will execute the OAUth2l reset command.
+   */
+  function resetToken(e) {
+    e.preventDefault();
+    // Body for the request.
+    const requestOptions = {
+      commandtype: "reset",
+      cachetoken: false,
+      usetoken: false,
+    };
+    // Sending the request.
+    axios
+      .post("http://localhost:8080/", requestOptions)
+  }
+
   return (
     <Formik
       initialValues={{ token: "" }}
@@ -94,7 +112,27 @@ export default function ValidateToken() {
       {({ handleChange, errors, touched, isSubmitting }) => (
         <div>
           <div className="form-text" style={{ marginBottom: "1rem" }}>
+          <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
+          > 
+            <Grid item xs>
             <Typography variant="h4">Validate Token</Typography>
+            </Grid>
+            <Grid item xs>
+            <Button
+        variant="contained"
+        color="primary"
+        startIcon={<RefreshIcon />}
+        style = {{float:"right"}}
+        onClick={resetToken}
+      >
+        reset
+      </Button>
+            </Grid>
+            </Grid>
           </div>
           <div>
             <Grid

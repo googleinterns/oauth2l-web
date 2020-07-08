@@ -1,7 +1,8 @@
 import Head from "./Head";
 import TokenForm from "./form/TokenForm";
 import TokenType from "./form/TokenType";
-import TokenScopes from "./form/TokenScopes";
+import TokenAccess from "./form/TokenAccess";
+import TokenCredentials from "./form/TokenCredentials";
 import ValidateToken from "./validation/TokenValidation";
 
-export { Head, TokenForm, TokenScopes, TokenType, ValidateToken };
+export { Head, TokenForm, TokenAccess, TokenType, TokenCredentials, ValidateToken };
