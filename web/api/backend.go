@@ -94,6 +94,13 @@ func createCredentialsToken(Credentials map[string]interface{}) (string, error) 
 	return credentialsTokenString, err
 }
 
+func isCredentialsNeeded(requestType string) bool {
+	if reflect.DeepEqual(requestType, "reset") || reflect.DeepEqual(requestType, "info") || reflect.DeepEqual(requestType, "test") {
+		return false
+	}
+	return true
+}
+
 // Handler takes as input a json body with the parts of the command
 // to be executed and a json body representing the uploaded uploadCredentials.json file and returns
 // a created jwt token that will be sent to the front end and cached for reused if needed
@@ -129,7 +136,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	credsMap = nil
 
 	// If command type is test or token, credentials are not necessary
-	if !(reflect.DeepEqual(requestBody.CommandType, "test")) && !(reflect.DeepEqual(requestBody.CommandType, "info")) && !(reflect.DeepEqual(requestBody.CommandType, "reset")) {
+	if isCredentialsNeeded(requestBody.CommandType) {
 		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
 		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
 			w.WriteHeader(http.StatusBadRequest)
