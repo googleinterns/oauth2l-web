@@ -1,19 +1,20 @@
 import React from "react";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button,Grid } from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import PropTypes from "prop-types";
 /**
  *
  * @param {string} prop token being passed for display
- * @return {div} returns a card so the token stands
+ * @return {Grid} returns a Grid component that contains the page
  */
 export default function TokenDisplay(props) {
   const { token } = props;
   const [copy, setCopy] = React.useState(false);
   return (
-    <div>
+    <Grid>
       <Typography variant="h5">Token:</Typography>
-      <Typography variant="body1" paragraph>
+      
+      <Typography noWrap variant="body1" >
         {token}
       </Typography>
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
@@ -21,7 +22,7 @@ export default function TokenDisplay(props) {
           Copy to Clipboard
         </Button>
       </CopyToClipboard>
-    </div>
+    </Grid>
   );
 }
 

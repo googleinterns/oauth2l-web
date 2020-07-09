@@ -17,7 +17,7 @@ function App() {
     if (childData["error"] !== undefined) {
       setToken(childData["error"].toString());
     } else {
-      setToken(childData);
+      setToken(childData['data']["Token"]);
     }
   }
 
