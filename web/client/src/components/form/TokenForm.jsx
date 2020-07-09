@@ -11,27 +11,73 @@ import {
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
-
-const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
+import { getCacheToken } from "../../util/apiWrapper";
 
 /**
+ * @param {param} props passes a callback function that sends the token back to the parent
  * @return {FormikStepper} component using Formik for creating a token
  */
-export default function TokenForm() {
+export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
-
+  /**
+   *
+   * @param {string} token variable that holds the token
+   */
+  function sendToken(token) {
+    props.parentCallback(token);
+  }
+  /**
+   * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
+   * calls apiWrapper in order to request the token from the backend
+   */
+  async function getToken(values) {
+    const tokenCred = JSON.parse(values.tokenCredentials);
+    let finalCredentials;
+    if (
+      tokenCred["web"] !== undefined &&
+      tokenCred["installed"] === undefined
+    ) {
+      finalCredentials = tokenCred["web"];
+    } else if (
+      tokenCred["web"] === undefined &&
+      tokenCred["installed"] !== undefined
+    ) {
+      finalCredentials = tokenCred["installed"];
+    } else {
+      finalCredentials = tokenCred;
+    }
+    let userScopes;
+    let userAudience;
+    if (!values.tokenScopes) {
+      userAudience = values.tokenAudience;
+    } else {
+      userScopes = values.tokenScopes;
+    }
+    const Body = {
+      commandtype: "fetch",
+      args: {
+        scope: userScopes || userAudience,
+      },
+      credential: finalCredentials,
+      cachetoken: true,
+      usetoken: false,
+    };
+    const response = await getCacheToken(Body);
+    const Token = response["data"]["OAuth2l Response"];
+    sendToken(Token);
+  }
   return (
     <FormikStepper
       initialValues={{
         tokenType: "",
         tokenFormat: "",
-        tokenScopes: "",
-        tokenAudience: "",
+        tokenScopes: [],
+        tokenAudience: [],
         tokenCredentials: "",
       }}
-      onSubmit={async () => {
-        await sleep(3000);
+      onSubmit={(values) => {
+        getToken(values);
       }}
       setSecondLabel={(value) => {
         setTokenType(value);
@@ -153,4 +199,8 @@ FormikStepper.propTypes = {
   children: PropTypes.node,
   onSubmit: PropTypes.func,
   setSecondLabel: PropTypes.func,
+};
+
+TokenForm.propTypes = {
+  parentCallback: PropTypes.func,
 };
