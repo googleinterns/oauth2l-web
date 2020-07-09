@@ -11,13 +11,14 @@ function App() {
 
   /**
    *
-   * @param {*} childData obtains the token value from the TokenForm component
+   * @param {string} childData obtains the token value from the TokenForm component
    */
   function callBackToken(childData) {
     if (childData["error"] !== undefined) {
       setToken(childData["error"].toString());
     } else {
-      setToken(childData["data"]["OAuth2l Response"]);
+      const endofResp = childData.data.indexOf(",");
+      setToken(childData.data.substring(21, endofResp));
     }
   }
 

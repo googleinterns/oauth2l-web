@@ -21,13 +21,13 @@ export default function TokenDisplay(props) {
   const [copy, setCopy] = React.useState(false);
   return (
     <Grid>
-      <Typography variant="h5">Token:</Typography>
+      <Typography variant="h5">OAuth2l Response:</Typography>
 
       <Typography noWrap variant="body1" className="form-text">
         {token}
       </Typography>
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
-        <Button variant="contained" color="primary" disabled={copy}>
+        <Button variant="contained" color="primary">
           Copy to Clipboard
         </Button>
       </CopyToClipboard>
