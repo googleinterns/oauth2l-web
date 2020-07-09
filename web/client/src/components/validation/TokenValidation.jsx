@@ -106,9 +106,7 @@ export default function ValidateToken() {
     <Formik
       initialValues={{ token: "" }}
       onSubmit={async (values) => {
-        // creating a delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        testToken(values);
+        await testToken(values);
       }}
       // Schema that prevents user from submitting if a token is not inputted.
       validationSchema={object({
