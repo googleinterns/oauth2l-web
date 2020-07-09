@@ -49,7 +49,6 @@ export default function TokenForm(props) {
     }
     let userScopes;
     let userAudience;
-
     if (!values.tokenScopes) {
       userAudience = values.tokenAudience;
     } else {
