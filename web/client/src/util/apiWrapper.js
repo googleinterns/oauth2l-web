@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL = "http://localhost:8080/api";
 
 export const getCacheToken = (credentials) => {
-  const requestString = `${BASE_URL}/api`;
+  const requestString = `${BASE_URL}`;
   const credentialFail = "GET_CREDENTIAL_TOKEN_FAIL";
   const res = axios.post(requestString, credentials).catch((error) => ({
     type: credentialFail,

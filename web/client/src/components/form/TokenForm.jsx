@@ -55,7 +55,6 @@ export default function TokenForm(props) {
     } else {
       userScopes = values.tokenScopes;
     }
-    console.log(userScopes)
     const Body = {
       commandtype: "fetch",
       args: {
