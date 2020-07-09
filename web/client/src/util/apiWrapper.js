@@ -10,3 +10,8 @@ export const getCacheToken = (credentials) => {
   }));
   return res;
 };
+
+export const validateToken = (requestOptions) => {
+  const requestString = `${BASE_URL}/api`;
+  return axios.post(requestString, requestOptions);
+};

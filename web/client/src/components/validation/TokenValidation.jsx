@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Form, Formik } from "formik";
 import {
   Box,
@@ -17,9 +16,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import CancelIcon from "@material-ui/icons/Cancel";
 import InfoIcon from "@material-ui/icons/Info";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import "../../styles/form.css";
 import "../../styles/validation.css";
+import { validateToken } from "../../util/apiWrapper";
 
 /**
  * @return {Formik} containing form fields for addding/validating token.
@@ -30,12 +29,45 @@ export default function ValidateToken() {
   const [credsToken, setCredsToken] = useState("");
   const [wantInfo, setWantInfo] = useState(false);
   const [info, setInfo] = useState("");
-  const [resetSuccess, setResetSuccess] = useState(false);
-  const [resetError, setResetError] = useState(false);
-  const [resetOpen, setResetOpen] = useState(true);
   const [errorOpen, setErrorOpen] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errMessage, setErrMessage] = useState("");
+
+  /**
+   *
+   * @param {param} values will take the inputted token and test it, returning if the token is valid or not.
+   */
+  function testToken(values) {
+    // Indicated that a token was inputted and is ready to be submitted.
+    setCompleted(true);
+    // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
+    setCredsToken(values["token"]);
+    // JSON body for the request.
+    const requestOptions = {
+      commandtype: "test",
+      args: {
+        token: values["token"],
+      },
+      cachetoken: false,
+      usetoken: false,
+      token: "",
+    };
+
+    // Sending the Request
+    validateToken(requestOptions)
+      .then(async (response) => {
+        if (response.data["OAuth2l Response"] === "0") {
+          setValid(true);
+        } else {
+          setValid(false);
+        }
+      })
+      .catch(function (error) {
+        setErrorOpen(true);
+        setHasError(true);
+        setErrMessage(error.toString());
+      });
+  }
 
   /**
    *
@@ -56,8 +88,7 @@ export default function ValidateToken() {
       token: "",
     };
     // Sending the request.
-    axios
-      .post("http://localhost:8080/", requestOptions)
+    validateToken(requestOptions)
       .then(async (response) => {
         const endofResponse = response.data.indexOf("}");
         // Setting info that will be displayed as the OAuth2l Response from the command.
@@ -69,68 +100,12 @@ export default function ValidateToken() {
       });
   }
 
-  /**
-   *
-   * @param {event} e handler for when the token reset button is clicked. Will execute the OAUth2l reset command.
-   */
-  function resetToken(e) {
-    e.preventDefault();
-    setResetOpen(true);
-    // Body for the request.
-    const requestOptions = {
-      commandtype: "reset",
-      cachetoken: false,
-      usetoken: false,
-    };
-    // Sending the request.
-    axios
-      .post("http://localhost:8080/", requestOptions)
-      .then(async (response) => {
-        if (response.status === 200) {
-          setResetSuccess(true);
-        }
-      })
-      .catch(function (error) {
-        setResetError(true);
-        setErrMessage(error.toString());
-      });
-  }
-
   return (
     <Formik
       initialValues={{ token: "" }}
       onSubmit={async (values) => {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        // Indicated that a token was inputted and is ready to be submitted.
-        setCompleted(true);
-        // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
-        setCredsToken(values["token"]);
-        // JSON body for the request.
-        const requestOptions = {
-          commandtype: "test",
-          args: {
-            token: values["token"],
-          },
-          cachetoken: false,
-          usetoken: false,
-          token: "",
-        };
-
-        // Sending the Request
-        axios
-          .post("http://localhost:8080/", requestOptions)
-          .then(async (response) => {
-            if (response.data["OAuth2l Response"] === "0") {
-              setValid(true);
-            } else {
-              setValid(false);
-            }
-          })
-          .catch(function (error) {
-            setErrorOpen(true);
-            setHasError(true);
-            setErrMessage(error.toString());
-          });
+        testToken(values);
       }}
       // Schema that prevents user from submitting if a token is not inputted.
       validationSchema={object({
@@ -149,64 +124,7 @@ export default function ValidateToken() {
               <Grid item xs>
                 <Typography variant="h4">Validate Token</Typography>
               </Grid>
-              <Grid item xs>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<RefreshIcon />}
-                  onClick={resetToken}
-                  className="button-reset"
-                >
-                  reset
-                </Button>
-              </Grid>
             </Grid>
-            {/* Alert for reset success. */}
-            {resetSuccess && (
-              <Collapse in={resetOpen} className="collapse-reset">
-                <Alert
-                  variant="outlined"
-                  severity="success"
-                  action={
-                    <IconButton
-                      aria-label="close"
-                      color="inherit"
-                      size="small"
-                      onClick={() => {
-                        setResetOpen(false);
-                      }}
-                    >
-                      <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                  }
-                >
-                  Reset Success!
-                </Alert>
-              </Collapse>
-            )}
-            {/* Alert for reset failure. */}
-            {resetError && (
-              <Collapse in={resetOpen} className="collapse-reset">
-                <Alert
-                  variant="outlined"
-                  severity="error"
-                  action={
-                    <IconButton
-                      aria-label="close"
-                      color="inherit"
-                      size="small"
-                      onClick={() => {
-                        setResetOpen(false);
-                      }}
-                    >
-                      <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                  }
-                >
-                  {errMessage}
-                </Alert>
-              </Collapse>
-            )}
           </div>
           <div>
             <Grid
