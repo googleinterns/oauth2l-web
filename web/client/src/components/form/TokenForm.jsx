@@ -67,9 +67,8 @@ export default function TokenForm(props) {
       cachetoken: true,
       usetoken: false,
     };
-    const response = await getCacheToken(Body);
-    const Token = response["data"]["Token"];
-    sendToken(Token);
+    const Response = await getCacheToken(Body);
+    sendToken(Response);
   }
   return (
     <FormikStepper

@@ -14,7 +14,11 @@ function App() {
    * @param {*} childData obtains the token value from the TokenForm component
    */
   function callBackToken(childData) {
-    setToken(childData);
+    if (childData["error"] !== undefined) {
+      setToken(childData["error"].toString());
+    } else {
+      setToken(childData);
+    }
   }
 
   return (
