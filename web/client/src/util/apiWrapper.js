@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8080/api";
 
 export const getCacheToken = (credentials) => {
   const requestString = `${BASE_URL}/token`;
@@ -12,6 +12,5 @@ export const getCacheToken = (credentials) => {
 };
 
 export const validateToken = (requestOptions) => {
-  const requestString = `${BASE_URL}/api`;
-  return axios.post(requestString, requestOptions);
+  return axios.post(`${BASE_URL}`, requestOptions);
 };

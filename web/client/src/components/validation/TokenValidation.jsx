@@ -27,7 +27,7 @@ export default function ValidateToken() {
   const [valid, setValid] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [credsToken, setCredsToken] = useState("");
-  const [wantInfo, setWantInfo] = useState(false);
+  const [S, setWantInfo] = useState(false);
   const [info, setInfo] = useState("");
   const [errorOpen, setErrorOpen] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -35,7 +35,8 @@ export default function ValidateToken() {
 
   /**
    *
-   * @param {param} values will take the inputted token and test it, returning if the token is valid or not.
+   * @param {object} values holds the inputted token string.
+   * Takes the inputted token and test it, returning if the token is valid or not.
    */
   function testToken(values) {
     // Indicated that a token was inputted and is ready to be submitted.
@@ -70,11 +71,12 @@ export default function ValidateToken() {
   }
   /**
    *
-   * @param {event} e handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
+   * @param {event} e event from when the info button is clicked.
+   * handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
    */
   function getTokenInfo(e) {
     e.preventDefault();
-    // To indicate the the info about the token is wanted
+    // To indicate the info about the token is wanted
     setWantInfo(true);
     // Body for the request.
     const requestOptions = {
@@ -104,7 +106,8 @@ export default function ValidateToken() {
     <Formik
       initialValues={{ token: "" }}
       onSubmit={async (values) => {
-        // await new Promise((resolve) => setTimeout(resolve, 500));
+        // creating a delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
         testToken(values);
       }}
       // Schema that prevents user from submitting if a token is not inputted.
@@ -181,7 +184,7 @@ export default function ValidateToken() {
                 </Grid>
               </Form>
               {/* Box where token info will appear if users chooses to display it. */}
-              {wantInfo && (
+              {S && (
                 <div className="validation-message-div">
                   <form noValidate autoComplete="off">
                     <TextField
