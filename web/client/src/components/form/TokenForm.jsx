@@ -55,20 +55,18 @@ export default function TokenForm(props) {
     } else {
       userScopes = values.tokenScopes;
     }
+    console.log(userScopes)
     const Body = {
       commandtype: "fetch",
       args: {
-        scope: [userScopes || userAudience],
+        scope: userScopes || userAudience,
       },
-      credential: {
-        quota_project_id: finalCredentials["project_id"],
-        type: "authorized_user",
-      },
+      credential: finalCredentials,
       cachetoken: true,
       usetoken: false,
     };
     const response = await getCacheToken(Body);
-    const Token = response["data"]["Token"];
+    const Token = response["data"]["OAuth2l Response"];
     sendToken(Token);
   }
   return (
@@ -76,8 +74,8 @@ export default function TokenForm(props) {
       initialValues={{
         tokenType: "",
         tokenFormat: "",
-        tokenScopes: "",
-        tokenAudience: "",
+        tokenScopes: [],
+        tokenAudience: [],
         tokenCredentials: "",
       }}
       onSubmit={(values) => {
