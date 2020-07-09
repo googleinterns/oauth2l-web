@@ -68,7 +68,6 @@ export default function ValidateToken() {
         setErrMessage(error.toString());
       });
   }
-
   /**
    *
    * @param {event} e handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
@@ -97,6 +96,7 @@ export default function ValidateToken() {
       .catch(function (error) {
         setErrorOpen(true);
         setHasError(true);
+        setErrMessage(error.toString());
       });
   }
 
@@ -104,7 +104,7 @@ export default function ValidateToken() {
     <Formik
       initialValues={{ token: "" }}
       onSubmit={async (values) => {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // await new Promise((resolve) => setTimeout(resolve, 500));
         testToken(values);
       }}
       // Schema that prevents user from submitting if a token is not inputted.
