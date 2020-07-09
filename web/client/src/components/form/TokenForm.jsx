@@ -60,10 +60,7 @@ export default function TokenForm(props) {
       args: {
         scope: [userScopes || userAudience],
       },
-      credential: {
-        quota_project_id: finalCredentials["project_id"],
-        type: "authorized_user",
-      },
+      credential: { finalCredentials },
       cachetoken: true,
       usetoken: false,
     };

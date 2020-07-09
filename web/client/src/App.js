@@ -17,7 +17,7 @@ function App() {
     if (childData["error"] !== undefined) {
       setToken(childData["error"].toString());
     } else {
-      setToken(childData['data']["Token"]);
+      setToken(childData["data"]["OAuth2l Response"]);
     }
   }
 

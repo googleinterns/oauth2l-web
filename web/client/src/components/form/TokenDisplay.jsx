@@ -1,7 +1,10 @@
 import React from "react";
-import { Typography, Button,Grid } from "@material-ui/core";
+import { Typography, Button,Grid, IconButton,Collapse} from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import PropTypes from "prop-types";
+import "../../styles/form.css"
+import {Alert} from '@material-ui/lab';
+import CloseIcon from '@material-ui/icons/Close'
 /**
  *
  * @param {string} prop token being passed for display
@@ -14,7 +17,7 @@ export default function TokenDisplay(props) {
     <Grid>
       <Typography variant="h5">Token:</Typography>
       
-      <Typography noWrap variant="body1" >
+      <Typography noWrap variant="body1" className= "form-text" >
         {token}
       </Typography>
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
@@ -22,6 +25,12 @@ export default function TokenDisplay(props) {
           Copy to Clipboard
         </Button>
       </CopyToClipboard>
+
+    <Collapse in = {copy}>
+      <Alert action = {<IconButton aria-label="close" color = "inherit" size = "small" onClick= {() => {
+          setCopy(!copy)
+      }}><CloseIcon fontSize = "inherit"/></IconButton>}>Successfully pasted the token to your clipboard!</Alert>
+      </Collapse>
     </Grid>
   );
 }
