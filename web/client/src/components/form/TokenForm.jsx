@@ -27,6 +27,50 @@ export default function TokenForm(props) {
   function sendToken(token) {
     props.parentCallback(token);
   }
+  /**
+   * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
+   * calls apiWrapper in order to request the token from the backend
+   */
+  async function getToken(values) {
+    const tokenCred = JSON.parse(values.tokenCredentials);
+    let finalCredentials;
+    if (
+      tokenCred["web"] !== undefined &&
+      tokenCred["installed"] === undefined
+    ) {
+      finalCredentials = tokenCred["web"];
+    } else if (
+      tokenCred["web"] === undefined &&
+      tokenCred["installed"] !== undefined
+    ) {
+      finalCredentials = tokenCred["installed"];
+    } else {
+      finalCredentials = tokenCred;
+    }
+    let userScopes;
+    let userAudience;
+
+    if (!values.tokenScopes) {
+      userAudience = values.tokenAudience;
+    } else {
+      userScopes = values.tokenScopes;
+    }
+    const Body = {
+      commandtype: "fetch",
+      args: {
+        scope: [userScopes || userAudience],
+      },
+      credential: {
+        quota_project_id: finalCredentials["project_id"],
+        type: "authorized_user",
+      },
+      cachetoken: true,
+      usetoken: false,
+    };
+    const response = await getCacheToken(Body);
+    const Token = response["data"]["Token"];
+    sendToken(Token);
+  }
   return (
     <FormikStepper
       initialValues={{
@@ -36,35 +80,8 @@ export default function TokenForm(props) {
         tokenAudience: "",
         tokenCredentials: "",
       }}
-      onSubmit={async (values) => {
-        const tokenCred = JSON.parse(values.tokenCredentials);
-        let finalCredentials;
-        if (tokenCred["web"] !== undefined) {
-          finalCredentials = tokenCred["web"];
-        } else {
-          finalCredentials = tokenCred;
-        }
-        let userScopes;
-        if (!values.tokenScopes) {
-          userScopes = values.tokenAudience;
-        } else {
-          userScopes = values.tokenScopes;
-        }
-        const Body = {
-          commandtype: "fetch",
-          args: {
-            scope: [userScopes],
-          },
-          credential: {
-            quota_project_id: finalCredentials["project_id"],
-            type: "authorized_user",
-          },
-          cachetoken: true,
-          usetoken: false,
-        };
-        const response = await getCacheToken(Body);
-        const Token = response["data"]["Token"];
-        sendToken(Token);
+      onSubmit={(values) => {
+        getToken(values);
       }}
       setSecondLabel={(value) => {
         setTokenType(value);
