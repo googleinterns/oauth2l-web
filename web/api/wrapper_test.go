@@ -1,4 +1,4 @@
-package handler
+package main
 
 import (
 	"encoding/json"
@@ -216,7 +216,7 @@ func TestCredentialFileContents(t *testing.T) {
 	path, err := getCredentialPath(cred)
 
 	fileBytes, err := ioutil.ReadFile(path)
-	
+
 	if err != nil {
 		t.Errorf("error reading from file")
 	}

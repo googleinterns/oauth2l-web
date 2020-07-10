@@ -58,7 +58,7 @@ export default function ValidateToken() {
     validateToken(requestOptions)
       .then(async (response) => {
         console.log(response.data)
-        if (response.data["OAuth2lReponse"] === "0") {
+        if (response.data["oauth2lResponse"] === "0") {
           setValid(true);
         } else {
           setValid(false);
@@ -75,7 +75,7 @@ export default function ValidateToken() {
    * @param {event} e event from when the info button is clicked.
    * handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
    */
-  function getTokenInfo(e) {
+  async function getTokenInfo(e) {
     e.preventDefault();
     // To indicate the info about the token is wanted
     setWantInfo(true);
@@ -93,7 +93,7 @@ export default function ValidateToken() {
     validateToken(requestOptions)
       .then(async (response) => {
         // Setting info that will be displayed as the OAuth2l Response from the command.
-        setInfo(response.data["OAuth2lReponse"]);
+        setInfo(response.data["oauth2lResponse"]);
       })
       .catch(function (error) {
         setErrorOpen(true);

@@ -1,4 +1,4 @@
-package handler
+package main
 
 import (
 	"bytes"
@@ -451,7 +451,7 @@ func TestHandlerTestCommand(t *testing.T) {
 	if err := json.Unmarshal(in, &raw); err != nil {
 		panic(err)
 	}
-	if raw["Oauth2lResponse"] == "" {
+	if raw["oauth2lResponse"] == "" {
 		t.Errorf("handler returned empty string")
 	}
 }
@@ -489,7 +489,7 @@ func TestHandlerInfoCommand(t *testing.T) {
 		panic(err)
 	}
 
-	if raw["Oauth2lResponse"] == "" {
+	if raw["oauth2lResponse"] == "" {
 		t.Errorf("handler returned empty string")
 	}
 }

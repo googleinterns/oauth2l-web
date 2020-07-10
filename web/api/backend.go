@@ -1,4 +1,4 @@
-package handler
+package main
 
 import (
 	"encoding/json"
@@ -25,7 +25,7 @@ type Request struct {
 
 //Response struct represents the JSON response that the backend will send
 type Response struct {
-	OAuth2lResponse string
+	oauth2lResponse string
 	Token           string
 }
 
@@ -204,7 +204,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// Writing response in json format.
 	w.Header().Set("Content-Type", "application/json")
 	response := Response{
-		OAuth2lResponse: CMDresponse,
+		oauth2lResponse: CMDresponse,
 		Token:           credentialsToken,
 	}
 	json.NewEncoder(w).Encode(response)
