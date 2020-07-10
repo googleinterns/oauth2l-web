@@ -25,8 +25,8 @@ type Request struct {
 
 //Response struct represents the JSON response that the backend will send
 type Response struct {
-	OAuth2lReponse string
-	Token          string
+	OAuth2lResponse string
+	Token           string
 }
 
 // Claims object that represents the claims (or the information about the token) of the JWT.
@@ -204,8 +204,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	// Writing response in json format.
 	w.Header().Set("Content-Type", "application/json")
 	response := Response{
-		OAuth2lReponse: CMDresponse,
-		Token:          credentialsToken,
+		OAuth2lResponse: CMDresponse,
+		Token:           credentialsToken,
 	}
 	json.NewEncoder(w).Encode(response)
 }

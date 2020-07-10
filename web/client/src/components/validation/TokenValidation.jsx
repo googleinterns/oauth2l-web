@@ -57,7 +57,8 @@ export default function ValidateToken() {
     // Sending the Request
     validateToken(requestOptions)
       .then(async (response) => {
-        if (response.data["OAuth2l Response"] === "0") {
+        console.log(response.data)
+        if (response.data["OAuth2lReponse"] === "0") {
           setValid(true);
         } else {
           setValid(false);
@@ -91,9 +92,8 @@ export default function ValidateToken() {
     // Sending the request.
     validateToken(requestOptions)
       .then(async (response) => {
-        const endofResponse = response.data.indexOf("}");
         // Setting info that will be displayed as the OAuth2l Response from the command.
-        setInfo(response.data.substring(22, endofResponse));
+        setInfo(response.data["OAuth2lReponse"]);
       })
       .catch(function (error) {
         setErrorOpen(true);
