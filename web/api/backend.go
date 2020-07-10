@@ -204,11 +204,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Writing response in json format.
 	w.Header().Set("Content-Type", "application/json")
-	response := Response{
+	responseBody := Response{
 		OAuth2lResponse: CMDresponse,
 		Token:           credentialsToken,
 	}
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(responseBody)
 }
 
 func main() {
