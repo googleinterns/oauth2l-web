@@ -44,7 +44,6 @@ export default function ValidateToken() {
   const classes = useStyles();
 
   /**
-   *
    * @param {object} values holds the inputted token string.
    * Takes the inputted token and test it, returning if the token is valid or not.
    */
@@ -78,8 +77,8 @@ export default function ValidateToken() {
       }
     }
   }
+
   /**
-   *
    * @param {event} e event from when the info button is clicked.
    * handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
    */
