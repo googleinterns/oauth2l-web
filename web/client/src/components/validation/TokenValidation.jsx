@@ -38,7 +38,7 @@ export default function ValidateToken() {
   const [credsToken, setCredsToken] = useState("");
   const [infoVisable, setInfoVisable] = useState(false);
   const [info, setInfo] = useState("");
-  const [errorOpen, setErrorOpen] = useState(true);
+  const [errorOpen, setErrorOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [errMessage, setErrMessage] = useState("");
   const classes = useStyles();
