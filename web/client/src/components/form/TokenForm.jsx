@@ -64,10 +64,10 @@ export default function TokenForm(props) {
       usetoken: false,
     };
     const Response = await getCacheToken(Body);
-    if(typeof(Response['error']) === undefined){
-      sendToken(Response['error'])
-    }else{
-      sendToken(Response['data']['OAuth2l Response'])
+    if (typeof Response["error"] === undefined) {
+      sendToken(Response["error"]);
+    } else {
+      sendToken(Response["data"]["OAuth2l Response"]);
     }
   }
   return (

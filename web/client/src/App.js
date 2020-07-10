@@ -14,7 +14,7 @@ function App() {
    * @param {string} childData obtains the token value from the TokenForm component
    */
   function callBackToken(childData) {
-      setToken(childData);
+    setToken(childData);
   }
 
   return (
