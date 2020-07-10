@@ -451,7 +451,7 @@ func TestHandlerTestCommand(t *testing.T) {
 	if err := json.Unmarshal(in, &raw); err != nil {
 		panic(err)
 	}
-	if raw["Oauth2l Response"] == "" {
+	if raw["Oauth2lResponse"] == "" {
 		t.Errorf("handler returned empty string")
 	}
 }
@@ -482,5 +482,14 @@ func TestHandlerInfoCommand(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
+	}
+	in := []byte(rr.Body.String())
+	var raw map[string]interface{}
+	if err := json.Unmarshal(in, &raw); err != nil {
+		panic(err)
+	}
+
+	if raw["Oauth2lResponse"] == "" {
+		t.Errorf("handler returned empty string")
 	}
 }
