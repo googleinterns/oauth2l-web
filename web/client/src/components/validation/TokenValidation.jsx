@@ -57,7 +57,6 @@ export default function ValidateToken() {
     // Sending the Request
     validateToken(requestOptions)
       .then(async (response) => {
-        console.log(response.data)
         if (response.data["OAuth2lReponse"] === "0") {
           setValid(true);
         } else {
