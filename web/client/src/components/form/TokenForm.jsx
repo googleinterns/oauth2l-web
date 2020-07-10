@@ -67,7 +67,7 @@ export default function TokenForm(props) {
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
-      sendToken(Response["data"]["OAuth2lResponse"]);
+      sendToken(Response["data"]["oauth2lResponse"]);
     }
   }
   return (
