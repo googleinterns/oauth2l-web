@@ -59,6 +59,8 @@ export default function TokenForm(props) {
       args: {
         scope: userScopes || userAudience,
       },
+      output_format: values['tokenFormat'],
+      type: values['tokenType'],
       credential: finalCredentials,
       cachetoken: true,
       usetoken: false,
