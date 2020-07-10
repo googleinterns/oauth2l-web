@@ -1,7 +1,8 @@
 import React from "react";
 import { Field, useFormikContext } from "formik";
 import { Autocomplete } from "@material-ui/lab";
-import { Typography, Box, Chip } from "@material-ui/core";
+
+import { Typography, Box } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
 import PropTypes from "prop-types";
 import scopes from "../../util/scopes_data";
@@ -23,21 +24,11 @@ export default function TokenAccess(props) {
       <Autocomplete
         multiple
         name={`token${label}`}
-        id="tags-filled"
         options={scopes.map((option) => option.scope)}
         freeSolo
         onChange={(e, value) => {
           setFieldValue(`token${label}`, value);
         }}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              variant="outlined"
-              label={option}
-              key={getTagProps({ index })}
-            />
-          ))
-        }
         renderInput={(params) => (
           <Field
             {...params}

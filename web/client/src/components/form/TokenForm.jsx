@@ -63,9 +63,12 @@ export default function TokenForm(props) {
       cachetoken: true,
       usetoken: false,
     };
-    const response = await getCacheToken(Body);
-    const Token = response["data"]["OAuth2l Response"];
-    sendToken(Token);
+    const Response = await getCacheToken(Body);
+    if (typeof Response["error"] === undefined) {
+      sendToken(Response["error"]);
+    } else {
+      sendToken(Response["data"]["OAuth2l Response"]);
+    }
   }
   return (
     <FormikStepper
