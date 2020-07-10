@@ -1,7 +1,8 @@
 import React from "react";
 import Enzyme, { mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import Scopes from "../components/Scopes";
+
+import { TokenForm } from "../components";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -9,11 +10,11 @@ Enzyme.configure({ adapter: new Adapter() });
 // assert pm react dom state
 // shallow rendering is not used for this as we need to be able to test the child components
 
-describe("Scopes Component", () => {
+describe("Main Component", () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = mount(<Scopes />);
+    wrapper = mount(<TokenForm />);
   });
 
   it("renders the page", () => {

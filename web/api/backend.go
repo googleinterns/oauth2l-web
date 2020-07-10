@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -34,7 +34,7 @@ type Claims struct {
 var jwtKey = []byte("my_secret_key")
 
 // SetupResponseHeaders sets up the headers for the response.
-func SetupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
+func setupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
@@ -94,6 +94,13 @@ func createCredentialsToken(Credentials map[string]interface{}) (string, error) 
 	return credentialsTokenString, err
 }
 
+func isCredentialsNeeded(requestType string) bool {
+	if reflect.DeepEqual(requestType, "reset") || reflect.DeepEqual(requestType, "info") || reflect.DeepEqual(requestType, "test") {
+		return false
+	}
+	return true
+}
+
 // Handler takes as input a json body with the parts of the command
 // to be executed and a json body representing the uploaded uploadCredentials.json file and returns
 // a created jwt token that will be sent to the front end and cached for reused if needed
@@ -104,7 +111,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	var requestBody Request
 
 	// Setting up reponse Headers.
-	SetupResponseHeaders(&w, r)
+	setupResponseHeaders(&w, r)
 	if (*&r).Method == "OPTIONS" {
 		return
 	}
@@ -129,7 +136,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	credsMap = nil
 
 	// If command type is test or token, credentials are not necessary
-	if !(reflect.DeepEqual(requestBody.CommandType, "test")) && !(reflect.DeepEqual(requestBody.CommandType, "info")) && !(reflect.DeepEqual(requestBody.CommandType, "reset")) {
+	if isCredentialsNeeded(requestBody.CommandType) {
 		// Checking if there is a token to use if the user asks to use a token or a credential body. Will return an error if those components are missing.
 		if (requestBody.UseToken && len(requestBody.Token) == 0) || (!requestBody.UseToken && len(requestBody.Credential) == 0) {
 			w.WriteHeader(http.StatusBadRequest)
@@ -141,7 +148,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Authenticating the token if requestBody.useToken=true and using uploadCredentials body in the token as the
+		// Authenticating the token if requestBody.useToken is true and using uploadCredentials body in the token as the
 		// uploadCredentials attribute in the WrapperCommand object.
 		// Otherwise use the requestBody.Credentials as the uploadCredentials attribute in WrapperCommand object.
 		if requestBody.UseToken {
@@ -196,7 +203,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
-	router.HandleFunc("/", Handler)
+	router.HandleFunc("/api", Handler)
 	var srv = &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:8080",

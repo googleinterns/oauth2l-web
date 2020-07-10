@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"bytes"
@@ -453,7 +453,6 @@ func TestHandlerTestCommand(t *testing.T) {
 	}
 	if raw["Oauth2l Response"] == "" {
 		t.Errorf("handler returned empty string")
-
 	}
 }
 

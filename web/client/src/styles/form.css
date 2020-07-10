@@ -6,3 +6,11 @@
 .form-text {
   padding-bottom: 0.75rem;
 }
+
+.file-input {
+  display: none;
+}
+
+.form-alert {
+  padding-top: 1rem;
+}

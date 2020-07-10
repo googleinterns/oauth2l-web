@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, cloneElement } from "react";
 import { Formik, Form } from "formik";
 import {
   Button,
@@ -8,25 +8,84 @@ import {
   Grid,
   CircularProgress,
 } from "@material-ui/core";
-import { TokenType, TokenScopes } from "../";
+import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
-
-const sleep = (time) => new Promise((acc) => setTimeout(acc, time));
+import { getCacheToken } from "../../util/apiWrapper";
 
 /**
+ * @param {param} props passes a callback function that sends the token back to the parent
  * @return {FormikStepper} component using Formik for creating a token
  */
-export default function TokenForm() {
+export default function TokenForm(props) {
+  const [secondLabel, setLabel] = useState("");
+  const [tokenType, setTokenType] = useState("");
+  /**
+   *
+   * @param {string} token variable that holds the token
+   */
+  function sendToken(token) {
+    props.parentCallback(token);
+  }
+  /**
+   * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
+   * calls apiWrapper in order to request the token from the backend
+   */
+  async function getToken(values) {
+    const tokenCred = JSON.parse(values.tokenCredentials);
+    let finalCredentials;
+    if (
+      tokenCred["web"] !== undefined &&
+      tokenCred["installed"] === undefined
+    ) {
+      finalCredentials = tokenCred["web"];
+    } else if (
+      tokenCred["web"] === undefined &&
+      tokenCred["installed"] !== undefined
+    ) {
+      finalCredentials = tokenCred["installed"];
+    } else {
+      finalCredentials = tokenCred;
+    }
+    let userScopes;
+    let userAudience;
+    if (!values.tokenScopes) {
+      userAudience = values.tokenAudience;
+    } else {
+      userScopes = values.tokenScopes;
+    }
+    const Body = {
+      commandtype: "fetch",
+      args: {
+        scope: userScopes || userAudience,
+      },
+      credential: finalCredentials,
+      cachetoken: true,
+      usetoken: false,
+    };
+    const response = await getCacheToken(Body);
+    const Token = response["data"]["OAuth2l Response"];
+    sendToken(Token);
+  }
   return (
     <FormikStepper
       initialValues={{
         tokenType: "",
         tokenFormat: "",
-        tokenScopes: "",
+        tokenScopes: [],
+        tokenAudience: [],
+        tokenCredentials: "",
       }}
-      onSubmit={async () => {
-        await sleep(3000);
+      onSubmit={(values) => {
+        getToken(values);
+      }}
+      setSecondLabel={(value) => {
+        setTokenType(value);
+        if (value === "OAuth") {
+          setLabel("Scopes");
+        } else if (value === "JWT") {
+          setLabel("Audience");
+        }
       }}
     >
       <TokenType
@@ -36,7 +95,24 @@ export default function TokenForm() {
         })}
         label="Type"
       />
-      <TokenScopes label="Scopes" />
+      <TokenAccess
+        validationSchema={object({
+          ...(tokenType === "OAuth"
+            ? { tokenScopes: string().required(`Must include scopes}`) }
+            : tokenType === "JWT"
+            ? { tokenAudience: string().required(`Must include audience}`) }
+            : {}),
+        })}
+        label={secondLabel}
+      />
+      <TokenCredentials
+        validationSchema={object({
+          tokenCredentials: string()
+            .required("Must include credential")
+            .min(1, "Must include credential"),
+        })}
+        label="Credentials"
+      />
     </FormikStepper>
   );
 }
@@ -49,8 +125,8 @@ export function FormikStepper(props) {
   const { children } = props;
   const childrenArray = React.Children.toArray(children);
   const [step, setStep] = useState(0);
+  const [done, setDone] = useState(false);
   const currentChild = childrenArray[step];
-  const [completed, setCompleted] = useState(false);
 
   const isLastStep = () => {
     return step === childrenArray.length - 1;
@@ -63,25 +139,25 @@ export function FormikStepper(props) {
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
-          setCompleted(true);
+          setDone(true);
         } else {
+          if (step === 0) {
+            props.setSecondLabel(values.tokenType);
+          }
           setStep((currStep) => currStep + 1);
         }
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, setFieldValue, errors, touched }) => (
         <Form>
           <Stepper alternativeLabel activeStep={step}>
             {childrenArray.map((child, index) => (
-              <Step
-                key={child.props.label}
-                completed={step > index || completed}
-              >
+              <Step key={child.props.label} completed={step > index || done}>
                 <StepLabel>{child.props.label}</StepLabel>
               </Step>
             ))}
           </Stepper>
-          {currentChild}
+          {cloneElement(currentChild, { setFieldValue, errors, touched })}
           <Grid container spacing={2}>
             {step > 0 ? (
               <Grid item>
@@ -122,4 +198,9 @@ export function FormikStepper(props) {
 FormikStepper.propTypes = {
   children: PropTypes.node,
   onSubmit: PropTypes.func,
+  setSecondLabel: PropTypes.func,
+};
+
+TokenForm.propTypes = {
+  parentCallback: PropTypes.func,
 };
