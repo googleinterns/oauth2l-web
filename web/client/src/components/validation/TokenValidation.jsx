@@ -48,7 +48,7 @@ export default function ValidateToken() {
    * @param {object} values holds the inputted token string.
    * Takes the inputted token and test it, returning if the token is valid or not.
    */
-  function testToken(values) {
+  async function testToken(values) {
     // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
     setCredsToken(values["token"]);
     // JSON body for the request.
@@ -63,24 +63,20 @@ export default function ValidateToken() {
     };
 
     // Sending the Request
-    validateToken(requestOptions)
-      .then(async (response) => {
-        console.log(response.data)
-        if (response.data["oauth2lResponse"] === "0") {
-          setValid(true);
-          // Indicated that a token was inputted and is ready to be submitted.
-          setCompleted(true);
-        } else {
-          setValid(false);
-          // Indicated that a token was inputted and is ready to be submitted.
-          setCompleted(true);
-        }
-      })
-      .catch(function (error) {
-        setErrorOpen(true);
-        setHasError(true);
-        setErrMessage(error.toString());
-      });
+    const Response = await validateToken(requestOptions);
+    if ("Error" in Response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(Response["Error"]["message"]);
+    } else {
+      // Indicated that a token was inputted and is ready to be submitted.
+      setCompleted(true);
+      if (Response["data"]["oauth2lResponse"] === "0") {
+        setValid(true);
+      } else {
+        setValid(false);
+      }
+    }
   }
   /**
    *
@@ -102,16 +98,14 @@ export default function ValidateToken() {
       token: "",
     };
     // Sending the request.
-    validateToken(requestOptions)
-      .then(async (response) => {
-        // Setting info that will be displayed as the OAuth2l Response from the command.
-        setInfo(response.data["oauth2lResponse"]);
-      })
-      .catch(function (error) {
-        setErrorOpen(true);
-        setHasError(true);
-        setErrMessage(error.toString());
-      });
+    const Response = await validateToken(requestOptions);
+    if ("Error" in Response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(Response["Error"]["message"]);
+    } else {
+      setInfo(Response["data"]["oauth2lResponse"]);
+    }
   }
 
   return (

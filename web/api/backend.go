@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -23,10 +23,10 @@ type Request struct {
 	Token      string
 }
 
-//Response struct represents the JSON response that the backend will send
+// Response struct represents the JSON response that the backend will send.
 type Response struct {
-	oauth2lResponse string
-	Token           string
+	OAuth2lResponse string `json:"oauth2lResponse"`
+	Token           string `json:"token"`
 }
 
 // Claims object that represents the claims (or the information about the token) of the JWT.
@@ -192,7 +192,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Getting a string representing the token created by the backend using the uploaded uploadCredentials file.
 	credentialsToken := ""
-	//creating the token.
+	// Creating the token.
 	if requestBody.CacheToken {
 		credentialsToken, err = createCredentialsToken(creds)
 		if err != nil {
@@ -201,10 +201,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
 	// Writing response in json format.
 	w.Header().Set("Content-Type", "application/json")
 	response := Response{
-		oauth2lResponse: CMDresponse,
+		OAuth2lResponse: CMDresponse,
 		Token:           credentialsToken,
 	}
 	json.NewEncoder(w).Encode(response)
