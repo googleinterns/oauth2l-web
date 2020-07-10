@@ -135,7 +135,7 @@ export default function ValidateToken() {
               alignItems="flex-end"
             >
               <Grid item xs>
-                <Typography variant="h4">Validate Token</Typography>
+                <Typography variant="h4">Validate token</Typography>
               </Grid>
             </Grid>
           </div>
@@ -163,7 +163,7 @@ export default function ValidateToken() {
                   >
                     <InfoIcon />
 
-                    <Typography variant="caption">Get Info</Typography>
+                    <Typography variant="caption">Get info</Typography>
                   </IconButton>
                 </div>
               )}
@@ -173,7 +173,7 @@ export default function ValidateToken() {
                     <CancelIcon color="error" />
 
                     <Typography variant="caption" color="error">
-                      Invalid Token
+                      Invalid token
                     </Typography>
                   </IconButton>
                 </div>
