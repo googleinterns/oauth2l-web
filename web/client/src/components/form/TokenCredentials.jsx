@@ -80,10 +80,14 @@ export default function TokenCredentials(props) {
       >
         <FormControlLabel
           value="file"
-          control={<Radio />}
+          control={<Radio color="primary" />}
           label="File upload"
         />
-        <FormControlLabel value="json" control={<Radio />} label="Text input" />
+        <FormControlLabel
+          value="json"
+          control={<Radio color="primary" />}
+          label="Text input"
+        />
       </RadioGroup>
       {credFormat === "file" ? (
         <div>
@@ -96,7 +100,7 @@ export default function TokenCredentials(props) {
               accept=".json"
               onChange={handleFile}
             />
-            <Button color="secondary" variant="contained" component="span">
+            <Button color="primary" variant="contained" component="span">
               Upload credential
             </Button>
           </label>
@@ -107,7 +111,7 @@ export default function TokenCredentials(props) {
           rows={15}
           fullWidth
           variant="outlined"
-          color="secondary"
+          color="primary"
           label="Paste credential in JSON format"
           name="tokenCredentials"
           onKeyUp={(e) => {

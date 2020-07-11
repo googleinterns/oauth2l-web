@@ -54,15 +54,25 @@ export default function TokenForm(props) {
     } else {
       userScopes = values.tokenScopes;
     }
+    let userFormat;
+    if (values.tokenFormat === "JSON Compact") {
+      userFormat = "json_compact";
+    } else {
+      userFormat = values.tokenFormat.toLowerCase();
+    }
+
     const Body = {
       commandtype: "fetch",
       args: {
         scope: userScopes || userAudience,
+        output_format: userFormat,
+        type: values["tokenType"].toLowerCase(),
       },
       credential: finalCredentials,
       cachetoken: true,
       usetoken: false,
     };
+
     const Response = await getCacheToken(Body);
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
