@@ -23,7 +23,7 @@ export default function TokenDisplay(props) {
     <Grid>
       <Typography variant="h5">OAuth2l Response:</Typography>
 
-      <Typography noWrap variant="body1" className="form-text">
+      <Typography variant="body1" className="form-text token-display">
         {token}
       </Typography>
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
