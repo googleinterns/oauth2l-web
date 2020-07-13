@@ -35,13 +35,13 @@ export default function TokenForm(props) {
     const tokenCred = JSON.parse(values.tokenCredentials);
     let finalCredentials;
     if (
-      tokenCred["web"] !== undefined &&
-      tokenCred["installed"] === undefined
+      typeof tokenCred["web"] !== undefined &&
+      typeof tokenCred["installed"] === undefined
     ) {
       finalCredentials = tokenCred["web"];
     } else if (
-      tokenCred["web"] === undefined &&
-      tokenCred["installed"] !== undefined
+      typeof tokenCred["web"] === undefined &&
+      typeof tokenCred["installed"] !== undefined
     ) {
       finalCredentials = tokenCred["installed"];
     } else {
@@ -49,7 +49,7 @@ export default function TokenForm(props) {
     }
     let userScopes;
     let userAudience;
-    if (!values.tokenScopes) {
+    if (values.tokenScopes.length === 0) {
       userAudience = values.tokenAudience;
     } else {
       userScopes = values.tokenScopes;
@@ -64,7 +64,8 @@ export default function TokenForm(props) {
     const Body = {
       commandtype: "fetch",
       args: {
-        scope: userScopes || userAudience,
+        scope: userScopes,
+        audience: userAudience,
         output_format: userFormat,
         type: values["tokenType"].toLowerCase(),
       },
@@ -74,6 +75,7 @@ export default function TokenForm(props) {
     };
 
     const Response = await getCacheToken(Body);
+
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
