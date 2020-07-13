@@ -7,6 +7,7 @@ import {
   Radio,
   FormControlLabel,
   Button,
+  Switch
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { TextField } from "formik-material-ui";
@@ -22,6 +23,7 @@ export default function TokenCredentials(props) {
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  const [saveCredential, setSaveCredential] = useState(false);
 
   const { setFieldValue } = props;
 
@@ -67,11 +69,26 @@ export default function TokenCredentials(props) {
     setFieldValue("tokenCredentials", str);
   };
 
+  const toggleSave = () => {
+    setFieldValue("saveTokenLocally", !saveCredential);
+    setSaveCredential((prev) => !prev);
+  };
+
+  const saveTokenToggle = () => {
+    return <FormControlLabel
+      className="form-save-cred-toggle"
+      control={<Switch checked={saveCredential} onChange={toggleSave} />}
+      label="Save credential for future use"
+      labelPlacement="start"
+    />
+  }
+
   return (
     <Box className="form-box">
       <div className="form-text">
         <Typography variant="h5">Upload or enter credentials</Typography>
       </div>
+      {saveTokenToggle()}
       <RadioGroup
         row
         name="credentialFormat"

@@ -88,8 +88,10 @@ export default function TokenForm(props) {
         tokenScopes: [],
         tokenAudience: [],
         tokenCredentials: "",
+        saveTokenLocally: false,
       }}
       onSubmit={(values) => {
+        console.log(values)
         getToken(values);
       }}
       setSecondLabel={(value) => {
@@ -101,7 +103,15 @@ export default function TokenForm(props) {
         }
       }}
     >
-      <TokenType
+      <TokenCredentials
+        validationSchema={object({
+          tokenCredentials: string()
+            .required("Must include credential")
+            .min(1, "Must include credential"),
+        })}
+        label="Credentials"
+      />
+      {/* <TokenType
         validationSchema={object({
           tokenType: string().required("Must select a token type"),
           tokenFormat: string().required("Must select a token format"),
@@ -117,15 +127,8 @@ export default function TokenForm(props) {
             : {}),
         })}
         label={secondLabel}
-      />
-      <TokenCredentials
-        validationSchema={object({
-          tokenCredentials: string()
-            .required("Must include credential")
-            .min(1, "Must include credential"),
-        })}
-        label="Credentials"
-      />
+      /> */}
+      
     </FormikStepper>
   );
 }

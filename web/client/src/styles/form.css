@@ -18,3 +18,7 @@
 .token-display {
   word-wrap: break-word;
 }
+
+.form-save-cred-toggle {
+  float: right;
+}
