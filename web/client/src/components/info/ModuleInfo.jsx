@@ -22,12 +22,19 @@ export default function ModuleInfo(props) {
   const { title, content } = props;
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
+  /**
+   * opens the dialog box
+   */
+  function handleClickOpen() {
     setOpen(true);
-  };
-  const handleClose = () => {
+  }
+
+  /**
+   * closes the dialog box
+   */
+  function handleClose() {
     setOpen(false);
-  };
+  }
 
   return (
     <Grid
@@ -41,13 +48,8 @@ export default function ModuleInfo(props) {
         <HelpOutlineIcon />
       </IconButton>
 
-      <Dialog
-        onClose={handleClose}
-        open={open}
-      >
-        <DialogTitle onClose={handleClose}>
-          {title}
-        </DialogTitle>
+      <Dialog onClose={handleClose} open={open}>
+        <DialogTitle onClose={handleClose}>{title}</DialogTitle>
         <DialogContent dividers>
           {content.map((text, index) => (
             <Typography key={index} gutterBottom>
