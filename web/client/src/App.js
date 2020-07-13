@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import MaterialUI from "./components/layout/Material";
-import { TokenForm, ValidateToken, TokenDisplay } from "./components";
+import {
+  TokenForm,
+  ValidateToken,
+  TokenDisplay,
+  ReqModule,
+} from "./components";
 import { Grid } from "@material-ui/core";
 
 /**
@@ -40,7 +45,7 @@ function App() {
           </Grid>
           <Grid item xs>
             <MaterialUI paperClass="paper-bottom">
-              <h2>Replace with http request module!</h2>
+              <ReqModule />
             </MaterialUI>
           </Grid>
         </Grid>
