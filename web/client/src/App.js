@@ -37,6 +37,8 @@ function App() {
                 "Once all the requirements are submitted, an access token will be" +
                   "returned, based on the format requested.",
               ]}
+              hasNote={true}
+              note="To obtain a JWT access token, a service account key must be included as the credentials file "
             />
             <Grid item className="main-content">
               <TokenForm parentCallback={callBackToken} />
@@ -62,6 +64,8 @@ function App() {
                   "When an OAuth access token is submitted, an icon will appear, stating whether the token is valid or not.",
                   "If the token is valid, a information button will appear, which will display the info of the token when clicked.",
                 ]}
+                hasNote={true}
+                note="The info for a JWT Token cannot be requested"
               />
               <Grid item xs className="main-content">
                 <ValidateToken />
@@ -70,7 +74,7 @@ function App() {
           </Grid>
           <Grid item xs>
             <MaterialUI paperClass="paper-bottom">
-              <ModuleInfo title="" content={[]} />
+              <ModuleInfo title="" content={[]} hasNote={false} note="" />
               <Grid item xs className="main-content">
                 <h2>Replace with http request module!</h2>
               </Grid>

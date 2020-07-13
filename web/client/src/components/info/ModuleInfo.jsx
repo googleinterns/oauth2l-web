@@ -19,7 +19,7 @@ import "../../styles/info.css";
  * @return {Grid} returns Grid component that contains the page
  */
 export default function ModuleInfo(props) {
-  const { title, content } = props;
+  const { title, content, hasNote, note } = props;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -50,6 +50,11 @@ export default function ModuleInfo(props) {
               {text}
             </Typography>
           ))}
+          {hasNote && (
+            <Typography variant="h6">
+              <strong>NOTE:</strong> {note}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
@@ -64,4 +69,6 @@ export default function ModuleInfo(props) {
 ModuleInfo.propTypes = {
   title: PropTypes.string,
   content: PropTypes.array,
+  hasNote: PropTypes.bool,
+  note: PropTypes.string,
 };
