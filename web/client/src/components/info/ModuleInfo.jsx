@@ -43,10 +43,9 @@ export default function ModuleInfo(props) {
 
       <Dialog
         onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+        <DialogTitle onClose={handleClose}>
           {title}
         </DialogTitle>
         <DialogContent dividers>
