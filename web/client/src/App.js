@@ -28,17 +28,14 @@ function App() {
         <Grid container direction="column">
           <MaterialUI paperClass="paper-top">
             <ModuleInfo
-              title="Getting a Token"
+              title="Requesting a token"
               content={[
-                "This module is used to generate a OAuth access token. It is equivalent to using the fetch and the header OAuth2l request.",
-                "To obtain the token, must first choose from the form the type and format of the token, as well as enter the scopes they" +
-                  "want the token to be based on. Then, a credentials file must" +
-                  "be submitted, either as a JSON file or a JSON body",
-                "Once all the requirements are submitted, an access token will be" +
-                  "returned, based on the format requested.",
+                "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
+                "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
+                "Once all the requirements are submitted, an access token will be returned based on the format requested.",
               ]}
               hasNote={true}
-              note="To obtain a JWT access token, a service account key must be included as the credentials file "
+              note="To obtain a JWT access token, a service account key must be used as the credentials file"
             />
             <Grid item className="main-content">
               <TokenForm parentCallback={callBackToken} />
@@ -58,11 +55,11 @@ function App() {
           <Grid item xs>
             <MaterialUI paperClass="paper-top">
               <ModuleInfo
-                title="Validating Token"
+                title="Validating your token"
                 content={[
                   "This module is used for validating an OAuth access token and getting the info from a valid token. It is the equivalent of using the test and info OAuth2l command.",
                   "When an OAuth access token is submitted, an icon will appear, stating whether the token is valid or not.",
-                  "If the token is valid, a information button will appear, which will display the info of the token when clicked.",
+                  "If the token is valid, an information button will appear, which will display the info of the token when clicked.",
                 ]}
                 hasNote={true}
                 note="The info for a JWT Token cannot be requested"
