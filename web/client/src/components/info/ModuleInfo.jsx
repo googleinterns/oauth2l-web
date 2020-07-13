@@ -22,19 +22,13 @@ export default function ModuleInfo(props) {
   const { title, content } = props;
   const [open, setOpen] = useState(false);
 
-  /**
-   * opens the dialog box
-   */
-  function handleClickOpen() {
+  const handleClickOpen = () => {
     setOpen(true);
-  }
+  };
 
-  /**
-   * closes the dialog box
-   */
-  function handleClose() {
+  const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <Grid
