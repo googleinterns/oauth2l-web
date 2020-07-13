@@ -32,21 +32,6 @@ export default function TokenForm(props) {
    * calls apiWrapper in order to request the token from the backend
    */
   async function getToken(values) {
-    const tokenCred = JSON.parse(values.tokenCredentials);
-    let finalCredentials;
-    if (
-      tokenCred["web"] !== undefined &&
-      tokenCred["installed"] === undefined
-    ) {
-      finalCredentials = tokenCred["web"];
-    } else if (
-      tokenCred["web"] === undefined &&
-      tokenCred["installed"] !== undefined
-    ) {
-      finalCredentials = tokenCred["installed"];
-    } else {
-      finalCredentials = tokenCred;
-    }
     let userScopes;
     let userAudience;
     if (!values.tokenScopes) {
@@ -61,23 +46,60 @@ export default function TokenForm(props) {
       userFormat = values.tokenFormat.toLowerCase();
     }
 
-    const Body = {
+    const useUploadedCredential =
+      values.tokenCredentials.length > 0
+
+    let finalCredentials;
+    if (useUploadedCredential) {
+      const tokenCred = JSON.parse(values.tokenCredentials);
+      if (
+        tokenCred["web"] !== undefined &&
+        tokenCred["installed"] === undefined
+      ) {
+        finalCredentials = tokenCred["web"];
+      } else if (
+        tokenCred["web"] === undefined &&
+        tokenCred["installed"] !== undefined
+      ) {
+        finalCredentials = tokenCred["installed"];
+      } else {
+        finalCredentials = tokenCred;
+      }
+    } else {
+      finalCredentials = localStorage.getItem("oauth2l-credential")
+    }
+
+    const body = useUploadedCredential ? {
       commandtype: "fetch",
       args: {
         scope: userScopes || userAudience,
         output_format: userFormat,
-        type: values["tokenType"].toLowerCase(),
+        type: values.tokenType.toLowerCase(),
       },
       credential: finalCredentials,
-      cachetoken: true,
+      cachetoken: values.saveTokenLocally,
+      usetoken: false,
+    } : {
+      commandtype: "fetch",
+      args: {
+        scope: userScopes || userAudience,
+        output_format: userFormat,
+        type: values.tokenType.toLowerCase(),
+      },
+      token: finalCredentials,
+      cachetoken: values.saveTokenLocally,
       usetoken: false,
     };
 
-    const Response = await getCacheToken(Body);
-    if (typeof Response["error"] === undefined) {
-      sendToken(Response["error"]);
+    const response = await getCacheToken(body);
+    console.log(response);
+    if (typeof response["error"] === undefined) {
+      sendToken(response["error"]);
     } else {
-      sendToken(Response["data"]["oauth2lResponse"]);
+      if (values.saveTokenLocally) {
+        localStorage.setItem("oauth2l-credential", response["data"]["token"]);
+      }
+      sendToken(response["data"]["oauth2lResponse"]);
     }
   }
   return (
@@ -91,7 +113,7 @@ export default function TokenForm(props) {
         saveTokenLocally: false,
       }}
       onSubmit={(values) => {
-        console.log(values)
+        console.log(values);
         getToken(values);
       }}
       setSecondLabel={(value) => {
@@ -103,15 +125,7 @@ export default function TokenForm(props) {
         }
       }}
     >
-      <TokenCredentials
-        validationSchema={object({
-          tokenCredentials: string()
-            .required("Must include credential")
-            .min(1, "Must include credential"),
-        })}
-        label="Credentials"
-      />
-      {/* <TokenType
+      <TokenType
         validationSchema={object({
           tokenType: string().required("Must select a token type"),
           tokenFormat: string().required("Must select a token format"),
@@ -127,8 +141,15 @@ export default function TokenForm(props) {
             : {}),
         })}
         label={secondLabel}
-      /> */}
-      
+      />
+      <TokenCredentials
+        validationSchema={object({
+          tokenCredentials: string()
+            .required("Must include credential")
+            .min(1, "Must include credential"),
+        })}
+        label="Credentials"
+      />
     </FormikStepper>
   );
 }
