@@ -15,13 +15,15 @@ import "./styles/app.css";
  */
 function App() {
   const [token, setToken] = useState("");
+  const [responseVisable, setResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
-  function callBackToken(childData) {
+  const callBackToken = (childData) => {
     setToken(childData);
-  }
+    setResponseVisable(true);
+  };
 
   return (
     <Grid container>
@@ -39,14 +41,16 @@ function App() {
               note="To obtain a JWT access token, a service account key must be used as the credentials file"
             />
             <Grid item className="main-content">
-              <TokenForm parentCallback={callBackToken} />
+              <TokenForm
+                parentCallback={(childData) => callBackToken(childData)}
+              />
             </Grid>
           </MaterialUI>
         </Grid>
         <Grid item xs>
           <MaterialUI paperClass="paper-bottom">
             <Grid item className="main-content token-display-grid">
-              <TokenDisplay token={token} />
+              <TokenDisplay token={token} responseVisable={responseVisable} />
             </Grid>
           </MaterialUI>
         </Grid>
