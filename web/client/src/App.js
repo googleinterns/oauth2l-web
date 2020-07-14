@@ -22,7 +22,7 @@ function App() {
   const callBackToken = (childData) => {
     setToken(childData);
     setResponseVisable(true);
-  }
+  };
 
   return (
     <Grid container>
