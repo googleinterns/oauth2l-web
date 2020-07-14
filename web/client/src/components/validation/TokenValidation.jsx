@@ -206,7 +206,7 @@ export default function ValidateToken() {
               {/* Box where token info will appear if users chooses to display it. */}
               {infoVisable && (
                 <div className="validation-message-div">
-                  <Typography variant="h5">Token Info</Typography>
+                  <Typography variant="h5">Token info</Typography>
                   <form noValidate autoComplete="off">
                     <TextField
                       multiline
