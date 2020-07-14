@@ -46,12 +46,12 @@ export default function ModuleInfo(props) {
         <DialogTitle onClose={handleClose}>{title}</DialogTitle>
         <DialogContent dividers>
           {content.map((text, index) => (
-            <Typography key={index} gutterBottom>
+            <Typography key={index} variant="body1" gutterBottom>
               {text}
             </Typography>
           ))}
           {hasNote && (
-            <Typography variant="h6">
+            <Typography variant="body2">
               <strong>NOTE:</strong> {note}
             </Typography>
           )}
