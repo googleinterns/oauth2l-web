@@ -17,7 +17,7 @@ export default function TokenType(props) {
     <div>
       <Box className="form-box">
         <FormControlLabel
-          control={<Field name="commandType" as={Switch} />}
+          control={<Field name="commandType" as={Switch} color="primary" />}
           label="Toggle for Header"
           className="toggle-button"
         />
