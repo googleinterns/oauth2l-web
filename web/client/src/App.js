@@ -13,46 +13,41 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const [token, setToken] = useState("");
+  const [response, setResponse] = useState(null);
   const [responseVisable, setResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
   const callBackToken = (childData) => {
-    setToken(childData);
+    console.log(childData)
+    setResponse(childData);
     setResponseVisable(true);
   };
+
+  console.log(response)
 
   return (
     <Grid container>
       <Grid item xs>
-        <Grid container direction="column">
-          <MaterialUI paperClass="paper-top">
-            <ModuleInfo
-              title="Requesting a token"
-              content={[
-                "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
-                "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
-                "Once all the requirements are submitted, an access token will be returned based on the format requested.",
-              ]}
-              hasNote={true}
-              note="To obtain a JWT access token, a service account key must be used as the credentials file"
-            />
-            <Grid item className="main-content">
-              <TokenForm
-                parentCallback={(childData) => callBackToken(childData)}
-              />
-            </Grid>
-          </MaterialUI>
-        </Grid>
-        <Grid item xs>
-          <MaterialUI paperClass="paper-bottom">
-            <Grid item className="main-content token-display-grid">
-              <TokenDisplay token={token} responseVisable={responseVisable} />
-            </Grid>
-          </MaterialUI>
-        </Grid>
+        <MaterialUI paperClass="paper-top">
+          <ModuleInfo
+            title="Requesting a token"
+            content={[
+              "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
+              "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
+              "Once all the requirements are submitted, an access token will be returned based on the format requested.",
+            ]}
+            hasNote={true}
+            note="To obtain a JWT access token, a service account key must be used as the credentials file"
+          />
+          <Grid item className="main-content">
+            {response ? <TokenDisplay token={response} responseVisable={responseVisable} /> : 
+            <TokenForm
+              parentCallback={(childData) => callBackToken(childData)}
+            />}
+          </Grid>
+        </MaterialUI>
       </Grid>
       <Grid item xs>
         <Grid container direction="column">
