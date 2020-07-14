@@ -18,3 +18,11 @@
 .token-display {
   word-wrap: break-word;
 }
+
+.copy-button {
+  margin-top: 1rem !important;
+}
+
+.response-box {
+  margin-top: 1rem !important;
+}
