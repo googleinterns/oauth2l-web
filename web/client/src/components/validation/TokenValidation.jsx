@@ -206,12 +206,12 @@ export default function ValidateToken() {
               {/* Box where token info will appear if users chooses to display it. */}
               {infoVisable && (
                 <div className="validation-message-div">
+                  <Typography variant="h5">Token Info</Typography>
                   <form noValidate autoComplete="off">
                     <TextField
                       multiline
                       fullWidth
                       variant="outlined"
-                      label="Info"
                       value={info}
                       InputProps={{
                         readOnly: true,
