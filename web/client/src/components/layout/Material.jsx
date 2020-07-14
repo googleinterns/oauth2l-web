@@ -21,6 +21,13 @@ export default function MaterialUI(props) {
         primary: blue,
         secondary: red,
       },
+      overrides: {
+        MuiTypography: {
+          gutterBottom: {
+            marginBottom: 20,
+          },
+        },
+      },
     })
   );
 
