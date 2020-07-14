@@ -100,7 +100,7 @@ export default function TokenCredentials(props) {
               accept=".json"
               onChange={handleFile}
             />
-            <Button color="primary" variant="contained" component="span">
+            <Button variant="contained" component="span">
               Upload credential
             </Button>
           </label>
