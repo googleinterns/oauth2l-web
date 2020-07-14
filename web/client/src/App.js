@@ -18,9 +18,9 @@ function App() {
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
-  function callBackToken(childData) {
+  const callBackToken = (childData) => {
     setToken(childData);
-  }
+  };
 
   return (
     <Grid container>
@@ -38,7 +38,9 @@ function App() {
               note="To obtain a JWT access token, a service account key must be used as the credentials file"
             />
             <Grid item className="main-content">
-              <TokenForm parentCallback={callBackToken} />
+              <TokenForm
+                parentCallback={(childData) => callBackToken(childData)}
+              />
             </Grid>
           </MaterialUI>
         </Grid>
