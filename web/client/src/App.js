@@ -14,12 +14,14 @@ import "./styles/app.css";
  */
 function App() {
   const [token, setToken] = useState("");
+  const [responseVisable, setResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
   const callBackToken = (childData) => {
     setToken(childData);
+    setResponseVisable(true);
   };
 
   return (
@@ -47,7 +49,7 @@ function App() {
         <Grid item xs>
           <MaterialUI paperClass="paper-bottom">
             <Grid item className="main-content token-display-grid">
-              <TokenDisplay token={token} />
+              <TokenDisplay token={token} responseVisable={responseVisable} />
             </Grid>
           </MaterialUI>
         </Grid>
