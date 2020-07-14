@@ -24,14 +24,14 @@ export default function TokenForm(props) {
    *
    * @param {string} token variable that holds the token
    */
-  function sendToken(token) {
+  const sendToken = (token) => {
     props.parentCallback(token);
-  }
+  };
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
    */
-  async function getToken(values) {
+  const getToken = async (values) => {
     const tokenCred = JSON.parse(values.tokenCredentials);
     let finalCredentials;
     if (
@@ -81,7 +81,7 @@ export default function TokenForm(props) {
     } else {
       sendToken(Response["data"]["oauth2lResponse"]);
     }
-  }
+  };
   return (
     <FormikStepper
       initialValues={{
@@ -91,9 +91,7 @@ export default function TokenForm(props) {
         tokenAudience: [],
         tokenCredentials: "",
       }}
-      onSubmit={(values) => {
-        getToken(values);
-      }}
+      onSubmit={(values) => getToken(values)}
       setSecondLabel={(value) => {
         setTokenType(value);
         if (value === "OAuth") {
