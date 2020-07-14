@@ -5,6 +5,7 @@ import TokenAccess from "./form/TokenAccess";
 import TokenCredentials from "./form/TokenCredentials";
 import TokenDisplay from "./form/TokenDisplay";
 import ValidateToken from "./validation/TokenValidation";
+import ModuleInfo from "./info/ModuleInfo";
 export {
   Head,
   TokenForm,
@@ -13,4 +14,5 @@ export {
   TokenCredentials,
   TokenDisplay,
   ValidateToken,
+  ModuleInfo,
 };

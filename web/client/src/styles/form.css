@@ -14,3 +14,7 @@
 .form-alert {
   padding-top: 1rem;
 }
+
+.token-display {
+  word-wrap: break-word;
+}

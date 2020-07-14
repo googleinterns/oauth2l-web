@@ -12,5 +12,7 @@ export const getCacheToken = (credentials) => {
 };
 
 export const validateToken = (requestOptions) => {
-  return axios.post(`${BASE_URL}`, requestOptions);
+  return axios.post(`${BASE_URL}`, requestOptions).catch(function (error) {
+    return JSON.parse(JSON.stringify({ Error: error }));
+  });
 };
