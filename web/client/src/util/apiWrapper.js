@@ -16,3 +16,18 @@ export const validateToken = (requestOptions) => {
     return JSON.parse(JSON.stringify({ Error: error }));
   });
 };
+
+export const getHTTPResponse = (values) => {
+  const param = {
+    url: values.URI,
+    method: values.httpMethod.toLowerCase(),
+    headers: {
+      Authorization: "Bearer " + values.token,
+      ...(values.contentType ? { "Content-Type": values.contentType } : {}),
+      ...(values.reqBody ? { data: values.reqBody } : {}),
+    },
+  };
+  return axios(param).catch(function (error) {
+    return JSON.parse(JSON.stringify({ Error: error }));
+  });
+};
