@@ -16,8 +16,14 @@ import {
   DialogActions,
   DialogContent,
   FormHelperText,
+<<<<<<< HEAD
   IconButton
+=======
+  IconButton,
+>>>>>>> 50a4eac3bca2c346d4265e0e503c9848f1b57b1d
 } from "@material-ui/core";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
 import "../../styles/request.css";
 import { object, string } from "yup";
 import { getHTTPResponse } from "../../util/apiWrapper";
@@ -60,13 +66,12 @@ export default function ReqModule() {
         URI: "",
         contentType: "",
         headers: [{ headerName: "", headerValue: "" }],
-        // headerValue: "",
         reqBody: "",
         token: "",
       }}
       onSubmit={async (values) => getResponse(values)}
       validationSchema={object({
-        httpMethod: string().required("Must have a http method"),
+        httpMethod: string().required("Must have HTTP method"),
         URI: string().required("Must have a URI"),
         token: string().required("Must have a token"),
       })}
