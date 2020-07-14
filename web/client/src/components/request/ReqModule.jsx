@@ -59,11 +59,7 @@ export default function ReqModule() {
       }}
       validationSchema={object({
         httpMethod: string().required("Must have a token"),
-        headerName: string().required("Must have a header name"),
-        headerValue: string().required("Must have a header value"),
         URI: string().required("Must have a URI"),
-        contentType: string().required("Must have a content type"),
-        reqBody: string().required("Must have a request body"),
       })}
     >
       {({ values, isSubmitting, errors, touched }) => (
@@ -102,16 +98,7 @@ export default function ReqModule() {
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={() => handleClickOpen(1)}
-                  color={
-                    (errors.headerValue && touched.headerValue) ||
-                    (errors.headerName && touched.headerName)
-                      ? "secondary"
-                      : "default"
-                  }
-                >
+                <Button variant="contained" onClick={() => handleClickOpen(1)}>
                   Add Header
                 </Button>
               </Grid>
@@ -123,12 +110,6 @@ export default function ReqModule() {
                 <Field
                   placeholder="Header Name"
                   name="headerName"
-                  error={errors.headerName && touched.headerName}
-                  helperText={
-                    errors.headerName && touched.headerName
-                      ? "Header name required."
-                      : null
-                  }
                   as={TextField}
                 />
               </DialogContent>
@@ -136,12 +117,6 @@ export default function ReqModule() {
                 <Field
                   placeholder="Header Value"
                   name="headerValue"
-                  error={errors.headerValue && touched.headerValue}
-                  helperText={
-                    errors.headerValue && touched.headerValue
-                      ? "Header value required."
-                      : null
-                  }
                   as={TextField}
                 />
               </DialogContent>
@@ -163,17 +138,12 @@ export default function ReqModule() {
 
             <Grid
               container
-              // direction="row"
               justify="space-between"
               alignItems="flex-start"
               className="request-content"
             >
               <Grid item xs={6} sm={3}>
-                <FormControl
-                  variant="outlined"
-                  fullWidth
-                  error={errors.contentType && touched.contentType}
-                >
+                <FormControl variant="outlined" fullWidth>
                   <InputLabel id="content">Content</InputLabel>
                   <Field
                     input={<OutlinedInput label="Content"></OutlinedInput>}
@@ -190,39 +160,16 @@ export default function ReqModule() {
                     <MenuItem value="text/csv">text/csv</MenuItem>
                     <MenuItem value="Custom...">Custom...</MenuItem>
                   </Field>
-                  {errors.contentType && touched.contentType && (
-                    <FormHelperText>
-                      Content type method required.
-                    </FormHelperText>
-                  )}
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={() => handleClickOpen(2)}
-                  color={
-                    errors.reqBody && touched.reqBody ? "secondary" : "default"
-                  }
-                >
-                  Add Body
-                </Button>
+                <Button variant="contained">Add Body</Button>
               </Grid>
             </Grid>
 
             <Dialog open={open2} onClose={() => handleClose(2)}>
               <DialogContent>
-                <Field
-                  name="reqBody"
-                  placeholder="Body"
-                  as={TextField}
-                  error={errors.reqBody && touched.reqBody}
-                  helperText={
-                    errors.reqBody && touched.reqBody
-                      ? "Request body Required."
-                      : null
-                  }
-                />
+                <Field name="reqBody" placeholder="Body" as={TextField} />
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleClose(2)} color="primary">

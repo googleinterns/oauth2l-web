@@ -74,7 +74,7 @@ function App() {
             <MaterialUI paperClass="paper-bottom">
               <ModuleInfo title="" content={[]} hasNote={false} note="" />
               <Grid item xs className="main-content">
-              <ReqModule />
+                <ReqModule />
               </Grid>
             </MaterialUI>
           </Grid>
