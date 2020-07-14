@@ -15,8 +15,10 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  FormHelperText,
 } from "@material-ui/core";
 import "../../styles/request.css";
+import { object, string } from "yup";
 
 /**
  * @return {Formik} component using Formik for creating send Request
@@ -55,8 +57,16 @@ export default function ReqModule() {
         setSubmitting(true);
         setSubmitting(false);
       }}
+      validationSchema={object({
+        httpMethod: string().required("Must have a token"),
+        headerName: string().required("Must have a header name"),
+        headerValue: string().required("Must have a header value"),
+        URI: string().required("Must have a URI"),
+        contentType: string().required("Must have a content type"),
+        reqBody: string().required("Must have a request body"),
+      })}
     >
-      {({ values, isSubmitting }) => (
+      {({ values, isSubmitting, errors, touched }) => (
         <Form>
           <Typography variant="h4">HTTP Request </Typography>
           <div>
@@ -67,7 +77,11 @@ export default function ReqModule() {
               className="request-content"
             >
               <Grid item xs={6} sm={3}>
-                <FormControl variant="outlined" fullWidth>
+                <FormControl
+                  variant="outlined"
+                  fullWidth
+                  error={errors.httpMethod && touched.httpMethod}
+                >
                   <InputLabel id="http">HTTP Request</InputLabel>
                   <Field
                     name="httpMethod"
@@ -82,10 +96,22 @@ export default function ReqModule() {
                     <MenuItem value="DELETE">DELETE</MenuItem>
                     <MenuItem value="PATCH">PATCH</MenuItem>
                   </Field>
+                  {errors.httpMethod && touched.httpMethod && (
+                    <FormHelperText>HTTP method required.</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button variant="contained" onClick={() => handleClickOpen(1)}>
+                <Button
+                  variant="contained"
+                  onClick={() => handleClickOpen(1)}
+                  color={
+                    (errors.headerValue && touched.headerValue) ||
+                    (errors.headerName && touched.headerName)
+                      ? "secondary"
+                      : "default"
+                  }
+                >
                   Add Header
                 </Button>
               </Grid>
@@ -97,6 +123,12 @@ export default function ReqModule() {
                 <Field
                   placeholder="Header Name"
                   name="headerName"
+                  error={errors.headerName && touched.headerName}
+                  helperText={
+                    errors.headerName && touched.headerName
+                      ? "Header name required."
+                      : null
+                  }
                   as={TextField}
                 />
               </DialogContent>
@@ -104,6 +136,12 @@ export default function ReqModule() {
                 <Field
                   placeholder="Header Value"
                   name="headerValue"
+                  error={errors.headerValue && touched.headerValue}
+                  helperText={
+                    errors.headerValue && touched.headerValue
+                      ? "Header value required."
+                      : null
+                  }
                   as={TextField}
                 />
               </DialogContent>
@@ -119,6 +157,8 @@ export default function ReqModule() {
               as={TextField}
               fullWidth
               className="request-content"
+              error={errors.URI && touched.URI}
+              helperText={errors.URI && touched.URI ? "URI required." : null}
             />
 
             <Grid
@@ -129,7 +169,11 @@ export default function ReqModule() {
               className="request-content"
             >
               <Grid item xs={6} sm={3}>
-                <FormControl variant="outlined" fullWidth>
+                <FormControl
+                  variant="outlined"
+                  fullWidth
+                  error={errors.contentType && touched.contentType}
+                >
                   <InputLabel id="content">Content</InputLabel>
                   <Field
                     input={<OutlinedInput label="Content"></OutlinedInput>}
@@ -146,10 +190,21 @@ export default function ReqModule() {
                     <MenuItem value="text/csv">text/csv</MenuItem>
                     <MenuItem value="Custom...">Custom...</MenuItem>
                   </Field>
+                  {errors.contentType && touched.contentType && (
+                    <FormHelperText>
+                      Content type method required.
+                    </FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button variant="contained" onClick={() => handleClickOpen(2)}>
+                <Button
+                  variant="contained"
+                  onClick={() => handleClickOpen(2)}
+                  color={
+                    errors.reqBody && touched.reqBody ? "secondary" : "default"
+                  }
+                >
                   Add Body
                 </Button>
               </Grid>
@@ -157,7 +212,17 @@ export default function ReqModule() {
 
             <Dialog open={open2} onClose={() => handleClose(2)}>
               <DialogContent>
-                <Field name="reqBody" placeholder="Body" as={TextField} />
+                <Field
+                  name="reqBody"
+                  placeholder="Body"
+                  as={TextField}
+                  error={errors.reqBody && touched.reqBody}
+                  helperText={
+                    errors.reqBody && touched.reqBody
+                      ? "Request body Required."
+                      : null
+                  }
+                />
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleClose(2)} color="primary">
