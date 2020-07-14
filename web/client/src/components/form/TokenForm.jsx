@@ -34,6 +34,10 @@ export default function TokenForm(props) {
   const getToken = async (values) => {
     const tokenCred = JSON.parse(values.tokenCredentials);
     let finalCredentials;
+    let userScopes;
+    let userAudience;
+    let userFormat;
+    const cmdType = values.commandType === true ? "header" : "fetch";
     if (
       typeof tokenCred["web"] !== undefined &&
       typeof tokenCred["installed"] === undefined
@@ -47,39 +51,54 @@ export default function TokenForm(props) {
     } else {
       finalCredentials = tokenCred;
     }
-    let userScopes;
-    let userAudience;
     if (values.tokenScopes.length === 0) {
       userAudience = values.tokenAudience;
     } else {
       userScopes = values.tokenScopes;
     }
-    let userFormat;
     if (values.tokenFormat === "JSON Compact") {
       userFormat = "json_compact";
     } else {
       userFormat = values.tokenFormat.toLowerCase();
     }
-
-    const Body = {
-      commandtype: "fetch",
-      args: {
-        scope: userScopes,
-        audience: userAudience,
-        output_format: userFormat,
-        type: values["tokenType"].toLowerCase(),
-      },
-      credential: finalCredentials,
-      cachetoken: true,
-      usetoken: false,
-    };
-
-    const Response = await getCacheToken(Body);
-
-    if (typeof Response["error"] === undefined) {
-      sendToken(Response["error"]);
+    if (cmdType === "header") {
+      const Body = {
+        commandtype: cmdType,
+        args: {
+          scope: userScopes,
+          audience: userAudience,
+          type: values["tokenType"].toLowerCase(),
+        },
+        credential: finalCredentials,
+        cachetoken: true,
+        usetoken: false,
+      };
+      const Response = await getCacheToken(Body);
+      if (typeof Response["error"] === undefined) {
+        sendToken(Response["error"]);
+      } else {
+        sendToken(Response["data"]["oauth2lResponse"]);
+      }
     } else {
-      sendToken(Response["data"]["oauth2lResponse"]);
+      const Body = {
+        commandtype: cmdType,
+        args: {
+          scope: userScopes,
+          audience: userAudience,
+          output_format: userFormat,
+          type: values["tokenType"].toLowerCase(),
+        },
+        credential: finalCredentials,
+        cachetoken: true,
+        usetoken: false,
+      };
+
+      const Response = await getCacheToken(Body);
+      if (typeof Response["error"] === undefined) {
+        sendToken(Response["error"]);
+      } else {
+        sendToken(Response["data"]["oauth2lResponse"]);
+      }
     }
   };
   return (

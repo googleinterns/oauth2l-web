@@ -5,7 +5,7 @@ import { FormControlLabel, Radio, Typography, Box } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import PropTypes from "prop-types";
 import "../../styles/form.css";
-
+import Switch from "@material-ui/core/Switch";
 /**
  * @param {Object} props contains validation errors and touched values representing if a field has been changed
  * @return {div} containing form fields for adding token type and format
@@ -16,6 +16,11 @@ export default function TokenType(props) {
   return (
     <div>
       <Box className="form-box">
+        <FormControlLabel
+          control={<Field name="commandType" as={Switch} />}
+          label="Toggle for Header"
+          className="toggle-button"
+        />
         <div className="form-text">
           <Typography variant="h5">Choose token type </Typography>
         </div>

@@ -26,3 +26,8 @@
 .response-box {
   margin-top: 1rem;
 }
+
+.toggle-button {
+  padding-left: 2rem;
+  float: right;
+}
