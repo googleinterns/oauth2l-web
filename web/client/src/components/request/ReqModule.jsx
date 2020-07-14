@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, FieldArray } from "formik";
 import {
   Select,
   CircularProgress,
@@ -16,7 +16,10 @@ import {
   DialogActions,
   DialogContent,
   FormHelperText,
+  IconButton,
 } from "@material-ui/core";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
 import "../../styles/request.css";
 import { object, string } from "yup";
 
@@ -49,17 +52,18 @@ export default function ReqModule() {
         httpMethod: "",
         URI: "",
         contentType: "",
-        headerName: "",
-        headerValue: "",
+        headers: [{ headerName: "", headerValue: "" }],
         reqBody: "",
+        token: "",
       }}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
         setSubmitting(false);
       }}
       validationSchema={object({
-        httpMethod: string().required("Must have a token"),
+        httpMethod: string().required("Must have HTTP method"),
         URI: string().required("Must have a URI"),
+        token: string().required("Must have a token"),
       })}
     >
       {({ values, isSubmitting, errors, touched }) => (
@@ -72,7 +76,7 @@ export default function ReqModule() {
               alignItems="flex-start"
               className="request-content"
             >
-              <Grid item xs={6} sm={3}>
+              <Grid item xs={6}>
                 <FormControl
                   variant="outlined"
                   fullWidth
@@ -105,21 +109,53 @@ export default function ReqModule() {
             </Grid>
 
             <Dialog open={open1} onClose={() => handleClose(1)}>
-              <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-              <DialogContent>
-                <Field
-                  placeholder="Header Name"
-                  name="headerName"
-                  as={TextField}
-                />
-              </DialogContent>
-              <DialogContent>
-                <Field
-                  placeholder="Header Value"
-                  name="headerValue"
-                  as={TextField}
-                />
-              </DialogContent>
+              <DialogTitle>Add Header</DialogTitle>
+              <FieldArray
+                name="headers"
+                render={({ remove, push }) => (
+                  <div>
+                    {values.headers.length > 0 &&
+                      values.headers.map((_, index) => (
+                        <div key={index}>
+                          <DialogContent>
+                            <Field
+                              placeholder="Header Name"
+                              name={`headers.${index}.headerName`}
+                              fullWidth
+                              as={TextField}
+                            />
+                          </DialogContent>
+                          <DialogContent>
+                            <Field
+                              placeholder="Header Value"
+                              name={`headers.${index}.headerValue`}
+                              fullWidth
+                              as={TextField}
+                            />
+                          </DialogContent>
+
+                          <IconButton
+                            color="primary"
+                            component="span"
+                            onClick={() => remove(index)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </div>
+                      ))}
+
+                    <IconButton
+                      color="primary"
+                      component="span"
+                      onClick={() => push({ headerName: "", headerValue: "" })}
+                      style={{ float: "right" }}
+                    >
+                      <AddCircleOutlineIcon />
+                    </IconButton>
+                  </div>
+                )}
+              />
+
               <DialogActions>
                 <Button onClick={() => handleClose(1)} color="primary">
                   Close
@@ -130,6 +166,7 @@ export default function ReqModule() {
               name="URI"
               label="URI"
               as={TextField}
+              variant="outlined"
               fullWidth
               className="request-content"
               error={errors.URI && touched.URI}
@@ -142,7 +179,7 @@ export default function ReqModule() {
               alignItems="flex-start"
               className="request-content"
             >
-              <Grid item xs={6} sm={3}>
+              <Grid item xs={6}>
                 <FormControl variant="outlined" fullWidth>
                   <InputLabel id="content">Content</InputLabel>
                   <Field
@@ -177,6 +214,19 @@ export default function ReqModule() {
                 </Button>
               </DialogActions>
             </Dialog>
+
+            <Field
+              name="token"
+              label="Token"
+              as={TextField}
+              variant="outlined"
+              fullWidth
+              className="request-content"
+              error={errors.token && touched.token}
+              helperText={
+                errors.token && touched.token ? "token required." : null
+              }
+            />
 
             <Button
               startIcon={isSubmitting ? <CircularProgress size="1rem" /> : null}
