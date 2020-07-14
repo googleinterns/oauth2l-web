@@ -23,6 +23,13 @@ export default function MaterialUI(props) {
           main: "#ce93d8",
         },
       },
+      overrides: {
+        MuiTypography: {
+          gutterBottom: {
+            marginBottom: 20,
+          },
+        },
+      },
     })
   );
 

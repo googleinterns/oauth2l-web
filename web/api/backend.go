@@ -23,6 +23,12 @@ type Request struct {
 	Token      string
 }
 
+// Response struct represents the JSON response that the backend will send.
+type Response struct {
+	OAuth2lResponse string `json:"oauth2lResponse"`
+	Token           string `json:"token"`
+}
+
 // Claims object that represents the claims (or the information about the token) of the JWT.
 // We add jwt.StandardClaims as an embedded type, to provide fields like expiry time.
 type Claims struct {
@@ -186,7 +192,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Getting a string representing the token created by the backend using the uploaded uploadCredentials file.
 	credentialsToken := ""
-	//creating the token.
+	// Creating the token.
 	if requestBody.CacheToken {
 		credentialsToken, err = createCredentialsToken(creds)
 		if err != nil {
@@ -195,9 +201,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
 	// Writing response in json format.
-	in := `{"OAuth2l Response":"` + CMDresponse + `", "Token":"` + credentialsToken + `"}`
-	io.WriteString(w, in)
+	w.Header().Set("Content-Type", "application/json")
+	responseBody := Response{
+		OAuth2lResponse: CMDresponse,
+		Token:           credentialsToken,
+	}
+	json.NewEncoder(w).Encode(responseBody)
 }
 
 func main() {

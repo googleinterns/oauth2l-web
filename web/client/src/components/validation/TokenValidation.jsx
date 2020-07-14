@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Form, Formik } from "formik";
+import { green } from "@material-ui/core/colors";
 import {
   Box,
   TextField,
@@ -19,6 +20,14 @@ import InfoIcon from "@material-ui/icons/Info";
 import "../../styles/form.css";
 import "../../styles/validation.css";
 import { validateToken } from "../../util/apiWrapper";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  iconButton: {
+    display: "flex",
+    flexDirection: "column",
+  },
+}));
 
 /**
  * @return {Formik} containing form fields for addding/validating token.
@@ -27,20 +36,18 @@ export default function ValidateToken() {
   const [valid, setValid] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [credsToken, setCredsToken] = useState("");
-  const [S, setWantInfo] = useState(false);
+  const [infoVisable, setInfoVisable] = useState(false);
   const [info, setInfo] = useState("");
-  const [errorOpen, setErrorOpen] = useState(true);
+  const [errorOpen, setErrorOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [errMessage, setErrMessage] = useState("");
+  const classes = useStyles();
 
   /**
-   *
    * @param {object} values holds the inputted token string.
    * Takes the inputted token and test it, returning if the token is valid or not.
    */
-  function testToken(values) {
-    // Indicated that a token was inputted and is ready to be submitted.
-    setCompleted(true);
+  async function testToken(values) {
     // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
     setCredsToken(values["token"]);
     // JSON body for the request.
@@ -55,29 +62,30 @@ export default function ValidateToken() {
     };
 
     // Sending the Request
-    validateToken(requestOptions)
-      .then(async (response) => {
-        if (response.data["OAuth2l Response"] === "0") {
-          setValid(true);
-        } else {
-          setValid(false);
-        }
-      })
-      .catch(function (error) {
-        setErrorOpen(true);
-        setHasError(true);
-        setErrMessage(error.toString());
-      });
+    const Response = await validateToken(requestOptions);
+    if ("Error" in Response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(Response["Error"]["message"]);
+    } else {
+      // Indicated that a token was inputted and is ready to be submitted.
+      setCompleted(true);
+      if (Response["data"]["oauth2lResponse"] === "0") {
+        setValid(true);
+      } else {
+        setValid(false);
+      }
+    }
   }
+
   /**
-   *
    * @param {event} e event from when the info button is clicked.
    * handler for when the token info button is clicked. Will provide the message from the OAuth2l info command for the token specified.
    */
-  function getTokenInfo(e) {
+  async function getTokenInfo(e) {
     e.preventDefault();
     // To indicate the info about the token is wanted
-    setWantInfo(true);
+    setInfoVisable(true);
     // Body for the request.
     const requestOptions = {
       commandtype: "info",
@@ -89,17 +97,14 @@ export default function ValidateToken() {
       token: "",
     };
     // Sending the request.
-    validateToken(requestOptions)
-      .then(async (response) => {
-        const endofResponse = response.data.indexOf("}");
-        // Setting info that will be displayed as the OAuth2l Response from the command.
-        setInfo(response.data.substring(22, endofResponse));
-      })
-      .catch(function (error) {
-        setErrorOpen(true);
-        setHasError(true);
-        setErrMessage(error.toString());
-      });
+    const Response = await validateToken(requestOptions);
+    if ("Error" in Response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(Response["Error"]["message"]);
+    } else {
+      setInfo(Response["data"]["oauth2lResponse"]);
+    }
   }
 
   return (
@@ -120,33 +125,50 @@ export default function ValidateToken() {
               container
               direction="row"
               justify="space-between"
-              alignItems="flex-start"
+              alignItems="flex-end"
             >
               <Grid item xs>
-                <Typography variant="h4">Validate Token</Typography>
+                <Typography variant="h4">Validate token</Typography>
               </Grid>
             </Grid>
           </div>
           <div>
-            <Grid
-              container
-              alignItems="flex-start"
-              justify="flex-end"
-              direction="row"
-            >
+            <Grid container alignItems="flex-end" justify="flex-end">
               {/* Indicated whether the token is valid or not. */}
               {completed && valid && (
                 <div>
                   {" "}
-                  <CheckCircleIcon color="primary" />
-                  <IconButton className="button-info" onClick={getTokenInfo}>
+                  <IconButton
+                    className="button-info"
+                    disabled
+                    classes={{ label: classes.iconButton }}
+                  >
+                    <CheckCircleIcon style={{ color: green[500] }} />
+
+                    <Typography variant="caption" style={{ color: green[500] }}>
+                      Valid Token
+                    </Typography>
+                  </IconButton>
+                  <IconButton
+                    className="button-info"
+                    onClick={getTokenInfo}
+                    classes={{ label: classes.iconButton }}
+                  >
                     <InfoIcon />
+
+                    <Typography variant="caption">Get info</Typography>
                   </IconButton>
                 </div>
               )}
               {completed && !valid && (
                 <div className="invalid-icon">
-                  <CancelIcon color="primary" />
+                  <IconButton disabled classes={{ label: classes.iconButton }}>
+                    <CancelIcon color="error" />
+
+                    <Typography variant="caption" color="error">
+                      Invalid token
+                    </Typography>
+                  </IconButton>
                 </div>
               )}
             </Grid>
@@ -182,7 +204,7 @@ export default function ValidateToken() {
                 </Grid>
               </Form>
               {/* Box where token info will appear if users chooses to display it. */}
-              {S && (
+              {infoVisable && (
                 <div className="validation-message-div">
                   <form noValidate autoComplete="off">
                     <TextField

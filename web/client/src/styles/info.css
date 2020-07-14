@@ -1,0 +1,10 @@
+.step-grid {
+  padding: 0.5rem;
+}
+
+.info-num {
+  height: 1.7rem !important;
+  width: 1.7rem !important;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
