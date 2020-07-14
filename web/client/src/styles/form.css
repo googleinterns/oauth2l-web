@@ -1,28 +1,28 @@
 .form-box {
-  padding-bottom: 2rem;
-  margin-right: 0rem;
+    padding-bottom: 2rem;
+    margin-right: 0rem;
 }
 
 .form-text {
-  padding-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
 }
 
 .file-input {
-  display: none;
+    display: none;
 }
 
 .form-alert {
-  padding-top: 1rem;
+    padding-top: 1rem;
 }
 
 .token-display {
-  word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .copy-button {
-  margin-top: 1rem !important;
+    margin-top: 1rem;
 }
 
 .response-box {
-  margin-top: 1rem !important;
+    margin-top: 1rem;
 }
