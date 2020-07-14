@@ -27,6 +27,16 @@ export const getHTTPResponse = (values) => {
       ...(values.reqBody ? { data: values.reqBody } : {}),
     },
   };
+  let i;
+  for (i = 0; i < values.headers.length; i++) {
+    if (
+      values.headers[i].headerName.length !== 0 &&
+      values[i].headerValue.length !== 0
+    ) {
+      param.headers[values.headers[i].headerName] =
+        values.headers[i].headerValue;
+    }
+  }
   return axios(param).catch(function (error) {
     return JSON.parse(JSON.stringify({ Error: error }));
   });

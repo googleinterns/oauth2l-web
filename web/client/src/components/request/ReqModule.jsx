@@ -16,19 +16,17 @@ import {
   DialogActions,
   DialogContent,
   FormHelperText,
-<<<<<<< HEAD
-  IconButton
-=======
   IconButton,
->>>>>>> 50a4eac3bca2c346d4265e0e503c9848f1b57b1d
+  Collapse,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import CloseIcon from "@material-ui/icons/Close";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import DeleteIcon from "@material-ui/icons/Delete";
 import "../../styles/request.css";
+import prettifyJSON from "../../util/prettify_json";
 import { object, string } from "yup";
 import { getHTTPResponse } from "../../util/apiWrapper";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 /**
  * @return {Formik} component using Formik for creating send Request
@@ -37,6 +35,9 @@ export default function ReqModule() {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [response, setResponse] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
 
   const handleClickOpen = (num) => {
     if (num === 1) {
@@ -56,7 +57,13 @@ export default function ReqModule() {
 
   const getResponse = async (values) => {
     const Response = await getHTTPResponse(values);
-    setResponse(JSON.stringify(Response["data"]));
+    if ("Error" in Response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(Response["Error"]["message"]);
+    } else {
+      setResponse(prettifyJSON(JSON.stringify(Response["data"], null, 2)));
+    }
   };
 
   return (
@@ -126,41 +133,52 @@ export default function ReqModule() {
 
               <Dialog open={open1} onClose={() => handleClose(1)} fullWidth>
                 <DialogTitle>Add Header</DialogTitle>
-              <FieldArray
-               name="headers"
-               render={({remove, push }) => (
-                 <div>{values.headers.length > 0 && values.headers.map((_, index) =>
-                 <div key={index}>
-                    <DialogContent>
-                  <Field
-                    placeholder="Header Name"
-                    name={`headers.${index}.headerName`}
-                    fullWidth
-                    as={TextField}
-                  />
-                  </DialogContent>
-                  <DialogContent>
-                  <Field
-                    placeholder="Header Value"
-                    name={`headers.${index}.headerValue`}
-                    fullWidth
-                    as={TextField}
-                  />
-                  </DialogContent>
-                 
-                <IconButton color="primary" component="span"  onClick={() => remove(index)}>
-          <DeleteIcon />
-        </IconButton>
-                 </div>
-                 )}
-                
- <IconButton color="primary" component="span" onClick={() => push({ headerName: "", headerValue: "" })} style={{float:"right"}}>
-          <AddCircleOutlineIcon />
-        </IconButton>
-             
-                 </div>
-                 
-                 )}
+                <FieldArray
+                  name="headers"
+                  render={({ remove, push }) => (
+                    <div>
+                      {values.headers.length > 0 &&
+                        values.headers.map((_, index) => (
+                          <div key={index}>
+                            <DialogContent>
+                              <Field
+                                placeholder="Header Name"
+                                name={`headers.${index}.headerName`}
+                                fullWidth
+                                as={TextField}
+                              />
+                            </DialogContent>
+                            <DialogContent>
+                              <Field
+                                placeholder="Header Value"
+                                name={`headers.${index}.headerValue`}
+                                fullWidth
+                                as={TextField}
+                              />
+                            </DialogContent>
+
+                            <IconButton
+                              color="primary"
+                              component="span"
+                              onClick={() => remove(index)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </div>
+                        ))}
+
+                      <IconButton
+                        color="primary"
+                        component="span"
+                        onClick={() =>
+                          push({ headerName: "", headerValue: "" })
+                        }
+                        style={{ float: "right" }}
+                      >
+                        <AddCircleOutlineIcon />
+                      </IconButton>
+                    </div>
+                  )}
                 />
                 <DialogActions>
                   <Button onClick={() => handleClose(1)} color="primary">
@@ -216,9 +234,14 @@ export default function ReqModule() {
               </Grid>
 
               <Dialog open={open2} onClose={() => handleClose(2)} fullWidth>
-              <DialogTitle>Add Body</DialogTitle>
+                <DialogTitle>Add Body</DialogTitle>
                 <DialogContent>
-                  <Field name="reqBody" placeholder="Body" as={TextField} fullWidth/>
+                  <Field
+                    name="reqBody"
+                    placeholder="Body"
+                    as={TextField}
+                    fullWidth
+                  />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={() => handleClose(2)} color="primary">
@@ -269,6 +292,31 @@ export default function ReqModule() {
                 }}
               />
             </form>
+          </div>
+          <div>
+            {/* Alert for error in fetching request. */}
+            {hasError && (
+              <Collapse in={errorOpen} className="collapse-reset">
+                <Alert
+                  variant="outlined"
+                  severity="error"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setErrorOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                >
+                  {errMessage}
+                </Alert>
+              </Collapse>
+            )}
           </div>
         </div>
       )}
