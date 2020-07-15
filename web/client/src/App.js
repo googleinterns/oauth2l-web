@@ -77,7 +77,7 @@ function App() {
           <Grid item xs>
             <MaterialUI paperClass="paper-bottom">
               <ModuleInfo
-                title="Using a Token in a HTTP Request"
+                title="Use your token for an HTTP request"
                 content={[
                   "This module is used for using a OAuth2l access token to make a HTTP request. It is the equivalent of using the curl OAuth2l command.",
                   "To make the request, you must submit the URL to the request, the method of the request, and the token you will be using in the request. You also have the option of entering a request body, headers, and content type of the reponse.",
