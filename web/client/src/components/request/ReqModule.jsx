@@ -26,7 +26,7 @@ import { object, string } from "yup";
 /**
  * @return {Formik} component using Formik for creating send Request
  */
-export default function ReqModule() {
+export default function RequestModule() {
   const [openHeaderBox, setOpenHeaderBox] = useState(false);
   const [openRequestBodyBox, setOpenRequestBodyBox] = useState(false);
 

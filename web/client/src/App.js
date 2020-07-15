@@ -4,7 +4,7 @@ import {
   TokenForm,
   ValidateToken,
   TokenDisplay,
-  ReqModule,
+  RequestModule,
   ModuleInfo,
 } from "./components";
 import { Grid } from "@material-ui/core";
@@ -87,7 +87,7 @@ function App() {
                 note=""
               />
               <Grid item xs className="main-content">
-                <ReqModule />
+                <RequestModule />
               </Grid>
             </MaterialUI>
           </Grid>
