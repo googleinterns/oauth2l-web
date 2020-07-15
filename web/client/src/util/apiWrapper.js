@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://yousefa-step-2020.uc.r.appspot.com/api"
-    : "https://yousefa-step-2020.uc.r.appspot.com/api";
+    : "http://localhost:8080/api";
 
 export const getCacheToken = (credentials) => {
   const requestString = `${BASE_URL}`;
