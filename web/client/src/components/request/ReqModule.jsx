@@ -108,7 +108,7 @@ export default function ReqModule() {
               </Grid>
             </Grid>
 
-            <Dialog open={open1} onClose={() => handleClose(1)}>
+            <Dialog open={open1} onClose={() => handleClose(1)} fullWidth>
               <DialogTitle>Add Header</DialogTitle>
               <FieldArray
                 name="headers"
@@ -195,18 +195,25 @@ export default function ReqModule() {
                     </MenuItem>
                     <MenuItem value="text/plain">text/plain</MenuItem>
                     <MenuItem value="text/csv">text/csv</MenuItem>
-                    <MenuItem value="Custom...">Custom...</MenuItem>
                   </Field>
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button variant="contained">Add Body</Button>
+                <Button variant="contained" onClick={() => handleClickOpen(2)}>
+                  Add Body
+                </Button>
               </Grid>
             </Grid>
 
-            <Dialog open={open2} onClose={() => handleClose(2)}>
+            <Dialog open={open2} onClose={() => handleClose(2)} fullWidth>
+              <DialogTitle>Add Body</DialogTitle>
               <DialogContent>
-                <Field name="reqBody" placeholder="Body" as={TextField} />
+                <Field
+                  name="reqBody"
+                  placeholder="Body"
+                  fullWidth
+                  as={TextField}
+                />
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleClose(2)} color="primary">
@@ -224,7 +231,7 @@ export default function ReqModule() {
               className="request-content"
               error={errors.token && touched.token}
               helperText={
-                errors.token && touched.token ? "token required." : null
+                errors.token && touched.token ? "Token required." : null
               }
             />
 
