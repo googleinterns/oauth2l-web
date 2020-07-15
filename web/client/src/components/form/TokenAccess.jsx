@@ -24,7 +24,7 @@ export default function TokenAccess(props) {
       <Autocomplete
         multiple
         name={`token${label}`}
-        options={scopes.map((option) => option.scope)}
+        options={label === "Scopes" ? scopes.map((option) => option.scope) : []}
         freeSolo
         onChange={(e, value) => {
           setFieldValue(`token${label}`, value);

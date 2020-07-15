@@ -111,9 +111,9 @@ export default function TokenForm(props) {
       <TokenAccess
         validationSchema={object({
           ...(tokenType === "OAuth"
-            ? { tokenScopes: string().required(`Must include scopes}`) }
+            ? { tokenScopes: string().required(`Must include scopes`) }
             : tokenType === "JWT"
-            ? { tokenAudience: string().required(`Must include audience}`) }
+            ? { tokenAudience: string().required(`Must include audience`) }
             : {}),
         })}
         label={secondLabel}
