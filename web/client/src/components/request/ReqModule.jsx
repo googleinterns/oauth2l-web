@@ -27,24 +27,8 @@ import { object, string } from "yup";
  * @return {Formik} component using Formik for creating send Request
  */
 export default function ReqModule() {
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
-
-  const handleClickOpen = (num) => {
-    if (num === 1) {
-      setOpen1(true);
-    } else if (num === 2) {
-      setOpen2(true);
-    }
-  };
-
-  const handleClose = (num) => {
-    if (num === 1) {
-      setOpen1(false);
-    } else if (num === 2) {
-      setOpen2(false);
-    }
-  };
+  const [openHeaderBox, setOpenHeaderBox] = useState(false);
+  const [openRequestBodyBox, setOpenRequestBodyBox] = useState(false);
 
   return (
     <Formik
@@ -102,13 +86,20 @@ export default function ReqModule() {
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button variant="contained" onClick={() => handleClickOpen(1)}>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpenHeaderBox(true)}
+                >
                   Add Header
                 </Button>
               </Grid>
             </Grid>
 
-            <Dialog open={open1} onClose={() => handleClose(1)} fullWidth>
+            <Dialog
+              open={openHeaderBox}
+              onClose={() => setOpenHeaderBox(false)}
+              fullWidth
+            >
               <DialogTitle>Add Header</DialogTitle>
               <FieldArray
                 name="headers"
@@ -157,7 +148,7 @@ export default function ReqModule() {
               />
 
               <DialogActions>
-                <Button onClick={() => handleClose(1)} color="primary">
+                <Button onClick={() => setOpenHeaderBox(false)} color="primary">
                   Close
                 </Button>
               </DialogActions>
@@ -199,13 +190,20 @@ export default function ReqModule() {
                 </FormControl>
               </Grid>
               <Grid item>
-                <Button variant="contained" onClick={() => handleClickOpen(2)}>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpenRequestBodyBox(true)}
+                >
                   Add Body
                 </Button>
               </Grid>
             </Grid>
 
-            <Dialog open={open2} onClose={() => handleClose(2)} fullWidth>
+            <Dialog
+              open={openRequestBodyBox}
+              onClose={() => setOpenRequestBodyBox(false)}
+              fullWidth
+            >
               <DialogTitle>Add Body</DialogTitle>
               <DialogContent>
                 <Field
@@ -216,7 +214,10 @@ export default function ReqModule() {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => handleClose(2)} color="primary">
+                <Button
+                  onClick={() => setOpenRequestBodyBox(false)}
+                  color="primary"
+                >
                   Close
                 </Button>
               </DialogActions>
