@@ -4,6 +4,7 @@ import {
   TokenForm,
   ValidateToken,
   TokenDisplay,
+  RequestModule,
   ModuleInfo,
 } from "./components";
 import { Grid } from "@material-ui/core";
@@ -14,12 +15,14 @@ import "./styles/app.css";
  */
 function App() {
   const [token, setToken] = useState("");
+  const [responseVisable, setResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
   const callBackToken = (childData) => {
     setToken(childData);
+    setResponseVisable(true);
   };
 
   return (
@@ -47,7 +50,7 @@ function App() {
         <Grid item xs>
           <MaterialUI paperClass="paper-bottom">
             <Grid item className="main-content token-display-grid">
-              <TokenDisplay token={token} />
+              <TokenDisplay token={token} responseVisable={responseVisable} />
             </Grid>
           </MaterialUI>
         </Grid>
@@ -73,9 +76,18 @@ function App() {
           </Grid>
           <Grid item xs>
             <MaterialUI paperClass="paper-bottom">
-              <ModuleInfo title="" content={[]} hasNote={false} note="" />
+              <ModuleInfo
+                title="Use your token for an HTTP request"
+                content={[
+                  "This module is used for using a OAuth2l access token to make a HTTP request. It is the equivalent of using the curl OAuth2l command.",
+                  "To make the request, you must submit the URL to the request, the method of the request, and the token you will be using in the request. You also have the option of entering a request body, headers, and content type of the reponse.",
+                  "Once that is all submitted, the request will be made and the response will be displayed.",
+                ]}
+                hasNote={false}
+                note=""
+              />
               <Grid item xs className="main-content">
-                <h2>Replace with http request module!</h2>
+                <RequestModule />
               </Grid>
             </MaterialUI>
           </Grid>
