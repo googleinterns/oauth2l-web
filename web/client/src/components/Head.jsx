@@ -1,6 +1,6 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
-import "../styles/head.css"
+import "../styles/head.css";
 
 /**
  * @return {AppBar} with Google Cloud logo
