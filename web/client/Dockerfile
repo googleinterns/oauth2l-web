@@ -1,4 +1,5 @@
 FROM node:13.12.0-alpine
+
 # set working directory
 WORKDIR /app
 
@@ -10,8 +11,11 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
 
-# add app
+# add frontend
 COPY . ./
+
+# exposing the frontend port
 EXPOSE 3000
-# start app
+
+# start frontend
 CMD ["npm", "start"] 
