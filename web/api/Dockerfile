@@ -5,6 +5,7 @@ ADD . /app/
 WORKDIR /app
 
 #installing backend dependencies 
+ENV GOBIN /go/bin
 RUN go get .
 
 # add frontend
