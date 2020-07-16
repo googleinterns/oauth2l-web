@@ -217,7 +217,7 @@ func main() {
 	router.HandleFunc("/api", Handler)
 	var srv = &http.Server{
 		Handler:      router,
-		Addr:         "127.0.0.1:8080",
+		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
