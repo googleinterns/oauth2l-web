@@ -17,11 +17,16 @@ import {
   DialogContent,
   FormHelperText,
   IconButton,
+  Collapse,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
 import "../../styles/request.css";
 import { object, string } from "yup";
+import { getHTTPResponse } from "../../util/apiWrapper";
+import prettifyJSON from "../../util/prettify_json";
 
 /**
  * @return {Formik} component using Formik for creating send Request
@@ -29,6 +34,21 @@ import { object, string } from "yup";
 export default function RequestModule() {
   const [openHeaderBox, setOpenHeaderBox] = useState(false);
   const [openRequestBodyBox, setOpenRequestBodyBox] = useState(false);
+  const [response, setResponse] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
+
+  const getResponse = async (values) => {
+    const Response = await getHTTPResponse(values);
+    if ("Error" in Response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(Response["Error"]["message"]);
+    } else {
+      setResponse(prettifyJSON(JSON.stringify(Response["data"], null, 2)));
+    }
+  };
 
   return (
     <Formik
@@ -40,10 +60,7 @@ export default function RequestModule() {
         reqBody: "",
         token: "",
       }}
-      onSubmit={async (values, { setSubmitting }) => {
-        setSubmitting(true);
-        setSubmitting(false);
-      }}
+      onSubmit={async (values) => getResponse(values)}
       validationSchema={object({
         httpMethod: string().required("Must have HTTP method"),
         URI: string().required("Must have a URI"),
@@ -256,12 +273,38 @@ export default function RequestModule() {
                 multiline
                 fullWidth
                 variant="outlined"
-                value={JSON.stringify(values, null, 2)}
+                // value={JSON.stringify(values, null, 2)}
+                value={response}
                 InputProps={{
                   readOnly: true,
                 }}
               />
             </form>
+            <div>
+              {/* Alert for error in fetching request. */}
+              {hasError && (
+                <Collapse in={errorOpen} className="collapse-reset">
+                  <Alert
+                    variant="outlined"
+                    severity="error"
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setErrorOpen(false);
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                  >
+                    {errMessage}
+                  </Alert>
+                </Collapse>
+              )}
+            </div>
           </div>
         </Form>
       )}
