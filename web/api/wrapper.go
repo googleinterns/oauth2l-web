@@ -14,6 +14,7 @@ type WrapperCommand struct {
 	CommandType string
 	Args
 	Credential
+	Code string
 }
 
 // Args type used for unmarshalled JSON
@@ -46,6 +47,9 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 
 	// Execute command and capture output
 	command := exec.Command("./binaries/oauth2l", args...)
+	if wc.Code != "" {
+		command.Stdin = strings.NewReader(wc.Code)
+	}
 	byteBuffer, err := command.Output()
 
 	// Convert byteBuffer to string and remove newline character

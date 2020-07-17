@@ -15,6 +15,7 @@ func TestWrapperCommandStructSingleArg(t *testing.T) {
 		expectedRequest,
 		expectedArgs,
 		Credential{},
+		"",
 	}
 
 	if wrapper.CommandType != expectedRequest {
@@ -34,6 +35,7 @@ func TestWrapperCommandStructManyArgs(t *testing.T) {
 		expectedRequest,
 		expectedArgs,
 		Credential{},
+		"",
 	}
 
 	if wrapper.CommandType != expectedRequest {
@@ -53,6 +55,7 @@ func TestInvalidTypeInArgs(t *testing.T) {
 		expectedRequest,
 		expectedArgs,
 		nil,
+		"",
 	}
 
 	_, err := wrapper.Execute()
@@ -70,6 +73,7 @@ func TestValidTypeInArgs(t *testing.T) {
 		expectedRequest,
 		expectedArgs,
 		nil,
+		"",
 	}
 
 	_, err := combinedArgs(wrapper)
@@ -147,6 +151,7 @@ func TestDummyOauth2lCommand(t *testing.T) {
 		expectedRequest,
 		expectedArgs,
 		nil,
+		"",
 	}
 
 	output, _ := wrapper.Execute()
@@ -166,6 +171,7 @@ func TestTokenCreationCredential(t *testing.T) {
 		"fetch",
 		Args{"--scope": []string{"cloud-platform"}},
 		cred,
+		"",
 	}
 
 	_, err := wrapper.Execute()
