@@ -49,7 +49,7 @@ export default function TokenForm(props) {
       sendToken(Response["error"]);
     } else {
       const tokenBeginning =
-        Response["data"]["oauth2lResponse"].indexOf("code:") + 5;
+        Response["data"]["oauth2lResponse"].indexOf("code:") + 6;
       sendToken(
         Response["data"]["oauth2lResponse"].substring(
           tokenBeginning,
@@ -107,16 +107,16 @@ export default function TokenForm(props) {
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
-      if (
-        typeof tokenCred["web"] !== undefined &&
-        typeof tokenCred["installed"]
-      ) {
-        if (Response["data"]["oauth2lResponse"].indexOf("following") !== -1) {
-          window.open(Response["data"]["oauth2lResponse"].substring(46, 308));
-          setOpenBox(true);
-        } else {
-          sendToken(Response["data"]["oauth2lResponse"]);
-        }
+      if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
+        const urlBeginning = Response["data"]["oauth2lResponse"].indexOf(":");
+        const urlEnd = Response["data"]["oauth2lResponse"].indexOf("=state");
+        window.open(
+          Response["data"]["oauth2lResponse"].substring(
+            urlBeginning + 1,
+            urlEnd + 7
+          )
+        );
+        setOpenBox(true);
       } else {
         sendToken(Response["data"]["oauth2lResponse"]);
       }
