@@ -58,15 +58,15 @@ export default function ValidateToken() {
     };
 
     // Sending the Request
-    const Response = await validateToken(requestOptions);
-    if ("Error" in Response) {
+    const response = await validateToken(requestOptions);
+    if ("Error" in response) {
       setErrorOpen(true);
       setHasError(true);
-      setErrMessage(Response["Error"]["message"]);
+      setErrMessage(response["Error"]["message"]);
     } else {
       // Indicated that a token was inputted and is ready to be submitted.
       setCompleted(true);
-      if (Response["data"]["oauth2lResponse"] === "0") {
+      if (response["data"]["oauth2lResponse"] === "0") {
         setValid(true);
       } else {
         setValid(false);
@@ -89,13 +89,13 @@ export default function ValidateToken() {
       token: "",
     };
     // Sending the request.
-    const Response = await validateToken(requestOptions);
-    if ("Error" in Response) {
+    const response = await validateToken(requestOptions);
+    if ("Error" in response) {
       setErrorOpen(true);
       setHasError(true);
-      setErrMessage(Response["Error"]["message"]);
+      setErrMessage(response["Error"]["message"]);
     } else {
-      setInfo(Response["data"]["oauth2lResponse"]);
+      setInfo(response["data"]["oauth2lResponse"]);
     }
   };
 

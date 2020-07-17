@@ -74,12 +74,12 @@ export default function TokenForm(props) {
       usetoken: false,
     };
 
-    const Response = await getCacheToken(Body);
+    const response = await getCacheToken(Body);
 
-    if (typeof Response["error"] === undefined) {
-      sendToken(Response["error"]);
+    if (typeof response["error"] === undefined) {
+      sendToken(response["error"]);
     } else {
-      sendToken(Response["data"]["oauth2lResponse"]);
+      sendToken(response["data"]["oauth2lResponse"]);
     }
   };
   return (

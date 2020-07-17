@@ -26,7 +26,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import "../../styles/request.css";
 import { object, string } from "yup";
 import { getHTTPResponse } from "../../util/apiWrapper";
-import prettifyJSON from "../../util/prettify_json";
 
 /**
  * @return {Formik} component using Formik for creating send Request
@@ -40,13 +39,31 @@ export default function RequestModule() {
   const [errMessage, setErrMessage] = useState("");
 
   const getResponse = async (values) => {
-    const Response = await getHTTPResponse(values);
-    if ("Error" in Response) {
+    const param = {
+      url: values.url,
+      method: values.httpMethod.toLowerCase(),
+      headers: {
+        Authorization: "Bearer " + values.token,
+        ...(values.contentType ? { "Content-Type": values.contentType } : null),
+        ...(values.reqBody ? { data: values.reqBody } : null),
+      },
+    };
+    for (let i = 0; i < values.headers.length; i++) {
+      if (
+        values.headers[i].headerName.length !== 0 &&
+        values[i].headerValue.length !== 0
+      ) {
+        param.headers[values.headers[i].headerName] =
+          values.headers[i].headerValue;
+      }
+    }
+    const response = await getHTTPResponse(param);
+    if ("Error" in response) {
       setErrorOpen(true);
       setHasError(true);
-      setErrMessage(Response["Error"]["message"]);
+      setErrMessage(response["Error"]["message"]);
     } else {
-      setResponse(prettifyJSON(JSON.stringify(Response["data"], null, 2)));
+      setResponse(JSON.stringify(response["data"], null, 2));
     }
   };
 
@@ -54,7 +71,7 @@ export default function RequestModule() {
     <Formik
       initialValues={{
         httpMethod: "",
-        URI: "",
+        url: "",
         contentType: "",
         headers: [{ headerName: "", headerValue: "" }],
         reqBody: "",
@@ -63,7 +80,7 @@ export default function RequestModule() {
       onSubmit={async (values) => getResponse(values)}
       validationSchema={object({
         httpMethod: string().required("Must have HTTP method"),
-        URI: string().required("Must have a URI"),
+        url: string().required("Must have a url"),
         token: string().required("Must have a token"),
       })}
     >
@@ -171,14 +188,14 @@ export default function RequestModule() {
               </DialogActions>
             </Dialog>
             <Field
-              name="URI"
-              label="URI"
+              name="url"
+              label="URL"
               as={TextField}
               variant="outlined"
               fullWidth
               className="request-content"
-              error={errors.URI && touched.URI}
-              helperText={errors.URI && touched.URI ? "URI required." : null}
+              error={errors.url && touched.url}
+              helperText={errors.url && touched.url ? "URL required." : null}
             />
 
             <Grid
@@ -273,7 +290,6 @@ export default function RequestModule() {
                 multiline
                 fullWidth
                 variant="outlined"
-                // value={JSON.stringify(values, null, 2)}
                 value={response}
                 InputProps={{
                   readOnly: true,
