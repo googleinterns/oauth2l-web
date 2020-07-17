@@ -1,3 +1,4 @@
+# build Go server
 FROM golang:latest AS builder
 ADD . /app
 WORKDIR /app/api
