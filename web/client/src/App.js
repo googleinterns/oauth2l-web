@@ -24,7 +24,6 @@ function App() {
     setResponseVisable(true);
   };
 
-
   return (
     <Grid container>
       <Grid item xs>
@@ -41,11 +40,17 @@ function App() {
               note="To obtain a JWT access token, a service account key must be used as the credentials file"
             />
             <Grid item className="main-content">
-            {(!responseVisable)? 
-              <TokenForm
-                parentCallback={(childData) => callBackToken(childData)}
-              /> : <TokenDisplay token={token} responseVisable = {responseVisable} parentCallback={(response) => setResponseVisable(!response)}/>
-} 
+              {!responseVisable ? (
+                <TokenForm
+                  parentCallback={(childData) => callBackToken(childData)}
+                />
+              ) : (
+                <TokenDisplay
+                  token={token}
+                  responseVisable={responseVisable}
+                  parentCallback={(response) => setResponseVisable(!response)}
+                />
+              )}
             </Grid>
           </MaterialUI>
         </Grid>

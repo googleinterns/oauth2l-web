@@ -81,7 +81,7 @@ export default function TokenForm(props) {
     }
   };
   return (
-  <FormikStepper
+    <FormikStepper
       initialValues={{
         tokenType: "",
         tokenFormat: "",
@@ -152,7 +152,7 @@ export function FormikStepper(props) {
           await props.onSubmit(values, helpers);
           setDone(true);
           setStep(0);
-          helpers.resetForm()
+          helpers.resetForm();
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
