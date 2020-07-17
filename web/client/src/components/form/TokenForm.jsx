@@ -26,7 +26,7 @@ export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
   const [requestBody, setRequestBody] = useState(null);
-  const [openBox, setOpenBox] = useState(false);
+  const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
   /**
    *
@@ -41,7 +41,7 @@ export default function TokenForm(props) {
    */
 
   const getTokenWithCode = async () => {
-    setOpenBox(false);
+    setCodeOpenBox(false);
     requestBody["code"] = code;
 
     const Response = await getCacheToken(requestBody);
@@ -116,7 +116,7 @@ export default function TokenForm(props) {
             urlEnd + 7
           )
         );
-        setOpenBox(true);
+        setCodeOpenBox(true);
       } else {
         sendToken(Response["data"]["oauth2lResponse"]);
       }
@@ -169,7 +169,7 @@ export default function TokenForm(props) {
         />
       </FormikStepper>
       <Dialog
-        open={openBox}
+        open={openCodeBox}
         onClose={getTokenWithCode}
         aria-labelledby="form-dialog-title"
       >
