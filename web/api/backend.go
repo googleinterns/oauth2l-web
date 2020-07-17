@@ -214,6 +214,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./web"))))
 	router.HandleFunc("/api", Handler)
 	var srv = &http.Server{
 		Handler:      router,
