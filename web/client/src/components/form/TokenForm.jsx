@@ -46,8 +46,7 @@ export default function TokenForm(props) {
       userFormat = values.tokenFormat.toLowerCase();
     }
 
-    const useUploadedCredential =
-      values.tokenCredentials.length > 0
+    const useUploadedCredential = values.tokenCredentials.length > 0;
 
     let finalCredentials;
     if (useUploadedCredential) {
@@ -66,33 +65,34 @@ export default function TokenForm(props) {
         finalCredentials = tokenCred;
       }
     } else {
-      finalCredentials = localStorage.getItem("oauth2l-credential")
+      finalCredentials = localStorage.getItem("oauth2l-credential");
     }
 
-    const body = useUploadedCredential ? {
-      commandtype: "fetch",
-      args: {
-        scope: userScopes || userAudience,
-        output_format: userFormat,
-        type: values.tokenType.toLowerCase(),
-      },
-      credential: finalCredentials,
-      cachetoken: values.saveTokenLocally,
-      usetoken: false,
-    } : {
-      commandtype: "fetch",
-      args: {
-        scope: userScopes || userAudience,
-        output_format: userFormat,
-        type: values.tokenType.toLowerCase(),
-      },
-      token: finalCredentials,
-      cachetoken: values.saveTokenLocally,
-      usetoken: false,
-    };
+    const body = useUploadedCredential
+      ? {
+          commandtype: "fetch",
+          args: {
+            scope: userScopes || userAudience,
+            output_format: userFormat,
+            type: values.tokenType.toLowerCase(),
+          },
+          credential: finalCredentials,
+          cachetoken: values.saveTokenLocally,
+          usetoken: false,
+        }
+      : {
+          commandtype: "fetch",
+          args: {
+            scope: userScopes || userAudience,
+            output_format: userFormat,
+            type: values.tokenType.toLowerCase(),
+          },
+          token: finalCredentials,
+          cachetoken: values.saveTokenLocally,
+          usetoken: false,
+        };
 
     const response = await getCacheToken(body);
-    console.log(response);
     if (typeof response["error"] === undefined) {
       sendToken(response["error"]);
     } else {
@@ -113,7 +113,6 @@ export default function TokenForm(props) {
         saveTokenLocally: false,
       }}
       onSubmit={(values) => {
-        console.log(values);
         getToken(values);
       }}
       setSecondLabel={(value) => {
