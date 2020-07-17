@@ -73,9 +73,7 @@ export default function TokenForm(props) {
       cachetoken: true,
       usetoken: false,
     };
-
     const Response = await getCacheToken(Body);
-
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
@@ -83,7 +81,7 @@ export default function TokenForm(props) {
     }
   };
   return (
-    <FormikStepper
+  <FormikStepper
       initialValues={{
         tokenType: "",
         tokenFormat: "",
@@ -153,6 +151,8 @@ export function FormikStepper(props) {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
           setDone(true);
+          setStep(0);
+          helpers.resetForm()
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);

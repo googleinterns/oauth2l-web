@@ -20,10 +20,15 @@ import CloseIcon from "@material-ui/icons/Close";
 export default function TokenDisplay(props) {
   const { token, responseVisable } = props;
   const [copy, setCopy] = React.useState(false);
+
+  const sendBack = (responseVisable) =>{
+    console.log(responseVisable)
+    props.parentCallback(!responseVisable)
+  }
   return (
     <Grid>
       <Typography variant="h5">OAuth2l Response:</Typography>
-
+<Button onClick = {sendBack(responseVisable)} variant="contained">Reset</Button>
       {responseVisable && (
         <form noValidate autoComplete="off" className="response-box">
           <TextField
