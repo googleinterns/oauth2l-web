@@ -21,6 +21,7 @@ import "../../styles/form.css";
 import "../../styles/validation.css";
 import { validateToken } from "../../util/apiWrapper";
 import { makeStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles((theme) => ({
   iconButton: {
     display: "flex",
