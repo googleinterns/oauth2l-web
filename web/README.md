@@ -12,8 +12,36 @@ The Authentication Playground was designed to provide an intuitive and functiona
 This application is built using  [React.JS](https://reactjs.org) on the frontend, themed with the [Material-UI](https://material-ui.com) library and uses [Go](https://golang.org) for the backend.
 
 ## Quickstart
+First clone the repository using the following command:
 
-### Deploying Locally
+```bash
+$ git clone https://github.com/googleinterns/oauth2l-web
+```
+Then go into the `web` directory in your `oauth2l-web` directory.
+```bash
+$ cd oauth2l-web
+```
+
+### Docker
+Download [Docker](https://docs.docker.com/get-docker/) if not already installed. 
+
+Create the image by running the following command:
+```bash
+$ docker build -t oauth2l-web .
+```
+Then run the container with the following command:
+```bash
+$ docker run --detatch --name oauth2l-web 3000:8000 -d oauth2l-web
+```
+The application should be running on http://localhost:3000.
+
+To stop the application, run the following commands:
+```bash
+$ docker container stop oauth2l-web
+$ docker container rm oauth2l-web
+```
+
+### Everywhere else
 #### Requirements
 
 The requirements needed to run the web application are:
@@ -27,17 +55,12 @@ The requirements needed to run the web application are:
 
 #### Installing Packages
 
-First clone the repository using the following command:
-
+Go into your `web/api` directory and install the `go` libraries used in the application. 
 ```bash
-$ git clone https://github.com/googleinterns/oauth2l-web
+$ cd web/api
+$ go get .
 ```
-Then go into your `oauth2l-web` directory and install the `go` libraries used in the application. 
-```bash
-$ cd oauth2l-web
-$ go get
-```
-Go into the `web/client` directory and install the libaries used for the front-end.
+Then go into the `web/client` directory and install the libaries used for the front-end.
 ```bash
 $ cd web/client
 $ npm install
