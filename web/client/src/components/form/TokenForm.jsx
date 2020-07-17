@@ -7,6 +7,11 @@ import {
   StepLabel,
   Grid,
   CircularProgress,
+  DialogTitle,
+  DialogContent,
+  Dialog,
+  TextField,
+  DialogActions,
 } from "@material-ui/core";
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
@@ -20,6 +25,9 @@ import { getCacheToken } from "../../util/apiWrapper";
 export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
+  const [requestBody, setRequestBody] = useState(null);
+  const [openBox, setOpenBox] = useState(false);
+  const [code, setCode] = useState("");
   /**
    *
    * @param {string} token variable that holds the token
@@ -31,6 +39,26 @@ export default function TokenForm(props) {
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
    */
+
+  const getTokenWithCode = async () => {
+    setOpenBox(false);
+    requestBody["code"] = code;
+
+    const Response = await getCacheToken(requestBody);
+    if (typeof Response["error"] === undefined) {
+      sendToken(Response["error"]);
+    } else {
+      const tokenBeginning =
+        Response["data"]["oauth2lResponse"].indexOf("code:") + 5;
+      sendToken(
+        Response["data"]["oauth2lResponse"].substring(
+          tokenBeginning,
+          Response["data"]["oauth2lResponse"].length
+        )
+      );
+    }
+  };
+
   const getToken = async (values) => {
     const tokenCred = JSON.parse(values.tokenCredentials);
     let finalCredentials;
@@ -73,60 +101,100 @@ export default function TokenForm(props) {
       cachetoken: true,
       usetoken: false,
     };
+    setRequestBody(Body);
 
     const Response = await getCacheToken(Body);
-
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
-      sendToken(Response["data"]["oauth2lResponse"]);
+      if (
+        typeof tokenCred["web"] !== undefined &&
+        typeof tokenCred["installed"]
+      ) {
+        if (Response["data"]["oauth2lResponse"].indexOf("following") !== -1) {
+          window.open(Response["data"]["oauth2lResponse"].substring(46, 308));
+          setOpenBox(true);
+        } else {
+          sendToken(Response["data"]["oauth2lResponse"]);
+        }
+      } else {
+        sendToken(Response["data"]["oauth2lResponse"]);
+      }
     }
   };
   return (
-    <FormikStepper
-      initialValues={{
-        tokenType: "",
-        tokenFormat: "",
-        tokenScopes: [],
-        tokenAudience: [],
-        tokenCredentials: "",
-      }}
-      onSubmit={(values) => getToken(values)}
-      setSecondLabel={(value) => {
-        setTokenType(value);
-        if (value === "OAuth") {
-          setLabel("Scopes");
-        } else if (value === "JWT") {
-          setLabel("Audience");
-        }
-      }}
-    >
-      <TokenType
-        validationSchema={object({
-          tokenType: string().required("Must select a token type"),
-          tokenFormat: string().required("Must select a token format"),
-        })}
-        label="Type"
-      />
-      <TokenAccess
-        validationSchema={object({
-          ...(tokenType === "OAuth"
-            ? { tokenScopes: string().required(`Must include scopes`) }
-            : tokenType === "JWT"
-            ? { tokenAudience: string().required(`Must include audience`) }
-            : {}),
-        })}
-        label={secondLabel}
-      />
-      <TokenCredentials
-        validationSchema={object({
-          tokenCredentials: string()
-            .required("Must include credential")
-            .min(1, "Must include credential"),
-        })}
-        label="Credentials"
-      />
-    </FormikStepper>
+    <div>
+      <FormikStepper
+        initialValues={{
+          tokenType: "",
+          tokenFormat: "",
+          tokenScopes: [],
+          tokenAudience: [],
+          tokenCredentials: "",
+        }}
+        onSubmit={(values) => getToken(values)}
+        setSecondLabel={(value) => {
+          setTokenType(value);
+          if (value === "OAuth") {
+            setLabel("Scopes");
+          } else if (value === "JWT") {
+            setLabel("Audience");
+          }
+        }}
+      >
+        <TokenType
+          validationSchema={object({
+            tokenType: string().required("Must select a token type"),
+            tokenFormat: string().required("Must select a token format"),
+          })}
+          label="Type"
+        />
+        <TokenAccess
+          validationSchema={object({
+            ...(tokenType === "OAuth"
+              ? { tokenScopes: string().required(`Must include scopes`) }
+              : tokenType === "JWT"
+              ? { tokenAudience: string().required(`Must include audience`) }
+              : {}),
+          })}
+          label={secondLabel}
+        />
+        <TokenCredentials
+          validationSchema={object({
+            tokenCredentials: string()
+              .required("Must include credential")
+              .min(1, "Must include credential"),
+          })}
+          label="Credentials"
+        />
+      </FormikStepper>
+      <Dialog
+        open={openBox}
+        onClose={getTokenWithCode}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Enter Code</DialogTitle>
+        <DialogContent>
+          <form>
+            <TextField
+              autoFocus
+              margin="dense"
+              fullWidth
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+            <Button style={{ float: "right" }} onClick={getTokenWithCode}>
+              Submit
+            </Button>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={getTokenWithCode} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
 
