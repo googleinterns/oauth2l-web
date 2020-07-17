@@ -30,24 +30,31 @@ function App() {
   return (
     <Grid container>
       <Grid item xs>
-        <MaterialUI paperClass="paper-top">
-          <ModuleInfo
-            title="Requesting a token"
-            content={[
-              "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
-              "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
-              "Once all the requirements are submitted, an access token will be returned based on the format requested.",
-            ]}
-            hasNote={true}
-            note="To obtain a JWT access token, a service account key must be used as the credentials file"
-          />
-          <Grid item className="main-content">
-            {response ? <TokenDisplay token={response} responseVisable={responseVisable} /> : 
-            <TokenForm
-              parentCallback={(childData) => callBackToken(childData)}
-            />}
-          </Grid>
-        </MaterialUI>
+          <MaterialUI paperClass="paper-top">
+            <ModuleInfo
+              title="Requesting a token"
+              content={[
+                "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
+                "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
+                "Once all the requirements are submitted, an access token will be returned based on the format requested.",
+              ]}
+              hasNote={true}
+              note="To obtain a JWT access token, a service account key must be used as the credentials file"
+            />
+            <Grid item className="main-content">
+              {!responseVisable ? (
+                <TokenForm
+                  parentCallback={(childData) => callBackToken(childData)}
+                />
+              ) : (
+                <TokenDisplay
+                  token={token}
+                  responseVisable={responseVisable}
+                  parentCallback={(response) => setResponseVisable(!response)}
+                />
+              )}
+            </Grid>
+          </MaterialUI>
       </Grid>
       <Grid item xs>
         <Grid container direction="column">
