@@ -44,6 +44,8 @@ export default function ValidateToken() {
   const classes = useStyles();
 
   const testToken = async (values) => {
+    setInfo("");
+    setInfoVisable(false);
     // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
     setCredsToken(values["token"]);
     // JSON body for the request.
@@ -108,7 +110,14 @@ export default function ValidateToken() {
         token: string().required("Must have a token"),
       })}
     >
-      {({ handleChange, errors, touched, isSubmitting }) => (
+      {({
+        handleChange,
+        errors,
+        touched,
+        isSubmitting,
+        values,
+        setFieldValue,
+      }) => (
         <div>
           <div className="form-text validation">
             <Grid
@@ -138,15 +147,6 @@ export default function ValidateToken() {
                     <Typography variant="caption" style={{ color: green[500] }}>
                       Valid Token
                     </Typography>
-                  </IconButton>
-                  <IconButton
-                    className="button-info"
-                    onClick={(e) => getTokenInfo(e)}
-                    classes={{ label: classes.iconButton }}
-                  >
-                    <InfoIcon />
-
-                    <Typography variant="caption">Get info</Typography>
                   </IconButton>
                 </div>
               )}
@@ -179,7 +179,12 @@ export default function ValidateToken() {
                     }
                   />
                 </Box>
-                <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="flex-start"
+                >
                   <Button
                     startIcon={
                       isSubmitting ? <CircularProgress size="1rem" /> : null
@@ -191,6 +196,17 @@ export default function ValidateToken() {
                   >
                     {isSubmitting ? "Submitting" : "Validate Token"}
                   </Button>
+                  {completed && valid && (
+                    <Button
+                      className="button-info"
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => getTokenInfo(e)}
+                      startIcon={<InfoIcon />}
+                    >
+                      Get info
+                    </Button>
+                  )}
                 </Grid>
               </Form>
               {/* Box where token info will appear if users chooses to display it. */}
