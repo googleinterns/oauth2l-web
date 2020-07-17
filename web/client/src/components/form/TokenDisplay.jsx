@@ -52,7 +52,8 @@ export default function TokenDisplay(props) {
       <div className="form-alert">
         <Collapse in={copy}>
           <Alert
-            variant="outlined" severity="success"
+            variant="outlined"
+            severity="success"
             action={
               <IconButton
                 aria-label="close"
