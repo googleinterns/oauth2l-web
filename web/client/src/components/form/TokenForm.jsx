@@ -24,17 +24,17 @@ export default function TokenForm(props) {
    *
    * @param {string} token variable that holds the token
    */
-  function sendToken(token) {
+  const sendToken = (token) => {
     props.parentCallback(token);
-  }
+  };
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
    */
-  async function getToken(values) {
+  const getToken = async (values) => {
     let userScopes;
     let userAudience;
-    if (!values.tokenScopes) {
+    if (values.tokenScopes.length === 0) {
       userAudience = values.tokenAudience;
     } else {
       userScopes = values.tokenScopes;
@@ -72,7 +72,8 @@ export default function TokenForm(props) {
       ? {
           commandtype: "fetch",
           args: {
-            scope: userScopes || userAudience,
+            scope: userScopes,
+            audience: userAudience,
             output_format: userFormat,
             type: values.tokenType.toLowerCase(),
           },
@@ -83,7 +84,8 @@ export default function TokenForm(props) {
       : {
           commandtype: "fetch",
           args: {
-            scope: userScopes || userAudience,
+            scope: userScopes,
+            audience: userAudience,
             output_format: userFormat,
             type: values.tokenType.toLowerCase(),
           },
@@ -101,7 +103,7 @@ export default function TokenForm(props) {
       }
       sendToken(response["data"]["oauth2lResponse"]);
     }
-  }
+  };
   return (
     <FormikStepper
       initialValues={{
@@ -112,9 +114,7 @@ export default function TokenForm(props) {
         tokenCredentials: "",
         saveTokenLocally: false,
       }}
-      onSubmit={(values) => {
-        getToken(values);
-      }}
+      onSubmit={(values) => getToken(values)}
       setSecondLabel={(value) => {
         setTokenType(value);
         if (value === "OAuth") {
@@ -134,9 +134,9 @@ export default function TokenForm(props) {
       <TokenAccess
         validationSchema={object({
           ...(tokenType === "OAuth"
-            ? { tokenScopes: string().required(`Must include scopes}`) }
+            ? { tokenScopes: string().required(`Must include scopes`) }
             : tokenType === "JWT"
-            ? { tokenAudience: string().required(`Must include audience}`) }
+            ? { tokenAudience: string().required(`Must include audience`) }
             : {}),
         })}
         label={secondLabel}

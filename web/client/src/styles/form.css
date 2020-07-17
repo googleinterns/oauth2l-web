@@ -22,3 +22,11 @@
 .form-save-cred-toggle {
   float: right;
 }
+
+.copy-button {
+  margin-top: 1rem !important;
+}
+
+.response-box {
+  margin-top: 1rem;
+}
