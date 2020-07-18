@@ -19,31 +19,34 @@ import CloseIcon from "@material-ui/icons/Close";
  */
 export default function TokenDisplay(props) {
   const token = props.token;
-  const visability = props.responseVisable
+  const visability = props.responseVisable;
   const [copy, setCopy] = React.useState(false);
-
 
   const sendToken = (visability) => {
     props.parentCallback(visability);
   };
-  
+
   return (
     <Grid>
       <Typography variant="h5">OAuth2l Response:</Typography>
-      <Button onClick= {() => sendToken(visability)} className = "form-reset" variant="contained">
+      <Button
+        onClick={() => sendToken(visability)}
+        className="form-reset"
+        variant="contained"
+      >
         Reset
       </Button>
-        <form noValidate autoComplete="off" className="response-box">
-          <TextField
-            multiline
-            fullWidth
-            variant="outlined"
-            value={token}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-        </form>
+      <form noValidate autoComplete="off" className="response-box">
+        <TextField
+          multiline
+          fullWidth
+          variant="outlined"
+          value={token}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </form>
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
         <Button variant="contained" color="primary" className="copy-button">
           Copy to Clipboard
