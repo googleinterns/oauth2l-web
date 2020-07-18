@@ -24,6 +24,10 @@ function App() {
     setResponseVisable(true);
   };
 
+  const resetClicked = (childData) => {
+    console.log(childData);
+    setResponseVisable(!childData);
+  }
   return (
     <Grid container>
       <Grid item xs>
@@ -46,8 +50,9 @@ function App() {
             ) : (
               <TokenDisplay
                 token={response}
-                responseVisable={responseVisable}
-                parentCallback={(response) => setResponseVisable(!response)}
+                parentCallback={(childData) => resetClicked(childData)}
+                responseVisable = {responseVisable}
+
               />
             )}
           </Grid>
