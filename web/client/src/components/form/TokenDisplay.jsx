@@ -19,18 +19,18 @@ import CloseIcon from "@material-ui/icons/Close";
  */
 export default function TokenDisplay(props) {
   const token = props.token;
-  const visability = props.responseVisable;
+  const visibility = props.responseVisable;
   const [copy, setCopy] = React.useState(false);
 
-  const sendToken = (visability) => {
-    props.parentCallback(visability);
+  const sendToken = (visibility) => {
+    props.parentCallback(visibility);
   };
 
   return (
     <Grid>
       <Typography variant="h5">OAuth2l Response:</Typography>
       <Button
-        onClick={() => sendToken(visability)}
+        onClick={() => sendToken(visibility)}
         className="form-reset"
         variant="contained"
       >

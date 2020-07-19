@@ -27,10 +27,10 @@ function App() {
 
   /**
    *
-   * @param {bool} childData obtains the child data back from the child component in order to change the conditional rendering
+   * @param {bool} visibility obtains the child data back from the child component in order to change the conditional rendering
    */
-  const resetClicked = (childData) => {
-    setResponseVisable(!childData);
+  const resetClicked = (visibility) => {
+    setResponseVisable(!visibility);
   };
   return (
     <Grid container>
@@ -54,7 +54,7 @@ function App() {
             ) : (
               <TokenDisplay
                 token={response}
-                parentCallback={(childData) => resetClicked(childData)}
+                parentCallback={(visibility) => resetClicked(visibility)}
                 responseVisable={responseVisable}
               />
             )}
