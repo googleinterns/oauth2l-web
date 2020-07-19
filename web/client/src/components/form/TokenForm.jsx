@@ -20,6 +20,7 @@ import { getCacheToken } from "../../util/apiWrapper";
 export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
+
   /**
    *
    * @param {string} token variable that holds the token
@@ -30,8 +31,9 @@ export default function TokenForm(props) {
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
+   * @param {func} helpers contains all of the helper functions of formik, passed in order to reset the form
    */
-  const getToken = async (values) => {
+  const getToken = async (values, helpers) => {
     const tokenCred = JSON.parse(values.tokenCredentials);
     let finalCredentials;
     if (
@@ -74,6 +76,7 @@ export default function TokenForm(props) {
       usetoken: false,
     };
     const Response = await getCacheToken(Body);
+    helpers.resetForm();
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
@@ -89,7 +92,7 @@ export default function TokenForm(props) {
         tokenAudience: [],
         tokenCredentials: "",
       }}
-      onSubmit={(values) => getToken(values)}
+      onSubmit={(values, helpers) => getToken(values, helpers)}
       setSecondLabel={(value) => {
         setTokenType(value);
         if (value === "OAuth") {
@@ -149,10 +152,11 @@ export function FormikStepper(props) {
       validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
-          await props.onSubmit(values, helpers);
           setDone(true);
-          setStep(0);
-          helpers.resetForm();
+          await props.onSubmit(values, helpers);
+          // setDone(true);
+          // setStep(0);
+          // helpers.resetForm();
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
