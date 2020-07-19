@@ -8,6 +8,8 @@ import {
   Typography,
   Grid,
   IconButton,
+  createMuiTheme,
+  ThemeProvider,
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PropTypes from "prop-types";
@@ -30,6 +32,12 @@ export default function ModuleInfo(props) {
     setOpen(false);
   };
 
+  const theme = createMuiTheme({
+    typography: {
+      fontSize: 20,
+    },
+  });
+
   return (
     <Grid
       container
@@ -42,20 +50,23 @@ export default function ModuleInfo(props) {
         <HelpOutlineIcon />
       </IconButton>
 
-      <Dialog onClose={handleClose} open={open}>
-        <DialogTitle onClose={handleClose}>{title}</DialogTitle>
-        <DialogContent dividers>
-          {content.map((text, index) => (
-            <Typography key={index} variant="body1" gutterBottom>
-              {text}
-            </Typography>
-          ))}
-          {hasNote && (
-            <Typography variant="body2">
-              <strong>NOTE:</strong> {note}
-            </Typography>
-          )}
-        </DialogContent>
+      <Dialog onClose={handleClose} open={open} maxWidth="lg" fullWidth>
+        <ThemeProvider theme={theme}>
+          <DialogTitle onClose={handleClose}>{title}</DialogTitle>
+
+          <DialogContent dividers>
+            {content.map((text, index) => (
+              <Typography key={index} variant="body1" gutterBottom>
+                {text}
+              </Typography>
+            ))}
+            {hasNote && (
+              <Typography variant="body2">
+                <strong>NOTE:</strong> {note}
+              </Typography>
+            )}
+          </DialogContent>
+        </ThemeProvider>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Close
