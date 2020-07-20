@@ -43,10 +43,21 @@ export default function RequestModule(props) {
   const [errMessage, setErrMessage] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
 
+  /**
+   *
+   * @param {string} response holds the response to the HTTP request
+   * sends the response of the HTTP request to the parent to be displayed
+   */
   const sendResponse = (response) => {
     props.parentCallback(response);
   };
 
+  /**
+   *
+   * @param {JSON} values holds the parameter of the HTTP request.
+   * @param {func} helpers contains all of the helper functions of formik, passed in order to reset the form
+   * calls api wrapper to execute the HTTP request created and sends the response back to the parent component to be displayed
+   */
   const getResponse = async (values, helpers) => {
     const param = {
       url: values.url,

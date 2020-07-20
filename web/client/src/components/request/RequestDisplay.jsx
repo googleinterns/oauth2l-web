@@ -11,6 +11,11 @@ import "../../styles/form.css";
 export default function RequestDisplay(props) {
   const httpResponse = props.httpResponse;
 
+  /**
+   *
+   * @param {bool} visibility bool of whether or not the response display should be visable.
+   * sends back the bool so that parent can display HTTP Request for instead of the response page.
+   */
   const resetResponse = (visibility) => {
     props.parentCallback(visibility);
   };
