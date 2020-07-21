@@ -216,11 +216,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responseBody)
 }
 
-// CredentialsTokenHandler takes as input a json body with the parts of the command
-// to be executed and a json body representing the uploaded uploadCredentials.json file and returns
-// a created jwt token that will be sent to the front end and cached for reused if needed
-// returns a 400 status if the uploadCredentials token cannot be created or there is not enough information
-// to extract the uploadCredentials file needed or a 401 status if the uploadCredentials token cannot be validated.
+// CredentialsTokenHandler takes as an input a json body with the old token
+// and returns a new token with a new expiration date only if the old token has not expired yet.
+// It returns a 400 status if the new token cannot be created or a 401 status if the uploadCredentials 
+// token cannot be validated.
 func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
 	// Request object to store information about request.
 	var requestBody CredentialsToken

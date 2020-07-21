@@ -11,7 +11,7 @@ import {
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
-import { getCacheToken, getNewCredentialToken } from "../../util/apiWrapper";
+import { getOAuthToken, getNewCredentialToken } from "../../util/apiWrapper";
 
 /**
  * @param {param} props passes a callback function that sends the token back to the parent
@@ -126,7 +126,7 @@ export default function TokenForm(props) {
           usetoken: false,
         };
 
-    const response = await getCacheToken(body);
+    const response = await getOAuthToken(body);
     if (typeof response["error"] === undefined) {
       sendToken(response["error"]);
     } else {
