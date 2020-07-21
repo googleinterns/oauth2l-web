@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Request struct represents the request that the backend will recieve.
+// Request struct represents the request that the backend will recieve.
 type Request struct {
 	CommandType string
 	Args
@@ -34,6 +34,11 @@ type Response struct {
 type Claims struct {
 	UploadCredentials map[string]interface{}
 	jwt.StandardClaims
+}
+
+// CredentialsToken struct represents the request that the backend will recieve when a new JWT token is requested.
+type CredentialsToken struct {
+	Token string
 }
 
 // secret key to make the uploadCredentials token
@@ -211,10 +216,57 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responseBody)
 }
 
+// CredentialsTokenHandler takes as input a json body with the parts of the command
+// to be executed and a json body representing the uploaded uploadCredentials.json file and returns
+// a created jwt token that will be sent to the front end and cached for reused if needed
+// returns a 400 status if the uploadCredentials token cannot be created or there is not enough information
+// to extract the uploadCredentials file needed or a 401 status if the uploadCredentials token cannot be validated.
+func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
+	// Request object to store information about request.
+	var requestBody CredentialsToken
+
+	// Setting up reponse Headers.
+	setupResponseHeaders(&w, r)
+	if (*&r).Method == "OPTIONS" {
+		return
+	}
+
+	// Get the JSON body and decode into requestBody.
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error.
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, "UNABLE TO PARSE JSON")
+		return
+	}
+
+	creds, err := authenticateCredentialsToken(requestBody.Token)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		io.WriteString(w, strings.ToUpper(err.Error()))
+		return
+	}
+
+	newToken, err := createCredentialsToken(creds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, strings.ToUpper(err.Error()))
+		return
+	}
+
+	// Writing response in json format.
+	w.Header().Set("Content-Type", "application/json")
+	responseBody := map[string]string {
+		"token": newToken,
+	}
+	json.NewEncoder(w).Encode(responseBody)
+}
+
 func main() {
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
 	router.HandleFunc("/api", Handler)
+	router.HandleFunc("/api/jwt/token", CredentialsTokenHandler)
 	var srv = &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:8080",
