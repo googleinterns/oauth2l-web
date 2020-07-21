@@ -83,8 +83,8 @@ func wrapperExecutor(wc WrapperCommand) string {
 // createCredentialsToken takes as input a representiation of the uplodaded uploadCredentials json body and returns a token using the
 // uploadCredentials json body as the payload.
 func createCredentialsToken(Credentials map[string]interface{}) (string, error) {
-	// Declare the expiration time of the token. Here, we have kept it as 1 day.
-	expirationTime := time.Now().Add(1440 * time.Minute)
+	// Declare the expiration time of the token. Here, we have kept it as 10 minutes.
+	expirationTime := time.Now().Add(10 * time.Minute)
 	// Create the JWT claims, which includes the uploaded uploadCredentials json body and expiry time.
 	claims := &Claims{
 		UploadCredentials: Credentials,
