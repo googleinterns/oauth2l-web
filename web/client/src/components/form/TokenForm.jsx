@@ -20,13 +20,16 @@ import { getCacheToken } from "../../util/apiWrapper";
 export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
+  const [credentialsToken, setCredentialsToken] = useState("");
+  const [parsedCredential, setParsedCredential] = useState(null)
+
   /**
-   *
    * @param {string} token variable that holds the token
    */
   const sendToken = (token) => {
     props.parentCallback(token);
   };
+
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
@@ -65,7 +68,7 @@ export default function TokenForm(props) {
         finalCredentials = tokenCred;
       }
     } else {
-      finalCredentials = localStorage.getItem("oauth2l-credential");
+      finalCredentials = credentialsToken;
     }
 
     const body = useUploadedCredential
@@ -99,7 +102,15 @@ export default function TokenForm(props) {
       sendToken(response["error"]);
     } else {
       if (values.saveTokenLocally) {
-        localStorage.setItem("oauth2l-credential", response["data"]["token"]);
+        const token = response["data"]["token"]
+
+        setCredentialsToken(token);
+        try {
+          const credentialObject = JSON.parse(atob(token.split('.')[1]))["UploadCredentials"]
+          setParsedCredential(JSON.stringify(credentialObject, null, 2));
+        } catch (error) {
+          setParsedCredential("Unable to parse credential payload")
+        }
       }
       sendToken(response["data"]["oauth2lResponse"]);
     }
@@ -148,6 +159,8 @@ export default function TokenForm(props) {
             .min(1, "Must include credential"),
         })}
         label="Credentials"
+        tokenAvailable={credentialsToken.length > 0}
+        parsedCredential={parsedCredential}
       />
     </FormikStepper>
   );

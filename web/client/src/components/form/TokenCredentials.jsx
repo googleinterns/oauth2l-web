@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Button,
   Switch,
+  TextField as TextFieldMUI
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { TextField } from "formik-material-ui";
@@ -25,10 +26,16 @@ export default function TokenCredentials(props) {
   const [success, setSuccess] = useState(false);
   const [saveCredential, setSaveCredential] = useState(false);
 
-  const { setFieldValue } = props;
+  const { setFieldValue, tokenAvailable, parsedCredential } = props;
 
   const handleCredFormat = (e) => {
-    setCredFormat(e.currentTarget.value);
+    const format = e.currentTarget.value;
+    setCredFormat(format);
+
+    if (format === "saved") {
+      setError(false);
+      setFieldValue("tokenCredentials", parsedCredential);
+    }
   };
 
   const handleFile = (e) => {
@@ -78,11 +85,9 @@ export default function TokenCredentials(props) {
     return (
       <FormControlLabel
         className="form-save-cred-toggle"
-        control={<Switch checked={saveCredential} onChange={toggleSave} />}
+        control={<Switch checked={saveCredential} onChange={toggleSave} color="primary"/>}
         label="Save credential for future use"
-        labelPlacement="start"
-      />
-    );
+      />);
   };
 
   return (
@@ -107,6 +112,12 @@ export default function TokenCredentials(props) {
           control={<Radio color="primary" />}
           label="Text input"
         />
+        {tokenAvailable ? 
+          <FormControlLabel
+          value="saved"
+          control={<Radio color="primary" />}
+          label="Saved credential"
+        /> : null}
       </RadioGroup>
       {credFormat === "file" ? (
         <div>
@@ -138,6 +149,19 @@ export default function TokenCredentials(props) {
           }}
           component={TextField}
         />
+      ) : credFormat === "saved" ? (
+        <TextFieldMUI
+          multiline
+          rows={15}
+          fullWidth
+          variant="outlined"
+          color="primary"
+          label="This is your saved credential"
+          defaultValue={parsedCredential}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
       ) : null}
       <div className="form-alert">
         {error && (
@@ -147,7 +171,7 @@ export default function TokenCredentials(props) {
         )}
         {success && (
           <Alert variant="outlined" severity="success">
-            Credential ready!
+            Credential ready
           </Alert>
         )}
       </div>
