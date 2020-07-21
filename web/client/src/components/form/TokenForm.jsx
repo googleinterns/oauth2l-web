@@ -1,4 +1,4 @@
-import React, { useState, cloneElement } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { Formik, Form } from "formik";
 import {
   Button,
@@ -22,6 +22,7 @@ export default function TokenForm(props) {
   const [tokenType, setTokenType] = useState("");
   const [credentialsToken, setCredentialsToken] = useState("");
   const [parsedCredential, setParsedCredential] = useState("");
+  const [loadedInterval, setLoadedInterval] = useState(false);
 
   /**
    * @param {string} token variable that holds the token
@@ -30,12 +31,35 @@ export default function TokenForm(props) {
     props.parentCallback(token);
   };
 
-  const newTokenCall = () => {
-    // const response = getNewCredentialToken(credentialsToken);
-    // setCredentialsToken(response["data"]["token"])
+  useEffect(() => {
+    const newTokenCall = async () => {
+      const body = {
+        token: credentialsToken
+      }
+      const response = await getNewCredentialToken(body);
 
-    // console.log(response["data"]["token"])
-  }
+      setCredentialsToken(response["data"]["token"])
+    }
+
+    if (credentialsToken.length > 0) {
+      console.log(JSON.parse(atob(credentialsToken.split('.')[1]))["exp"])
+    }
+
+    if (!loadedInterval && credentialsToken.length > 0) {
+      try {
+        const credentialObject = JSON.parse(atob(credentialsToken.split('.')[1]))["UploadCredentials"]
+        setParsedCredential(JSON.stringify(credentialObject, null, 2));
+      } catch (error) {
+        setParsedCredential("Unable to parse credential payload")
+      }
+
+      const expTime = JSON.parse(atob(credentialsToken.split('.')[1]))["exp"]
+      const timeDelta = (expTime * 1000) - Date.now();
+
+      setInterval(newTokenCall, timeDelta - 60000);
+      setLoadedInterval(true);
+    }
+  }, [credentialsToken]);
 
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
@@ -112,21 +136,9 @@ export default function TokenForm(props) {
         const token = response["data"]["token"]
 
         setCredentialsToken(token);
-        try {
-          const credentialObject = JSON.parse(atob(token.split('.')[1]))["UploadCredentials"]
-          setParsedCredential(JSON.stringify(credentialObject, null, 2));
-        } catch (error) {
-          setParsedCredential("Unable to parse credential payload")
-        }
-        console.log(JSON.parse(atob(token.split('.')[1])))
-
-        const expTime = JSON.parse(atob(token.split('.')[1]))["exp"]
-        const timeDelta = (expTime * 1000) - Date.now();
-
-        setInterval(newTokenCall, timeDelta - 5000);
+  
+        sendToken(response["data"]["oauth2lResponse"]);
       }
-
-      sendToken(response["data"]["oauth2lResponse"]);
     }
   };
 
