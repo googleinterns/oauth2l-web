@@ -11,7 +11,7 @@ import {
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
-import { getCacheToken } from "../../util/apiWrapper";
+import { getCacheToken, getNewCredentialToken } from "../../util/apiWrapper";
 
 /**
  * @param {param} props passes a callback function that sends the token back to the parent
@@ -21,7 +21,7 @@ export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
   const [credentialsToken, setCredentialsToken] = useState("");
-  const [parsedCredential, setParsedCredential] = useState(null)
+  const [parsedCredential, setParsedCredential] = useState("");
 
   /**
    * @param {string} token variable that holds the token
@@ -29,6 +29,13 @@ export default function TokenForm(props) {
   const sendToken = (token) => {
     props.parentCallback(token);
   };
+
+  const newTokenCall = () => {
+    // const response = getNewCredentialToken(credentialsToken);
+    // setCredentialsToken(response["data"]["token"])
+
+    // console.log(response["data"]["token"])
+  }
 
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
@@ -111,10 +118,18 @@ export default function TokenForm(props) {
         } catch (error) {
           setParsedCredential("Unable to parse credential payload")
         }
+        console.log(JSON.parse(atob(token.split('.')[1])))
+
+        const expTime = JSON.parse(atob(token.split('.')[1]))["exp"]
+        const timeDelta = (expTime * 1000) - Date.now();
+
+        setInterval(newTokenCall, timeDelta - 5000);
       }
+
       sendToken(response["data"]["oauth2lResponse"]);
     }
   };
+
   return (
     <FormikStepper
       initialValues={{
