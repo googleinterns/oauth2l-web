@@ -34,32 +34,30 @@ export default function TokenForm(props) {
   useEffect(() => {
     const newTokenCall = async () => {
       const body = {
-        token: credentialsToken
-      }
+        token: credentialsToken,
+      };
       const response = await getNewCredentialToken(body);
 
-      setCredentialsToken(response["data"]["token"])
-    }
-
-    if (credentialsToken.length > 0) {
-      console.log(JSON.parse(atob(credentialsToken.split('.')[1]))["exp"])
-    }
+      setCredentialsToken(response["data"]["token"]);
+    };
 
     if (!loadedInterval && credentialsToken.length > 0) {
       try {
-        const credentialObject = JSON.parse(atob(credentialsToken.split('.')[1]))["UploadCredentials"]
+        const credentialObject = JSON.parse(
+          atob(credentialsToken.split(".")[1])
+        )["UploadCredentials"];
         setParsedCredential(JSON.stringify(credentialObject, null, 2));
       } catch (error) {
-        setParsedCredential("Unable to parse credential payload")
+        setParsedCredential("Unable to parse credential payload");
       }
 
-      const expTime = JSON.parse(atob(credentialsToken.split('.')[1]))["exp"]
-      const timeDelta = (expTime * 1000) - Date.now();
+      const expTime = JSON.parse(atob(credentialsToken.split(".")[1]))["exp"];
+      const timeDelta = expTime * 1000 - Date.now();
 
       setInterval(newTokenCall, timeDelta - 60000);
       setLoadedInterval(true);
     }
-  }, [credentialsToken]);
+  }, [credentialsToken, loadedInterval]);
 
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
@@ -133,10 +131,10 @@ export default function TokenForm(props) {
       sendToken(response["error"]);
     } else {
       if (values.saveTokenLocally) {
-        const token = response["data"]["token"]
+        const token = response["data"]["token"];
 
         setCredentialsToken(token);
-  
+
         sendToken(response["data"]["oauth2lResponse"]);
       }
     }

@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   Button,
   Switch,
-  TextField as TextFieldMUI
+  TextField as TextFieldMUI,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { TextField } from "formik-material-ui";
@@ -85,9 +85,16 @@ export default function TokenCredentials(props) {
     return (
       <FormControlLabel
         className="form-save-cred-toggle"
-        control={<Switch checked={saveCredential} onChange={toggleSave} color="primary"/>}
+        control={
+          <Switch
+            checked={saveCredential}
+            onChange={toggleSave}
+            color="primary"
+          />
+        }
         label="Save credential for future use"
-      />);
+      />
+    );
   };
 
   return (
@@ -112,12 +119,13 @@ export default function TokenCredentials(props) {
           control={<Radio color="primary" />}
           label="Text input"
         />
-        {tokenAvailable ? 
+        {tokenAvailable ? (
           <FormControlLabel
-          value="saved"
-          control={<Radio color="primary" />}
-          label="Saved credential"
-        /> : null}
+            value="saved"
+            control={<Radio color="primary" />}
+            label="Saved credential"
+          />
+        ) : null}
       </RadioGroup>
       {credFormat === "file" ? (
         <div>
@@ -181,4 +189,6 @@ export default function TokenCredentials(props) {
 
 TokenCredentials.propTypes = {
   setFieldValue: PropTypes.func,
+  tokenAvailable: PropTypes.bool,
+  parsedCredential: PropTypes.string,
 };
