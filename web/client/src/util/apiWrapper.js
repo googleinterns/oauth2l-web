@@ -7,8 +7,17 @@ const BASE_URL =
 
 export const getCacheToken = (credentials) => {
   const requestString = `${BASE_URL}`;
-  const credentialFail = "GET_CREDENTIAL_TOKEN_FAIL";
+  const oauthFail = "GET_OAUTH_TOKEN_FAIL";
   return axios.post(requestString, credentials).catch((error) => ({
+    type: oauthFail,
+    error,
+  }));
+};
+
+export const getNewCredentialToken = (oldToken) => {
+  const requestString = `${BASE_URL}/jwt/token`;
+  const credentialFail = "GET_CREDENTIAL_TOKEN_FAIL";
+  return axios.post(requestString, oldToken).catch((error) => ({
     type: credentialFail,
     error,
   }));
