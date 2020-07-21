@@ -19,7 +19,7 @@ $ git clone https://github.com/googleinterns/oauth2l-web
 ```
 Then go into the `web` directory in your `oauth2l-web` directory.
 ```bash
-$ cd oauth2l-web
+$ cd oauth2l-web/web
 ```
 
 ### Docker
