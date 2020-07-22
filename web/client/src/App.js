@@ -52,26 +52,28 @@ function App() {
     <Grid container>
       <Grid item xs>
         <Grid container direction="column">
-          <MaterialUI paperClass="paper-top">
-            <ModuleInfo
-              title="Requesting a token"
-              content={[
-                "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
-                "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
-                "Once all the requirements are submitted, an access token will be returned based on the format requested.",
-              ]}
-              hasNote={true}
-              note={[
-                "To obtain a JWT access token, a service account key must be used as the credentials file",
-                "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application",
-              ]}
-            />
-            <Grid item className="main-content">
-              <TokenForm
-                parentCallback={(childData) => callBackToken(childData)}
+          <Grid item xs>
+            <MaterialUI paperClass="paper-top">
+              <ModuleInfo
+                title="Requesting a token"
+                content={[
+                  "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
+                  "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
+                  "Once all the requirements are submitted, an access token will be returned based on the format requested.",
+                ]}
+                hasNote={true}
+                note={[
+                  "To obtain a JWT access token, a service account key must be used as the credentials file",
+                  "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application",
+                ]}
               />
-            </Grid>
-          </MaterialUI>
+              <Grid item xs className="main-content">
+                <TokenForm
+                  parentCallback={(childData) => callBackToken(childData)}
+                />
+              </Grid>
+            </MaterialUI>
+          </Grid>
         </Grid>
         <Grid item xs>
           <MaterialUI paperClass="paper-bottom">
