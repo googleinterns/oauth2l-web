@@ -18,19 +18,18 @@ import CloseIcon from "@material-ui/icons/Close";
  * @return {Grid} returns a Grid component that contains the page
  */
 export default function TokenDisplay(props) {
-  const token = props.token;
-  const visibility = props.tokenResponseVisable;
+  const { token, tokenResponseVisable, parentCallback } = props;
   const [copy, setCopy] = React.useState(false);
 
-  const sendToken = (visibility) => {
-    props.parentCallback(visibility);
+  const sendToken = (tokenResponseVisable) => {
+    parentCallback(tokenResponseVisable);
   };
 
   return (
     <Grid>
       <Typography variant="h5">OAuth2l Response:</Typography>
       <Button
-        onClick={() => sendToken(visibility)}
+        onClick={() => sendToken(tokenResponseVisable)}
         className="form-reset"
         variant="contained"
       >

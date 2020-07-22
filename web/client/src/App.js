@@ -57,7 +57,6 @@ function App() {
   return (
     <Grid container>
       <Grid item xs>
-
         <Grid container direction="column">
           <MaterialUI paperClass="paper-top">
             <ModuleInfo
@@ -74,20 +73,20 @@ function App() {
               ]}
             />
             <Grid item className="main-content">
-            if(!tokenResponseVisable ? (
-              <TokenForm
-                parentCallback={(childData) => callBackToken(childData)}
-              />
-            ) : (
-              <TokenDisplay
-                token={response}
-                parentCallback={(visibility) => resetClicked(visibility)}
-                tokenResponseVisable={tokenResponseVisable}
-              />
-            )}
-          </Grid>
-        </MaterialUI>
-      </Grid>
+              {!tokenResponseVisable ? (
+                <TokenForm
+                  parentCallback={(childData) => callBackToken(childData)}
+                />
+              ) : (
+                <TokenDisplay
+                  token={response}
+                  parentCallback={(visibility) => resetClicked(visibility)}
+                  tokenResponseVisable={tokenResponseVisable}
+                />
+              )}
+            </Grid>
+          </MaterialUI>
+        </Grid>
       </Grid>
       <Grid item xs>
         <Grid container direction="column">

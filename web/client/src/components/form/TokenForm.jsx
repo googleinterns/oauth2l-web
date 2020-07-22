@@ -71,8 +71,6 @@ export default function TokenForm(props) {
     }
   }, [credentialsToken, loadedInterval]);
 
-
-
   /**
    *
    * @param {string} cmdResponse holds the response from the backend.
@@ -120,7 +118,7 @@ export default function TokenForm(props) {
     return url;
   };
 
-  const getToken = async (values,helpers) => {
+  const getToken = async (values, helpers) => {
     let userScopes;
     let userAudience;
     if (values.tokenScopes.length === 0) {
@@ -137,7 +135,6 @@ export default function TokenForm(props) {
     setTokenFormat(values.tokenFormat);
 
     const useUploadedCredential = values.tokenCredentials.length > 0;
-
 
     let finalCredentials;
     if (useUploadedCredential) {
@@ -206,7 +203,6 @@ export default function TokenForm(props) {
   };
 
   return (
-
     <div>
       <FormikStepper
         initialValues={{
@@ -282,7 +278,6 @@ export default function TokenForm(props) {
         </DialogActions>
       </Dialog>
     </div>
-
   );
 }
 
@@ -309,9 +304,6 @@ export function FormikStepper(props) {
         if (isLastStep()) {
           setDone(true);
           await props.onSubmit(values, helpers);
-          // setDone(true);
-          // setStep(0);
-          // helpers.resetForm();
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
