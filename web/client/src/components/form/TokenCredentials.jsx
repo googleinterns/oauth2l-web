@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 import "../../styles/form.css";
 
 /**
- * @param {Object} props contains setFieldValue function for updating credential field manually
+ * @param {Object} props contains setFieldValue function for updating credentials field manually
  * @return {Box} containing form fields for adding scopes
  */
 export default function TokenCredentials(props) {
@@ -92,7 +92,7 @@ export default function TokenCredentials(props) {
             color="primary"
           />
         }
-        label="Save credential for future use"
+        label="Save credentials for future use"
       />
     );
   };
@@ -123,7 +123,7 @@ export default function TokenCredentials(props) {
           <FormControlLabel
             value="saved"
             control={<Radio color="primary" />}
-            label="Saved credential"
+            label="Saved credentials"
           />
         ) : null}
       </RadioGroup>
@@ -139,7 +139,7 @@ export default function TokenCredentials(props) {
               onChange={handleFile}
             />
             <Button variant="contained" component="span">
-              Upload credential
+              Upload credentials
             </Button>
           </label>
         </div>
@@ -150,7 +150,7 @@ export default function TokenCredentials(props) {
           fullWidth
           variant="outlined"
           color="primary"
-          label="Paste credential in JSON format"
+          label="Paste credentials in JSON format"
           name="tokenCredentials"
           onKeyUp={(e) => {
             validateJSON(e.target.value);
@@ -164,7 +164,7 @@ export default function TokenCredentials(props) {
           fullWidth
           variant="outlined"
           color="primary"
-          label="This is your saved credential"
+          label="This is your saved credentials"
           defaultValue={parsedCredential}
           InputProps={{
             readOnly: true,
@@ -179,7 +179,7 @@ export default function TokenCredentials(props) {
         )}
         {success && (
           <Alert variant="outlined" severity="success">
-            Credential ready
+            Credentials ready
           </Alert>
         )}
       </div>
