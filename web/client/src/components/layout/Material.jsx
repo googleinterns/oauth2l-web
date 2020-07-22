@@ -13,15 +13,15 @@ import "../../styles/layout.css";
  */
 export default function MaterialUI(props) {
   const { children, paperClass } = props;
-  const [themeType, setThemeType] = useState("dark")
+  const [themeType, setThemeType] = useState("dark");
 
   const setThemeTypeCallBack = (darkMode) => {
     if (darkMode) {
-      setThemeType("dark")
+      setThemeType("dark");
     } else {
-      setThemeType("light")
+      setThemeType("light");
     }
-  }
+  };
 
   const theme = responsiveFontSizes(
     createMuiTheme({
@@ -43,7 +43,7 @@ export default function MaterialUI(props) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Head callback={(childData) => setThemeTypeCallBack(childData)}/>
+      <Head callback={(childData) => setThemeTypeCallBack(childData)} />
       <div className="root">
         <Paper className={paperClass}>{children}</Paper>
       </div>
