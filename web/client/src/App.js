@@ -5,6 +5,7 @@ import {
   ValidateToken,
   TokenDisplay,
   RequestModule,
+  RequestDisplay,
   ModuleInfo,
 } from "./components";
 import { Grid } from "@material-ui/core";
@@ -16,6 +17,9 @@ import "./styles/app.css";
 function App() {
   const [token, setToken] = useState("");
   const [responseVisable, setResponseVisable] = useState(false);
+
+  const [httpResponse, setHttpResponse] = useState("");
+  const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
@@ -23,6 +27,25 @@ function App() {
   const callBackToken = (childData) => {
     setToken(childData);
     setResponseVisable(true);
+  };
+
+  /**
+   *
+   * @param {string} childData holds the response of the HTTP request.
+   * displaying the page with the HTTP response.
+   */
+  const callBackHttpResponse = (childData) => {
+    setHttpResponse(childData);
+    setHttpResponseVisable(true);
+  };
+
+  /**
+   *
+   * @param {bool} visibility boolean condition of the visibility.
+   * resets the HTTP request back to the HTTP form.
+   */
+  const resetHttpRequest = (visibility) => {
+    setHttpResponseVisable(visibility);
   };
 
   return (
@@ -38,7 +61,10 @@ function App() {
                 "Once all the requirements are submitted, an access token will be returned based on the format requested.",
               ]}
               hasNote={true}
-              note="To obtain a JWT access token, a service account key must be used as the credentials file"
+              note={[
+                "To obtain a JWT access token, a service account key must be used as the credentials file",
+                "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application",
+              ]}
             />
             <Grid item className="main-content">
               <TokenForm
@@ -67,7 +93,7 @@ function App() {
                   "If the token is valid, an information button will appear, which will display the info of the token when clicked.",
                 ]}
                 hasNote={true}
-                note="The info for a JWT Token cannot be requested"
+                note={["The info for a JWT Token cannot be requested"]}
               />
               <Grid item xs className="main-content">
                 <ValidateToken />
@@ -84,10 +110,25 @@ function App() {
                   "Once that is all submitted, the request will be made and the response will be displayed.",
                 ]}
                 hasNote={false}
-                note=""
+                note={[]}
               />
               <Grid item xs className="main-content">
-                <RequestModule />
+                {/* <RequestModule /> */}
+                {!httpresponseVisable ? (
+                  <RequestModule
+                    parentCallback={(childData) =>
+                      callBackHttpResponse(childData)
+                    }
+                  />
+                ) : (
+                  <RequestDisplay
+                    httpResponse={httpResponse}
+                    parentCallback={(httpresponseVisable) =>
+                      resetHttpRequest(httpresponseVisable)
+                    }
+                    responseVisable={httpresponseVisable}
+                  />
+                )}
               </Grid>
             </MaterialUI>
           </Grid>

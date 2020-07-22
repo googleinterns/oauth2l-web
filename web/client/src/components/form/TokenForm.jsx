@@ -7,6 +7,11 @@ import {
   StepLabel,
   Grid,
   CircularProgress,
+  DialogTitle,
+  DialogContent,
+  Dialog,
+  TextField,
+  DialogActions,
 } from "@material-ui/core";
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
@@ -26,6 +31,10 @@ export default function TokenForm(props) {
   const [credentialsToken, setCredentialsToken] = useState("");
   const [parsedCredential, setParsedCredential] = useState("");
   const [loadedInterval, setLoadedInterval] = useState(false);
+  const [tokenFormat, setTokenFormat] = useState("");
+  const [requestBody, setRequestBody] = useState(null);
+  const [openCodeBox, setCodeOpenBox] = useState(false);
+  const [code, setCode] = useState("");
 
   /**
    * @param {string} token variable that holds the token
@@ -66,6 +75,54 @@ export default function TokenForm(props) {
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
    */
+
+  /**
+   *
+   * @param {string} cmdResponse holds the response from the backend.
+   * @return {string} OAuth2l access token from the backend.
+   */
+  const extractToken = (cmdResponse) => {
+    // Getting rid of white space.
+    cmdResponse = cmdResponse.replace(/\s+/g, "");
+    // Extracting the token from the cmd Response.
+    let token = cmdResponse.match(/(?<=code:)(.*)/)[1];
+    // Prettifying if token format is JSON or JSON Compact
+    if (tokenFormat === "JSON" || tokenFormat === "JSON Compact") {
+      token = JSON.stringify(JSON.parse(token), null, 2);
+    }
+    return token;
+  };
+
+  /**
+   * Second command to handle client id. Calls apiWrapper with original request with
+   * the additional code to be inputted.
+   */
+  const getTokenWithCode = async () => {
+    setCodeOpenBox(false);
+    requestBody["code"] = decodeURIComponent(code);
+
+    const Response = await getOAuthToken(requestBody);
+    if (typeof Response["error"] === undefined) {
+      sendToken(Response["error"]);
+    } else {
+      const token = extractToken(Response["data"]["oauth2lResponse"]);
+      sendToken(token);
+    }
+  };
+
+  /**
+   *
+   * @param {string} cmdResponse holds the response from the backend.
+   * @return {string} OAuth2l access token from the backend.
+   */
+  const getURL = (cmdResponse) => {
+    // Getting rid of whitespace.
+    cmdResponse = cmdResponse.replace(/\s+/g, "");
+    // Extracting url from cmd response.
+    const url = cmdResponse.match(/(?<=browser:)(.*)(?=Enter)/)[1];
+    return url;
+  };
+
   const getToken = async (values) => {
     let userScopes;
     let userAudience;
@@ -80,6 +137,7 @@ export default function TokenForm(props) {
     } else {
       userFormat = values.tokenFormat.toLowerCase();
     }
+    setTokenFormat(values.tokenFormat);
 
     const useUploadedCredential = values.tokenCredentials.length > 0;
 
@@ -128,41 +186,47 @@ export default function TokenForm(props) {
           cachetoken: values.saveTokenLocally,
           usetoken: false,
         };
+    setRequestBody(body);
 
     const response = await getOAuthToken(body);
     if (typeof response["error"] === undefined) {
       sendToken(response["error"]);
     } else {
-      if (values.saveTokenLocally) {
+      if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
+        const url = getURL(Response["data"]["oauth2lResponse"]);
+        window.open(url);
+        setCodeOpenBox(true);
+      } else if (values.saveTokenLocally) {
         const token = response["data"]["token"];
-
         setCredentialsToken(token);
-
+        sendToken(response["data"]["oauth2lResponse"]);
+      } else {
         sendToken(response["data"]["oauth2lResponse"]);
       }
     }
   };
 
   return (
-    <FormikStepper
-      initialValues={{
-        tokenType: "",
-        tokenFormat: "",
-        tokenScopes: [],
-        tokenAudience: [],
-        tokenCredentials: "",
-        saveTokenLocally: false,
-      }}
-      onSubmit={(values) => getToken(values)}
-      setSecondLabel={(value) => {
-        setTokenType(value);
-        if (value === "OAuth") {
-          setLabel("Scopes");
-        } else if (value === "JWT") {
-          setLabel("Audience");
-        }
-      }}
-    >
+    <div>
+      <FormikStepper
+        initialValues={{
+          tokenType: "",
+          tokenFormat: "",
+          tokenScopes: [],
+          tokenAudience: [],
+          tokenCredentials: "",
+          saveTokenLocally: false,
+        }}
+        onSubmit={(values) => getToken(values)}
+        setSecondLabel={(value) => {
+          setTokenType(value);
+          if (value === "OAuth") {
+            setLabel("Scopes");
+          } else if (value === "JWT") {
+            setLabel("Audience");
+          }
+        }}
+      >
       <TokenType
         validationSchema={object({
           tokenType: string().required("Must select a token type"),
@@ -191,6 +255,33 @@ export default function TokenForm(props) {
         parsedCredential={parsedCredential}
       />
     </FormikStepper>
+    <Dialog
+      open={openCodeBox}
+      onClose={getTokenWithCode}
+      aria-labelledby="form-dialog-title"
+    >
+      <DialogTitle id="form-dialog-title">Enter Code</DialogTitle>
+      <DialogContent>
+        <form>
+          <TextField
+            autoFocus
+            margin="dense"
+            fullWidth
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+          <Button style={{ float: "right" }} onClick={getTokenWithCode}>
+            Submit
+          </Button>
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={getTokenWithCode} color="primary">
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+    </div>
   );
 }
 

@@ -21,6 +21,7 @@ type Request struct {
 	CacheToken bool
 	UseToken   bool
 	Token      string
+	Code       string
 }
 
 // Response struct represents the JSON response that the backend will send.
@@ -194,6 +195,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		CommandType: requestBody.CommandType,
 		Args:        requestBody.Args,
 		Credential:  credsMap,
+		Code:        requestBody.Code,
 	}
 	// Getting the response from the OAuth2l.
 	CMDresponse := wrapperExecutor(cmd)
@@ -271,7 +273,7 @@ func main() {
 	router.HandleFunc("/api/jwt/token", CredentialsTokenHandler)
 	var srv = &http.Server{
 		Handler:      router,
-		Addr:         "127.0.0.1:8080",
+		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

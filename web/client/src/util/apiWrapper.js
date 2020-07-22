@@ -25,7 +25,13 @@ export const getNewCredentialToken = (oldToken) => {
 };
 
 export const validateToken = (requestOptions) => {
-  return axios.post(`${BASE_URL}`, requestOptions).catch(function (error) {
+  return axios.post(`${BASE_URL}`, requestOptions).catch((error) => {
+    return JSON.parse(JSON.stringify({ Error: error }));
+  });
+};
+
+export const getHTTPResponse = (requestBody) => {
+  return axios(requestBody).catch((error) => {
     return JSON.parse(JSON.stringify({ Error: error }));
   });
 };
