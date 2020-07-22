@@ -72,5 +72,5 @@ ModuleInfo.propTypes = {
   title: PropTypes.string,
   content: PropTypes.array,
   hasNote: PropTypes.bool,
-  note: PropTypes.string,
+  note: PropTypes.array,
 };

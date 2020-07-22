@@ -110,7 +110,7 @@ function App() {
                   "Once that is all submitted, the request will be made and the response will be displayed.",
                 ]}
                 hasNote={false}
-                note=""
+                note={[]}
               />
               <Grid item xs className="main-content">
                 {/* <RequestModule /> */}
