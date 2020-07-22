@@ -227,60 +227,60 @@ export default function TokenForm(props) {
           }
         }}
       >
-      <TokenType
-        validationSchema={object({
-          tokenType: string().required("Must select a token type"),
-          tokenFormat: string().required("Must select a token format"),
-        })}
-        label="Type"
-      />
-      <TokenAccess
-        validationSchema={object({
-          ...(tokenType === "OAuth"
-            ? { tokenScopes: string().required(`Must include scopes`) }
-            : tokenType === "JWT"
-            ? { tokenAudience: string().required(`Must include audience`) }
-            : {}),
-        })}
-        label={secondLabel}
-      />
-      <TokenCredentials
-        validationSchema={object({
-          tokenCredentials: string()
-            .required("Must include credential")
-            .min(1, "Must include credential"),
-        })}
-        label="Credentials"
-        tokenAvailable={credentialsToken.length > 0}
-        parsedCredential={parsedCredential}
-      />
-    </FormikStepper>
-    <Dialog
-      open={openCodeBox}
-      onClose={getTokenWithCode}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Enter Code</DialogTitle>
-      <DialogContent>
-        <form>
-          <TextField
-            autoFocus
-            margin="dense"
-            fullWidth
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-          <Button style={{ float: "right" }} onClick={getTokenWithCode}>
-            Submit
+        <TokenType
+          validationSchema={object({
+            tokenType: string().required("Must select a token type"),
+            tokenFormat: string().required("Must select a token format"),
+          })}
+          label="Type"
+        />
+        <TokenAccess
+          validationSchema={object({
+            ...(tokenType === "OAuth"
+              ? { tokenScopes: string().required(`Must include scopes`) }
+              : tokenType === "JWT"
+              ? { tokenAudience: string().required(`Must include audience`) }
+              : {}),
+          })}
+          label={secondLabel}
+        />
+        <TokenCredentials
+          validationSchema={object({
+            tokenCredentials: string()
+              .required("Must include credential")
+              .min(1, "Must include credential"),
+          })}
+          label="Credentials"
+          tokenAvailable={credentialsToken.length > 0}
+          parsedCredential={parsedCredential}
+        />
+      </FormikStepper>
+      <Dialog
+        open={openCodeBox}
+        onClose={getTokenWithCode}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Enter Code</DialogTitle>
+        <DialogContent>
+          <form>
+            <TextField
+              autoFocus
+              margin="dense"
+              fullWidth
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+            <Button style={{ float: "right" }} onClick={getTokenWithCode}>
+              Submit
+            </Button>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={getTokenWithCode} color="primary">
+            Close
           </Button>
-        </form>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={getTokenWithCode} color="primary">
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
