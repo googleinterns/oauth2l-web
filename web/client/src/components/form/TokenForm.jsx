@@ -75,12 +75,13 @@ export default function TokenForm(props) {
       cachetoken: true,
       usetoken: false,
     };
-    const Response = await getCacheToken(Body);
+
+    const response = await getCacheToken(Body);
     helpers.resetForm();
-    if (typeof Response["error"] === undefined) {
-      sendToken(Response["error"]);
+    if (typeof response["error"] === undefined) {
+      sendToken(response["error"]);
     } else {
-      sendToken(Response["data"]["oauth2lResponse"]);
+      sendToken(response["data"]["oauth2lResponse"]);
     }
   };
   return (
@@ -112,9 +113,9 @@ export default function TokenForm(props) {
       <TokenAccess
         validationSchema={object({
           ...(tokenType === "OAuth"
-            ? { tokenScopes: string().required(`Must include scopes}`) }
+            ? { tokenScopes: string().required(`Must include scopes`) }
             : tokenType === "JWT"
-            ? { tokenAudience: string().required(`Must include audience}`) }
+            ? { tokenAudience: string().required(`Must include audience`) }
             : {}),
         })}
         label={secondLabel}

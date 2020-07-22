@@ -4,6 +4,8 @@ import {
   TokenForm,
   ValidateToken,
   TokenDisplay,
+  RequestModule,
+  RequestDisplay,
   ModuleInfo,
 } from "./components";
 import { Grid } from "@material-ui/core";
@@ -14,15 +16,17 @@ import "./styles/app.css";
  */
 function App() {
   const [response, setResponse] = useState(null);
-  const [responseVisable, setResponseVisable] = useState(false);
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(false);
 
+  const [httpResponse, setHttpResponse] = useState("");
+  const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
   const callBackToken = (childData) => {
     setResponse(childData);
-    setResponseVisable(true);
+    setTokenResponseVisable(true);
   };
 
   /**
@@ -30,8 +34,26 @@ function App() {
    * @param {bool} visibility obtains the child data back from the child component in order to change the conditional rendering
    */
   const resetClicked = (visibility) => {
-    setResponseVisable(!visibility);
+    setTokenResponseVisable(!visibility);
   };
+  /**
+   * @param {string} childData holds the response of the HTTP request.
+   * displaying the page with the HTTP response.
+   */
+  const callBackHttpResponse = (childData) => {
+    setHttpResponse(childData);
+    setHttpResponseVisable(true);
+  };
+
+  /**
+   *
+   * @param {bool} visibility boolean condition of the visibility.
+   * resets the HTTP request back to the HTTP form.
+   */
+  const resetHttpRequest = (visibility) => {
+    setHttpResponseVisable(visibility);
+  };
+
   return (
     <Grid container>
       <Grid item xs>
@@ -47,7 +69,7 @@ function App() {
             note="To obtain a JWT access token, a service account key must be used as the credentials file"
           />
           <Grid item className="main-content">
-            {!responseVisable ? (
+            {!tokenResponseVisable ? (
               <TokenForm
                 parentCallback={(childData) => callBackToken(childData)}
               />
@@ -55,7 +77,7 @@ function App() {
               <TokenDisplay
                 token={response}
                 parentCallback={(visibility) => resetClicked(visibility)}
-                responseVisable={responseVisable}
+                tokenResponseVisable={tokenResponseVisable}
               />
             )}
           </Grid>
@@ -82,9 +104,33 @@ function App() {
           </Grid>
           <Grid item xs>
             <MaterialUI paperClass="paper-bottom">
-              <ModuleInfo title="" content={[]} hasNote={false} note="" />
+              <ModuleInfo
+                title="Use your token for an HTTP request"
+                content={[
+                  "This module is used for using a OAuth2l access token to make a HTTP request. It is the equivalent of using the curl OAuth2l command.",
+                  "To make the request, you must submit the URL to the request, the method of the request, and the token you will be using in the request. You also have the option of entering a request body, headers, and content type of the reponse.",
+                  "Once that is all submitted, the request will be made and the response will be displayed.",
+                ]}
+                hasNote={false}
+                note=""
+              />
               <Grid item xs className="main-content">
-                <h2>Replace with http request module!</h2>
+                {/* <RequestModule /> */}
+                {!httpresponseVisable ? (
+                  <RequestModule
+                    parentCallback={(childData) =>
+                      callBackHttpResponse(childData)
+                    }
+                  />
+                ) : (
+                  <RequestDisplay
+                    httpResponse={httpResponse}
+                    parentCallback={(httpresponseVisable) =>
+                      resetHttpRequest(httpresponseVisable)
+                    }
+                    responseVisable={httpresponseVisable}
+                  />
+                )}
               </Grid>
             </MaterialUI>
           </Grid>

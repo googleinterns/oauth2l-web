@@ -19,7 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
  */
 export default function TokenDisplay(props) {
   const token = props.token;
-  const visibility = props.responseVisable;
+  const visibility = props.tokenResponseVisable;
   const [copy, setCopy] = React.useState(false);
 
   const sendToken = (visibility) => {
@@ -80,6 +80,6 @@ export default function TokenDisplay(props) {
 
 TokenDisplay.propTypes = {
   token: PropTypes.string,
-  responseVisable: PropTypes.bool,
+  tokenResponseVisable: PropTypes.bool,
   parentCallback: PropTypes.func,
 };
