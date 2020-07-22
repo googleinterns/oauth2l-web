@@ -17,36 +17,91 @@ import {
   DialogContent,
   FormHelperText,
   IconButton,
+  Collapse,
+  Menu,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
 import "../../styles/request.css";
 import { object, string } from "yup";
+import { getHTTPResponse } from "../../util/apiWrapper";
+import PropTypes from "prop-types";
 
 /**
+ *
+ * @param {func} props passes a callback function that sends the response back to the parent
  * @return {Formik} component using Formik for creating send Request
  */
-export default function RequestModule() {
+export default function RequestModule(props) {
   const [openHeaderBox, setOpenHeaderBox] = useState(false);
   const [openRequestBodyBox, setOpenRequestBodyBox] = useState(false);
+  const [openContentTypeBox, setOpenContentTypeBox] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  /**
+   *
+   * @param {string} response holds the response to the HTTP request
+   * sends the response of the HTTP request to the parent to be displayed
+   */
+  const sendResponse = (response) => {
+    props.parentCallback(response);
+  };
+
+  /**
+   *
+   * @param {JSON} values holds the parameter of the HTTP request.
+   * @param {func} helpers contains all of the helper functions of formik, passed in order to reset the form
+   * calls api wrapper to execute the HTTP request created and sends the response back to the parent component to be displayed
+   */
+  const getResponse = async (values, helpers) => {
+    const param = {
+      url: values.url,
+      method: values.httpMethod.toLowerCase(),
+      headers: {
+        Authorization: "Bearer " + values.token,
+        ...(values.contentType ? { "Content-Type": values.contentType } : null),
+        ...(values.reqBody ? { data: values.reqBody } : null),
+      },
+    };
+    for (let i = 0; i < values.headers.length; i++) {
+      if (
+        values.headers[i].headerName.length !== 0 &&
+        values[i].headerValue.length !== 0
+      ) {
+        param.headers[values.headers[i].headerName] =
+          values.headers[i].headerValue;
+      }
+    }
+    const response = await getHTTPResponse(param);
+    helpers.resetForm();
+    if ("Error" in response) {
+      setErrorOpen(true);
+      setHasError(true);
+      setErrMessage(response["Error"]["message"]);
+    } else {
+      sendResponse(JSON.stringify(response["data"], null, 2));
+    }
+  };
 
   return (
     <Formik
       initialValues={{
         httpMethod: "",
-        URI: "",
+        url: "",
         contentType: "",
         headers: [{ headerName: "", headerValue: "" }],
         reqBody: "",
         token: "",
       }}
-      onSubmit={async (values, { setSubmitting }) => {
-        setSubmitting(true);
-        setSubmitting(false);
-      }}
+      onSubmit={async (values, helpers) => getResponse(values, helpers)}
       validationSchema={object({
         httpMethod: string().required("Must have HTTP method"),
-        URI: string().required("Must have a URI"),
+        url: string().required("Must have a url"),
         token: string().required("Must have a token"),
       })}
     >
@@ -59,8 +114,10 @@ export default function RequestModule() {
               justify="space-between"
               alignItems="flex-start"
               className="request-content"
+              direction="row"
+              spacing={2}
             >
-              <Grid item xs={6}>
+              <Grid item xs={9}>
                 <FormControl
                   variant="outlined"
                   fullWidth
@@ -88,12 +145,31 @@ export default function RequestModule() {
               <Grid item>
                 <Button
                   variant="contained"
-                  onClick={() => setOpenHeaderBox(true)}
+                  onClick={(event) => {
+                    setAnchorEl(event.currentTarget);
+                  }}
                 >
-                  Add Header
+                  Options
                 </Button>
               </Grid>
             </Grid>
+
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+            >
+              <MenuItem onClick={() => setOpenHeaderBox(true)}>
+                Add Header
+              </MenuItem>
+              <MenuItem onClick={() => setOpenRequestBodyBox(true)}>
+                Add Body
+              </MenuItem>
+              <MenuItem onClick={() => setOpenContentTypeBox(true)}>
+                Add Content Type
+              </MenuItem>
+            </Menu>
 
             <Dialog
               open={openHeaderBox}
@@ -111,6 +187,7 @@ export default function RequestModule() {
                           <DialogContent>
                             <Field
                               placeholder="Header Name"
+                              variant="outlined"
                               name={`headers.${index}.headerName`}
                               fullWidth
                               as={TextField}
@@ -119,6 +196,7 @@ export default function RequestModule() {
                           <DialogContent>
                             <Field
                               placeholder="Header Value"
+                              variant="outlined"
                               name={`headers.${index}.headerValue`}
                               fullWidth
                               as={TextField}
@@ -153,24 +231,39 @@ export default function RequestModule() {
                 </Button>
               </DialogActions>
             </Dialog>
-            <Field
-              name="URI"
-              label="URI"
-              as={TextField}
-              variant="outlined"
-              fullWidth
-              className="request-content"
-              error={errors.URI && touched.URI}
-              helperText={errors.URI && touched.URI ? "URI required." : null}
-            />
 
-            <Grid
-              container
-              justify="space-between"
-              alignItems="flex-start"
-              className="request-content"
+            <Dialog
+              open={openRequestBodyBox}
+              onClose={() => setOpenRequestBodyBox(false)}
+              fullWidth
             >
-              <Grid item xs={6}>
+              <DialogTitle>Add Body</DialogTitle>
+              <DialogContent>
+                <Field
+                  name="reqBody"
+                  placeholder="Body"
+                  fullWidth
+                  variant="outlined"
+                  as={TextField}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => setOpenRequestBodyBox(false)}
+                  color="primary"
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            <Dialog
+              open={openContentTypeBox}
+              onClose={() => setOpenContentTypeBox(false)}
+              fullWidth
+            >
+              <DialogTitle>Add Content Type</DialogTitle>
+              <DialogContent>
                 <FormControl variant="outlined" fullWidth>
                   <InputLabel id="content">Content</InputLabel>
                   <Field
@@ -188,40 +281,27 @@ export default function RequestModule() {
                     <MenuItem value="text/csv">text/csv</MenuItem>
                   </Field>
                 </FormControl>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={() => setOpenRequestBodyBox(true)}
-                >
-                  Add Body
-                </Button>
-              </Grid>
-            </Grid>
-
-            <Dialog
-              open={openRequestBodyBox}
-              onClose={() => setOpenRequestBodyBox(false)}
-              fullWidth
-            >
-              <DialogTitle>Add Body</DialogTitle>
-              <DialogContent>
-                <Field
-                  name="reqBody"
-                  placeholder="Body"
-                  fullWidth
-                  as={TextField}
-                />
               </DialogContent>
               <DialogActions>
                 <Button
-                  onClick={() => setOpenRequestBodyBox(false)}
+                  onClick={() => setOpenContentTypeBox(false)}
                   color="primary"
                 >
                   Close
                 </Button>
               </DialogActions>
             </Dialog>
+
+            <Field
+              name="url"
+              label="URL"
+              as={TextField}
+              variant="outlined"
+              fullWidth
+              className="request-content"
+              error={errors.url && touched.url}
+              helperText={errors.url && touched.url ? "URL required." : null}
+            />
 
             <Field
               name="token"
@@ -248,23 +328,37 @@ export default function RequestModule() {
             </Button>
           </div>
           <div className="request-content">
-            <Typography variant="h5" gutterBottom>
-              Response/Request
-            </Typography>
-            <form noValidate autoComplete="off">
-              <TextField
-                multiline
-                fullWidth
-                variant="outlined"
-                value={JSON.stringify(values, null, 2)}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </form>
+            <div>
+              {/* Alert for error in fetching request. */}
+              {hasError && (
+                <Collapse in={errorOpen} className="collapse-reset">
+                  <Alert
+                    variant="outlined"
+                    severity="error"
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setErrorOpen(false);
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                  >
+                    {errMessage}
+                  </Alert>
+                </Collapse>
+              )}
+            </div>
           </div>
         </Form>
       )}
     </Formik>
   );
 }
+RequestModule.propTypes = {
+  parentCallback: PropTypes.func,
+};
