@@ -13,6 +13,9 @@ import { object, string } from "yup";
 import PropTypes from "prop-types";
 import { getOAuthToken, getNewCredentialToken } from "../../util/apiWrapper";
 
+// Time before the expiry of the credential token to request a new token in milliseconds
+const timeBeforeExpiry = 60000;
+
 /**
  * @param {param} props passes a callback function that sends the token back to the parent
  * @return {FormikStepper} component using Formik for creating a token
@@ -54,7 +57,7 @@ export default function TokenForm(props) {
       const expTime = JSON.parse(atob(credentialsToken.split(".")[1]))["exp"];
       const timeDelta = expTime * 1000 - Date.now();
 
-      setInterval(newTokenCall, timeDelta - 60000);
+      setInterval(newTokenCall, timeDelta - timeBeforeExpiry);
       setLoadedInterval(true);
     }
   }, [credentialsToken, loadedInterval]);

@@ -41,8 +41,11 @@ type CredentialsToken struct {
 	Token string
 }
 
-// secret key to make the uploadCredentials token
+// Secret key to make the uploadCredentials token
 var jwtKey = []byte("my_secret_key")
+
+// Sets the token expiry constant variable for the credential token
+const tokenExpiryMinutes = 10
 
 // SetupResponseHeaders sets up the headers for the response.
 func setupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
@@ -88,8 +91,8 @@ func wrapperExecutor(wc WrapperCommand) string {
 // createCredentialsToken takes as input a representiation of the uplodaded uploadCredentials json body and returns a token using the
 // uploadCredentials json body as the payload.
 func createCredentialsToken(Credentials map[string]interface{}) (string, error) {
-	// Declare the expiration time of the token. Here, we have kept it as 10 minutes.
-	expirationTime := time.Now().Add(10 * time.Minute)
+	// Declare the expiration time of the token.
+	expirationTime := time.Now().Add(tokenExpiryMinutes * time.Minute)
 	// Create the JWT claims, which includes the uploaded uploadCredentials json body and expiry time.
 	claims := &Claims{
 		UploadCredentials: Credentials,
