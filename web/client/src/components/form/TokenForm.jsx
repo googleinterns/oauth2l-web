@@ -133,6 +133,7 @@ export default function TokenForm(props) {
     };
     setRequestBody(Body);
 
+<<<<<<< HEAD
     const Response = await getCacheToken(Body);
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
@@ -144,6 +145,14 @@ export default function TokenForm(props) {
       } else {
         sendToken(Response["data"]["oauth2lResponse"]);
       }
+=======
+    const response = await getCacheToken(Body);
+
+    if (typeof response["error"] === undefined) {
+      sendToken(response["error"]);
+    } else {
+      sendToken(response["data"]["oauth2lResponse"]);
+>>>>>>> 61d0d48d2c5cb4047e7e3f43f3bf1951a08717c0
     }
   };
   return (
