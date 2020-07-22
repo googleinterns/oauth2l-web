@@ -25,6 +25,7 @@ import { getCacheToken } from "../../util/apiWrapper";
 export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
+  const [tokenFormat, setTokenFormat] = useState("");
   const [requestBody, setRequestBody] = useState(null);
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
@@ -40,23 +41,51 @@ export default function TokenForm(props) {
    * calls apiWrapper in order to request the token from the backend
    */
 
+  /**
+   *
+   * @param {string} cmdResponse holds the response from the backend.
+   * @return {string} OAuth2l access token from the backend.
+   */
+  const extractToken = (cmdResponse) => {
+    // Getting rid of white space.
+    cmdResponse = cmdResponse.replace(/\s+/g, "");
+    // Extracting the token from the cmd Response.
+    let token = cmdResponse.match(/(?<=code:)(.*)/)[1];
+    // Prettifying if token format is JSON or JSON Compact
+    if (tokenFormat === "JSON" || tokenFormat === "JSON Compact") {
+      token = JSON.stringify(JSON.parse(token), null, 2);
+    }
+    return token;
+  };
+
+  /**
+   * Second command to handle client id. Calls apiWrapper with original request with
+   * the additional code to be inputted.
+   */
   const getTokenWithCode = async () => {
     setCodeOpenBox(false);
-    requestBody["code"] = code;
+    requestBody["code"] = decodeURIComponent(code);
 
     const Response = await getCacheToken(requestBody);
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
-      const tokenBeginning =
-        Response["data"]["oauth2lResponse"].indexOf("code:") + 6;
-      sendToken(
-        Response["data"]["oauth2lResponse"].substring(
-          tokenBeginning,
-          Response["data"]["oauth2lResponse"].length
-        )
-      );
+      const token = extractToken(Response["data"]["oauth2lResponse"]);
+      sendToken(token);
     }
+  };
+
+  /**
+   *
+   * @param {string} cmdResponse holds the response from the backend.
+   * @return {string} OAuth2l access token from the backend.
+   */
+  const getURL = (cmdResponse) => {
+    // Getting rid of whitespace.
+    cmdResponse = cmdResponse.replace(/\s+/g, "");
+    // Extracting url from cmd response.
+    const url = cmdResponse.match(/(?<=browser:)(.*)(?=Enter)/)[1];
+    return url;
   };
 
   const getToken = async (values) => {
@@ -88,6 +117,7 @@ export default function TokenForm(props) {
     } else {
       userFormat = values.tokenFormat.toLowerCase();
     }
+    setTokenFormat(values.tokenFormat);
 
     const Body = {
       commandtype: "fetch",
@@ -108,14 +138,8 @@ export default function TokenForm(props) {
       sendToken(Response["error"]);
     } else {
       if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
-        const urlBeginning = Response["data"]["oauth2lResponse"].indexOf(":");
-        const urlEnd = Response["data"]["oauth2lResponse"].indexOf("=state");
-        window.open(
-          Response["data"]["oauth2lResponse"].substring(
-            urlBeginning + 1,
-            urlEnd + 7
-          )
-        );
+        const url = getURL(Response["data"]["oauth2lResponse"]);
+        window.open(url);
         setCodeOpenBox(true);
       } else {
         sendToken(Response["data"]["oauth2lResponse"]);
