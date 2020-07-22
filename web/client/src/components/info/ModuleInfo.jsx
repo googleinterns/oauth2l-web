@@ -50,11 +50,13 @@ export default function ModuleInfo(props) {
               {text}
             </Typography>
           ))}
-          {hasNote && (
-            <Typography variant="body2">
-              <strong>NOTE:</strong> {note}
-            </Typography>
-          )}
+          {hasNote &&
+            note.map((text, index) => (
+              <Typography variant="body2" key={index}>
+                <strong>NOTE: </strong>
+                {text}
+              </Typography>
+            ))}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

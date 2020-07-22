@@ -61,7 +61,10 @@ function App() {
                 "Once all the requirements are submitted, an access token will be returned based on the format requested.",
               ]}
               hasNote={true}
-              note="To obtain a JWT access token, a service account key must be used as the credentials file"
+              note={[
+                "To obtain a JWT access token, a service account key must be used as the credentials file",
+                "When using a client-id credentials file, after consenting, copy the code in thr url to the redirected page and paste it into the dialog box that appears in the application",
+              ]}
             />
             <Grid item className="main-content">
               <TokenForm
@@ -90,7 +93,7 @@ function App() {
                   "If the token is valid, an information button will appear, which will display the info of the token when clicked.",
                 ]}
                 hasNote={true}
-                note="The info for a JWT Token cannot be requested"
+                note={["The info for a JWT Token cannot be requested"]}
               />
               <Grid item xs className="main-content">
                 <ValidateToken />
