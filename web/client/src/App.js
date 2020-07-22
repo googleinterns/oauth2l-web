@@ -5,6 +5,7 @@ import {
   ValidateToken,
   TokenDisplay,
   RequestModule,
+  RequestDisplay,
   ModuleInfo,
 } from "./components";
 import { Grid } from "@material-ui/core";
@@ -16,6 +17,9 @@ import "./styles/app.css";
 function App() {
   const [token, setToken] = useState("");
   const [responseVisable, setResponseVisable] = useState(false);
+
+  const [httpResponse, setHttpResponse] = useState("");
+  const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
@@ -23,6 +27,25 @@ function App() {
   const callBackToken = (childData) => {
     setToken(childData);
     setResponseVisable(true);
+  };
+
+  /**
+   *
+   * @param {string} childData holds the response of the HTTP request.
+   * displaying the page with the HTTP response.
+   */
+  const callBackHttpResponse = (childData) => {
+    setHttpResponse(childData);
+    setHttpResponseVisable(true);
+  };
+
+  /**
+   *
+   * @param {bool} visibility boolean condition of the visibility.
+   * resets the HTTP request back to the HTTP form.
+   */
+  const resetHttpRequest = (visibility) => {
+    setHttpResponseVisable(visibility);
   };
 
   return (
@@ -87,7 +110,22 @@ function App() {
                 note=""
               />
               <Grid item xs className="main-content">
-                <RequestModule />
+                {/* <RequestModule /> */}
+                {!httpresponseVisable ? (
+                  <RequestModule
+                    parentCallback={(childData) =>
+                      callBackHttpResponse(childData)
+                    }
+                  />
+                ) : (
+                  <RequestDisplay
+                    httpResponse={httpResponse}
+                    parentCallback={(httpresponseVisable) =>
+                      resetHttpRequest(httpresponseVisable)
+                    }
+                    responseVisable={httpresponseVisable}
+                  />
+                )}
               </Grid>
             </MaterialUI>
           </Grid>

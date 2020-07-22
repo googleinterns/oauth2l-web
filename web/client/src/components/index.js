@@ -7,6 +7,7 @@ import TokenDisplay from "./form/TokenDisplay";
 import ValidateToken from "./validation/TokenValidation";
 import RequestModule from "./request/RequestModule";
 import ModuleInfo from "./info/ModuleInfo";
+import RequestDisplay from "./request/RequestDisplay";
 export {
   Head,
   TokenForm,
@@ -17,4 +18,5 @@ export {
   ValidateToken,
   RequestModule,
   ModuleInfo,
+  RequestDisplay,
 };
