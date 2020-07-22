@@ -67,6 +67,7 @@ export default function ModuleInfo(props) {
             )}
           </DialogContent>
         </ThemeProvider>
+
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Close
@@ -81,5 +82,5 @@ ModuleInfo.propTypes = {
   title: PropTypes.string,
   content: PropTypes.array,
   hasNote: PropTypes.bool,
-  note: PropTypes.string,
+  note: PropTypes.array,
 };
