@@ -192,8 +192,8 @@ export default function TokenForm(props) {
     if (typeof response["error"] === undefined) {
       sendToken(response["error"]);
     } else {
-      if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
-        const url = getURL(Response["data"]["oauth2lResponse"]);
+      if (response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
+        const url = getURL(response["data"]["oauth2lResponse"]);
         window.open(url);
         setCodeOpenBox(true);
       } else if (values.saveTokenLocally) {
