@@ -63,7 +63,7 @@ function App() {
               hasNote={true}
               note={[
                 "To obtain a JWT access token, a service account key must be used as the credentials file",
-                "When using a client-id credentials file, after consenting, copy the code in thr url to the redirected page and paste it into the dialog box that appears in the application",
+                "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application",
               ]}
             />
             <Grid item className="main-content">
