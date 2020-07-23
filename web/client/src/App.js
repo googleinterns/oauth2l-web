@@ -24,20 +24,19 @@ function App() {
     tokenAudience: [],
     tokenCredentials: "",
     saveTokenLocally: false,
-  
-  }
+  };
+  const [isReset, setReset] = useState(true);
   const [values, setValues] = useState(defaultValues);
-
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
+   * @param {object} credentials contains the previous states filled out by the user
    */
   const callBackToken = (childData, credentials) => {
     setResponse(childData);
     setTokenResponseVisable(true);
-    console.log(credentials);
     setValues(credentials); //step that is left is to just pass it back when a certain button is clicked
   };
 
@@ -47,18 +46,18 @@ function App() {
    */
   const resetClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
-    setValues(defaultValues)
+    setValues(defaultValues);
   };
 
   /**
-   * 
-   * @param {bool} visibility obtains the bool to render the form back  
+   *
+   * @param {bool} visibility obtains the bool to render the form back
    */
 
   const backClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
-
-  }
+    setReset(false);
+  };
   /**
    * @param {string} childData holds the response of the HTTP request.
    * displaying the page with the HTTP response.
@@ -102,12 +101,13 @@ function App() {
                     callBackToken(childData, credentials)
                   }
                   values={values}
+                  isReset={isReset}
                 />
               ) : (
                 <TokenDisplay
                   token={response}
                   parentCallback={(visibility) => resetClicked(visibility)}
-                  parentGoBack = {(visibility => backClicked(visibility))}
+                  parentGoBack={(visibility) => backClicked(visibility)}
                   tokenResponseVisable={tokenResponseVisable}
                 />
               )}

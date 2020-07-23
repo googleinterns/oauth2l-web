@@ -35,7 +35,7 @@ export default function TokenForm(props) {
   const [requestBody, setRequestBody] = useState(null);
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
-  const { parentCallback, values } = props;
+  const { parentCallback, values, isReset } = props;
 
   /**
    * @param {string} token variable that holds the token
@@ -119,7 +119,7 @@ export default function TokenForm(props) {
     return url;
   };
 
-  const getToken = async (values) => {
+  const getToken = async (values, step) => {
     let userScopes;
     let userAudience;
     if (values.tokenScopes.length === 0) {
@@ -198,7 +198,8 @@ export default function TokenForm(props) {
         setCredentialsToken(token);
         sendToken(response["data"]["oauth2lResponse"]);
       } else {
-        sendToken(response["data"]["oauth2lResponse"], values);
+        sendToken(response["data"]["oauth2lResponse"], values, step);
+        console.log(step);
       }
     }
   };
@@ -206,14 +207,7 @@ export default function TokenForm(props) {
   return (
     <div>
       <FormikStepper
-        initialValues={{
-          tokenType: values["tokenType"],
-          tokenFormat: values["tokenFormat"],
-          tokenScopes: values["tokenScopes"],
-          tokenAudience: values["tokenAudience"],
-          tokenCredentials: values["tokenCredentials"],
-          saveTokenLocally: values["saveTokenLocally"],
-        }}
+        initialValues={values}
         onSubmit={(values) => getToken(values)}
         setSecondLabel={(value) => {
           setTokenType(value);
@@ -223,6 +217,7 @@ export default function TokenForm(props) {
             setLabel("Audience");
           }
         }}
+        isReset={isReset}
       >
         <TokenType
           validationSchema={object({
@@ -287,12 +282,11 @@ export default function TokenForm(props) {
  * @return {Formik} component for showing one child form at a time
  */
 export function FormikStepper(props) {
-  const { children } = props;
+  const { children, isReset } = props;
   const childrenArray = React.Children.toArray(children);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(isReset ? 0 : childrenArray.length - 1);
   const [done, setDone] = useState(false);
   const currentChild = childrenArray[step];
-
   const isLastStep = () => {
     return step === childrenArray.length - 1;
   };
@@ -306,6 +300,7 @@ export function FormikStepper(props) {
           setDone(true);
           await props.onSubmit(values);
         } else {
+          console.log("step", step);
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
           }
