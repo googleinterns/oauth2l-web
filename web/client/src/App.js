@@ -37,7 +37,7 @@ function App() {
   const callBackToken = (childData, credentials) => {
     setResponse(childData);
     setTokenResponseVisable(true);
-    setValues(credentials); //step that is left is to just pass it back when a certain button is clicked
+    setValues(credentials);
   };
 
   /**
@@ -51,7 +51,7 @@ function App() {
 
   /**
    *
-   * @param {bool} visibility obtains the bool to render the form back
+   * @param {bool} visibility obtains the bool to render the form back and if clicked it resets to the last component
    */
 
   const backClicked = (visibility) => {

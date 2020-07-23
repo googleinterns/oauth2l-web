@@ -39,6 +39,7 @@ export default function TokenForm(props) {
 
   /**
    * @param {string} token variable that holds the token
+   * @param {object} credentials variable that holds the previous answers that the user provided
    */
   const sendToken = (token, credentials) => {
     parentCallback(token, credentials);
@@ -199,7 +200,6 @@ export default function TokenForm(props) {
         sendToken(response["data"]["oauth2lResponse"]);
       } else {
         sendToken(response["data"]["oauth2lResponse"], values, step);
-        console.log(step);
       }
     }
   };
@@ -300,7 +300,6 @@ export function FormikStepper(props) {
           setDone(true);
           await props.onSubmit(values);
         } else {
-          console.log("step", step);
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
           }
@@ -357,10 +356,13 @@ export function FormikStepper(props) {
 
 FormikStepper.propTypes = {
   children: PropTypes.node,
+  isReset: PropTypes.bool,
   onSubmit: PropTypes.func,
   setSecondLabel: PropTypes.func,
 };
 
 TokenForm.propTypes = {
   parentCallback: PropTypes.func,
+  values: PropTypes.object,
+  isReset: PropTypes.bool,
 };

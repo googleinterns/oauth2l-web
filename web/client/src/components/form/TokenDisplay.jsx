@@ -91,4 +91,5 @@ TokenDisplay.propTypes = {
   token: PropTypes.string,
   tokenResponseVisable: PropTypes.bool,
   parentCallback: PropTypes.func,
+  parentGoBack: PropTypes.func,
 };
