@@ -17,14 +17,16 @@ import "./styles/app.css";
 function App() {
   const [response, setResponse] = useState(null);
   const [tokenResponseVisable, setTokenResponseVisable] = useState(false);
-  const [values, setValues] = useState({
+  const defaultValues = {
     tokenType: "",
     tokenFormat: "",
     tokenScopes: [],
     tokenAudience: [],
     tokenCredentials: "",
     saveTokenLocally: false,
-  });
+  
+  }
+  const [values, setValues] = useState(defaultValues);
 
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
@@ -45,8 +47,18 @@ function App() {
    */
   const resetClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
-    console.log(values);
+    setValues(defaultValues)
   };
+
+  /**
+   * 
+   * @param {bool} visibility obtains the bool to render the form back  
+   */
+
+  const backClicked = (visibility) => {
+    setTokenResponseVisable(!visibility);
+
+  }
   /**
    * @param {string} childData holds the response of the HTTP request.
    * displaying the page with the HTTP response.
@@ -95,6 +107,7 @@ function App() {
                 <TokenDisplay
                   token={response}
                   parentCallback={(visibility) => resetClicked(visibility)}
+                  parentGoBack = {(visibility => backClicked(visibility))}
                   tokenResponseVisable={tokenResponseVisable}
                 />
               )}

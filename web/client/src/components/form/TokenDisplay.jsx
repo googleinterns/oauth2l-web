@@ -18,13 +18,16 @@ import CloseIcon from "@material-ui/icons/Close";
  * @return {Grid} returns a Grid component that contains the page
  */
 export default function TokenDisplay(props) {
-  const { token, tokenResponseVisable, parentCallback } = props;
+  const { token, tokenResponseVisable, parentCallback, parentGoBack } = props;
   const [copy, setCopy] = useState(false);
 
   const sendToken = (tokenResponseVisable) => {
     parentCallback(tokenResponseVisable);
   };
 
+  const sendBack = (tokenResponseVisable) => {
+    parentGoBack(tokenResponseVisable);
+  };
   return (
     <Grid>
       <Typography variant="h5">OAuth2l Response:</Typography>
@@ -52,7 +55,7 @@ export default function TokenDisplay(props) {
         </Button>
       </CopyToClipboard>
       <Button
-        onClick={() => sendToken(tokenResponseVisable)}
+        onClick={() => sendBack(tokenResponseVisable)}
         className="form-back"
         variant="contained"
       >
