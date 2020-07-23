@@ -35,12 +35,13 @@ export default function TokenForm(props) {
   const [requestBody, setRequestBody] = useState(null);
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
+  const { parentCallback, values } = props;
 
   /**
    * @param {string} token variable that holds the token
    */
-  const sendToken = (token) => {
-    props.parentCallback(token);
+  const sendToken = (token, credentials) => {
+    parentCallback(token, credentials);
   };
 
   useEffect(() => {
@@ -118,7 +119,7 @@ export default function TokenForm(props) {
     return url;
   };
 
-  const getToken = async (values, helpers) => {
+  const getToken = async (values) => {
     let userScopes;
     let userAudience;
     if (values.tokenScopes.length === 0) {
@@ -184,7 +185,7 @@ export default function TokenForm(props) {
     setRequestBody(body);
 
     const response = await getOAuthToken(body);
-    helpers.resetForm();
+
     if (typeof response["error"] === undefined) {
       sendToken(response["error"]);
     } else {
@@ -197,7 +198,7 @@ export default function TokenForm(props) {
         setCredentialsToken(token);
         sendToken(response["data"]["oauth2lResponse"]);
       } else {
-        sendToken(response["data"]["oauth2lResponse"]);
+        sendToken(response["data"]["oauth2lResponse"], values);
       }
     }
   };
@@ -206,14 +207,14 @@ export default function TokenForm(props) {
     <div>
       <FormikStepper
         initialValues={{
-          tokenType: "",
-          tokenFormat: "",
-          tokenScopes: [],
-          tokenAudience: [],
-          tokenCredentials: "",
-          saveTokenLocally: false,
+          tokenType: values["tokenType"],
+          tokenFormat: values["tokenFormat"],
+          tokenScopes: values["tokenScopes"],
+          tokenAudience: values["tokenAudience"],
+          tokenCredentials: values["tokenCredentials"],
+          saveTokenLocally: values["saveTokenLocally"],
         }}
-        onSubmit={(values, helpers) => getToken(values, helpers)}
+        onSubmit={(values) => getToken(values)}
         setSecondLabel={(value) => {
           setTokenType(value);
           if (value === "OAuth") {
@@ -300,10 +301,10 @@ export function FormikStepper(props) {
     <Formik
       {...props}
       validationSchema={currentChild.props.validationSchema}
-      onSubmit={async (values, helpers) => {
+      onSubmit={async (values) => {
         if (isLastStep()) {
           setDone(true);
-          await props.onSubmit(values, helpers);
+          await props.onSubmit(values);
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);

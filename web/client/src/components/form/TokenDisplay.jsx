@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Button,
@@ -19,7 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
  */
 export default function TokenDisplay(props) {
   const { token, tokenResponseVisable, parentCallback } = props;
-  const [copy, setCopy] = React.useState(false);
+  const [copy, setCopy] = useState(false);
 
   const sendToken = (tokenResponseVisable) => {
     parentCallback(tokenResponseVisable);
@@ -51,6 +51,13 @@ export default function TokenDisplay(props) {
           Copy to Clipboard
         </Button>
       </CopyToClipboard>
+      <Button
+        onClick={() => sendToken(tokenResponseVisable)}
+        className="form-back"
+        variant="contained"
+      >
+        Go Back
+      </Button>
       <div className="form-alert">
         <Collapse in={copy}>
           <Alert

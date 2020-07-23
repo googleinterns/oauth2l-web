@@ -17,6 +17,14 @@ import "./styles/app.css";
 function App() {
   const [response, setResponse] = useState(null);
   const [tokenResponseVisable, setTokenResponseVisable] = useState(false);
+  const [values, setValues] = useState({
+    tokenType: "",
+    tokenFormat: "",
+    tokenScopes: [],
+    tokenAudience: [],
+    tokenCredentials: "",
+    saveTokenLocally: false,
+  });
 
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
@@ -24,9 +32,11 @@ function App() {
    *
    * @param {string} childData obtains the token value from the TokenForm component
    */
-  const callBackToken = (childData) => {
+  const callBackToken = (childData, credentials) => {
     setResponse(childData);
     setTokenResponseVisable(true);
+    console.log(credentials);
+    setValues(credentials); //step that is left is to just pass it back when a certain button is clicked
   };
 
   /**
@@ -35,6 +45,7 @@ function App() {
    */
   const resetClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
+    console.log(values);
   };
   /**
    * @param {string} childData holds the response of the HTTP request.
@@ -75,7 +86,10 @@ function App() {
             <Grid item className="main-content">
               {!tokenResponseVisable ? (
                 <TokenForm
-                  parentCallback={(childData) => callBackToken(childData)}
+                  parentCallback={(childData, credentials) =>
+                    callBackToken(childData, credentials)
+                  }
+                  values={values}
                 />
               ) : (
                 <TokenDisplay
