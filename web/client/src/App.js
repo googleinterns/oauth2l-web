@@ -47,6 +47,7 @@ function App() {
   const resetClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
     setValues(defaultValues);
+    setReset(true);
   };
 
   /**
