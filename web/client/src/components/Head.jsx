@@ -14,7 +14,7 @@ export default function Head(props) {
 
   useEffect(() => {
     callback(isDarkMode);
-  }, [isDarkMode]);
+  }, [callback, isDarkMode]);
 
   return (
     <AppBar className="header">
