@@ -50,11 +50,13 @@ export default function ModuleInfo(props) {
               {text}
             </Typography>
           ))}
-          {hasNote && (
-            <Typography variant="body2">
-              <strong>NOTE:</strong> {note}
-            </Typography>
-          )}
+          {hasNote &&
+            note.map((text, index) => (
+              <Typography variant="body2" key={index}>
+                <strong>NOTE: </strong>
+                {text}
+              </Typography>
+            ))}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
@@ -70,5 +72,5 @@ ModuleInfo.propTypes = {
   title: PropTypes.string,
   content: PropTypes.array,
   hasNote: PropTypes.bool,
-  note: PropTypes.string,
+  note: PropTypes.array,
 };

@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Request struct represents the request that the backend will recieve.
+// Request struct represents the request that the backend will recieve.
 type Request struct {
 	CommandType string
 	Args
@@ -21,6 +21,7 @@ type Request struct {
 	CacheToken bool
 	UseToken   bool
 	Token      string
+	Code       string
 }
 
 // Response struct represents the JSON response that the backend will send.
@@ -36,8 +37,16 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-// secret key to make the uploadCredentials token
+// CredentialsToken struct represents the request that the backend will recieve when a new JWT token is requested.
+type CredentialsToken struct {
+	Token string
+}
+
+// Secret key to make the uploadCredentials token
 var jwtKey = []byte("my_secret_key")
+
+// Sets the token expiry constant variable for the credential token
+const tokenExpiryMinutes = 10
 
 // SetupResponseHeaders sets up the headers for the response.
 func setupResponseHeaders(w *http.ResponseWriter, req *http.Request) {
@@ -83,8 +92,8 @@ func wrapperExecutor(wc WrapperCommand) string {
 // createCredentialsToken takes as input a representiation of the uplodaded uploadCredentials json body and returns a token using the
 // uploadCredentials json body as the payload.
 func createCredentialsToken(Credentials map[string]interface{}) (string, error) {
-	// Declare the expiration time of the token. Here, we have kept it as 1 day.
-	expirationTime := time.Now().Add(1440 * time.Minute)
+	// Declare the expiration time of the token.
+	expirationTime := time.Now().Add(tokenExpiryMinutes * time.Minute)
 	// Create the JWT claims, which includes the uploaded uploadCredentials json body and expiry time.
 	claims := &Claims{
 		UploadCredentials: Credentials,
@@ -186,6 +195,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		CommandType: requestBody.CommandType,
 		Args:        requestBody.Args,
 		Credential:  credsMap,
+		Code:        requestBody.Code,
 	}
 	// Getting the response from the OAuth2l.
 	CMDresponse := wrapperExecutor(cmd)
@@ -211,13 +221,59 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responseBody)
 }
 
+// CredentialsTokenHandler takes as an input a json body with the old token
+// and returns a new token with a new expiration date only if the old token has not expired yet.
+// It returns a 400 status if the new token cannot be created or a 401 status if the uploadCredentials 
+// token cannot be validated.
+func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
+	// Request object to store information about request.
+	var requestBody CredentialsToken
+
+	// Setting up reponse Headers.
+	setupResponseHeaders(&w, r)
+	if (*&r).Method == "OPTIONS" {
+		return
+	}
+
+	// Get the JSON body and decode into requestBody.
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error.
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, "UNABLE TO PARSE JSON")
+		return
+	}
+
+	creds, err := authenticateCredentialsToken(requestBody.Token)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		io.WriteString(w, strings.ToUpper(err.Error()))
+		return
+	}
+
+	newToken, err := createCredentialsToken(creds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, strings.ToUpper(err.Error()))
+		return
+	}
+
+	// Writing response in json format.
+	w.Header().Set("Content-Type", "application/json")
+	responseBody := map[string]string {
+		"token": newToken,
+	}
+	json.NewEncoder(w).Encode(responseBody)
+}
+
 func main() {
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
 	router.HandleFunc("/api", Handler)
+	router.HandleFunc("/api/jwt/token", CredentialsTokenHandler)
 	var srv = &http.Server{
 		Handler:      router,
-		Addr:         "127.0.0.1:8080",
+		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

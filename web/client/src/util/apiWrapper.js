@@ -1,18 +1,37 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/api";
+// TODO: Deploy backend on a Google Cloud service
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://yousefa-step-2020.uc.r.appspot.com/api"
+    : "http://localhost:8080/api";
 
-export const getCacheToken = (credentials) => {
+export const getOAuthToken = (credentials) => {
   const requestString = `${BASE_URL}`;
-  const credentialFail = "GET_CREDENTIAL_TOKEN_FAIL";
+  const oauthTokenFail = "GET_OAUTH_TOKEN_FAIL";
   return axios.post(requestString, credentials).catch((error) => ({
-    type: credentialFail,
+    type: oauthTokenFail,
+    error,
+  }));
+};
+
+export const getNewCredentialToken = (oldToken) => {
+  const requestString = `${BASE_URL}/jwt/token`;
+  const credentialTokenFail = "GET_CREDENTIAL_TOKEN_FAIL";
+  return axios.post(requestString, oldToken).catch((error) => ({
+    type: credentialTokenFail,
     error,
   }));
 };
 
 export const validateToken = (requestOptions) => {
-  return axios.post(`${BASE_URL}`, requestOptions).catch(function (error) {
+  return axios.post(`${BASE_URL}`, requestOptions).catch((error) => {
+    return JSON.parse(JSON.stringify({ Error: error }));
+  });
+};
+
+export const getHTTPResponse = (requestBody) => {
+  return axios(requestBody).catch((error) => {
     return JSON.parse(JSON.stringify({ Error: error }));
   });
 };
