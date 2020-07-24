@@ -39,10 +39,10 @@ export default function TokenForm(props) {
   const sentValues = useState(values);
   /**
    * @param {string} token variable that holds the token
-   * @param {object} credentials variable that holds the previous answers that the user provided
+   * @param {object} values variable that holds the previous answers that the user provided
    */
-  const sendToken = (token, credentials) => {
-    parentCallback(token, credentials);
+  const sendToken = (token, values) => {
+    parentCallback(token, values);
   };
 
   useEffect(() => {
@@ -190,7 +190,14 @@ export default function TokenForm(props) {
   return (
     <div>
       <FormikStepper
-        initialValues={values}
+        initialValues={{
+          tokenType: "",
+          tokenFormat: "",
+          tokenScopes: [],
+          tokenAudience: [],
+          tokenCredentials: "",
+          saveTokenLocally: false,
+        }}
         onSubmit={(values) => getToken(values)}
         setSecondLabel={(value) => {
           setTokenType(value);
@@ -268,6 +275,7 @@ export function FormikStepper(props) {
   const { children, isReset } = props;
   const childrenArray = React.Children.toArray(children);
   const [step, setStep] = useState(isReset ? 0 : childrenArray.length - 1);
+
   const [done, setDone] = useState(false);
   const currentChild = childrenArray[step];
   const isLastStep = () => {

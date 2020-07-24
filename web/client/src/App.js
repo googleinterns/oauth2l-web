@@ -15,8 +15,6 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const [response, setResponse] = useState(null);
-  const [tokenResponseVisable, setTokenResponseVisable] = useState(false);
   const defaultValues = {
     tokenType: "",
     tokenFormat: "",
@@ -25,8 +23,10 @@ function App() {
     tokenCredentials: "",
     saveTokenLocally: false,
   };
-  const [isReset, setReset] = useState(true);
   const [values, setValues] = useState(defaultValues);
+  const [response, setResponse] = useState(null); // holds the response from the backend
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
+  const [isReset, setReset] = useState(true); // the state resets the form
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
@@ -36,7 +36,7 @@ function App() {
    */
   const callBackToken = (childData, credentials) => {
     setResponse(childData);
-    setTokenResponseVisable(true);
+    setTokenResponseVisable(false);
     setValues(credentials);
   };
 
@@ -46,8 +46,8 @@ function App() {
    */
   const resetClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
-    setValues(defaultValues);
     setReset(true);
+    setValues(defaultValues);
   };
 
   /**
@@ -96,22 +96,21 @@ function App() {
               ]}
             />
             <Grid item className="main-content">
-              {!tokenResponseVisable ? (
+              <div style={{ display: tokenResponseVisable ? "block" : "none" }}>
                 <TokenForm
-                  parentCallback={(childData, credentials) =>
-                    callBackToken(childData, credentials)
-                  }
+                  parentCallback={(childData) => callBackToken(childData)}
                   values={values}
                   isReset={isReset}
                 />
-              ) : (
+              </div>
+              <div style={{ display: tokenResponseVisable ? "none" : "block" }}>
                 <TokenDisplay
                   token={response}
                   parentCallback={(visibility) => resetClicked(visibility)}
                   parentGoBack={(visibility) => backClicked(visibility)}
                   tokenResponseVisable={tokenResponseVisable}
                 />
-              )}
+              </div>
             </Grid>
           </MaterialUI>
         </Grid>
