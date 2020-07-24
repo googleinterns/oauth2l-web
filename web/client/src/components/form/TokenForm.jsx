@@ -36,7 +36,7 @@ export default function TokenForm(props) {
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
   const { parentCallback, values, isReset } = props;
-
+  const sentValues = useState(values);
   /**
    * @param {string} token variable that holds the token
    * @param {object} credentials variable that holds the previous answers that the user provided
@@ -102,7 +102,7 @@ export default function TokenForm(props) {
       sendToken(Response["error"]);
     } else {
       const token = extractToken(Response["data"]["oauth2lResponse"]);
-      sendToken(token);
+      sendToken(token, sentValues);
     }
   };
 
