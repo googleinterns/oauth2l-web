@@ -50,7 +50,7 @@ export default function TokenForm(props) {
     // Getting rid of white space.
     cmdResponse = cmdResponse.replace(/\s+/g, "");
     // Extracting the token from the cmd Response.
-    let token = cmdResponse.match(/(?<=code:)(.*)/)[1];
+    let token = cmdResponse.match(/code:(.*)/)[1];
     // Prettifying if token format is JSON or JSON Compact
     if (tokenFormat === "JSON" || tokenFormat === "JSON Compact") {
       token = JSON.stringify(JSON.parse(token), null, 2);
@@ -84,7 +84,7 @@ export default function TokenForm(props) {
     // Getting rid of whitespace.
     cmdResponse = cmdResponse.replace(/\s+/g, "");
     // Extracting url from cmd response.
-    const url = cmdResponse.match(/(?<=browser:)(.*)(?=Enter)/)[1];
+    const url = cmdResponse.match(/browser:(.*)Enter/)[1];
     return url;
   };
 
@@ -119,19 +119,42 @@ export default function TokenForm(props) {
     }
     setTokenFormat(values.tokenFormat);
 
-    const Body = {
-      commandtype: "fetch",
-      args: {
-        scope: userScopes,
-        audience: userAudience,
-        output_format: userFormat,
-        type: values["tokenType"].toLowerCase(),
-      },
-      credential: finalCredentials,
-      cachetoken: true,
-      usetoken: false,
-    };
-    setRequestBody(Body);
+    const useUploadedCredential = values.tokenCredentials.length > 0;
+
+    let finalCredentials;
+    if (useUploadedCredential) {
+      const tokenCred = JSON.parse(values.tokenCredentials);
+      finalCredentials = tokenCred;
+    } else {
+      finalCredentials = credentialsToken;
+    }
+
+    const body = useUploadedCredential
+      ? {
+          commandtype: "fetch",
+          args: {
+            scope: userScopes,
+            audience: userAudience,
+            output_format: userFormat,
+            type: values.tokenType.toLowerCase(),
+          },
+          credential: finalCredentials,
+          cachetoken: values.saveTokenLocally,
+          usetoken: false,
+        }
+      : {
+          commandtype: "fetch",
+          args: {
+            scope: userScopes,
+            audience: userAudience,
+            output_format: userFormat,
+            type: values.tokenType.toLowerCase(),
+          },
+          token: finalCredentials,
+          cachetoken: values.saveTokenLocally,
+          usetoken: false,
+        };
+    setRequestBody(body);
 
     const Response = await getCacheToken(Body);
     if (typeof Response["error"] === undefined) {

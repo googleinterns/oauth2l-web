@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -209,6 +209,51 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	responseBody := Response{
 		OAuth2lResponse: CMDresponse,
 		Token:           credentialsToken,
+	}
+	json.NewEncoder(w).Encode(responseBody)
+}
+
+// CredentialsTokenHandler takes as an input a json body with the old token
+// and returns a new token with a new expiration date only if the old token has not expired yet.
+// It returns a 400 status if the new token cannot be created or a 401 status if the uploadCredentials
+// token cannot be validated.
+func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
+	// Request object to store information about request.
+	var requestBody CredentialsToken
+
+	// Setting up reponse Headers.
+	setupResponseHeaders(&w, r)
+	if (*&r).Method == "OPTIONS" {
+		return
+	}
+
+	// Get the JSON body and decode into requestBody.
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error.
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, "UNABLE TO PARSE JSON")
+		return
+	}
+
+	creds, err := authenticateCredentialsToken(requestBody.Token)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		io.WriteString(w, strings.ToUpper(err.Error()))
+		return
+	}
+
+	newToken, err := createCredentialsToken(creds)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, strings.ToUpper(err.Error()))
+		return
+	}
+
+	// Writing response in json format.
+	w.Header().Set("Content-Type", "application/json")
+	responseBody := map[string]string{
+		"token": newToken,
 	}
 	json.NewEncoder(w).Encode(responseBody)
 }
