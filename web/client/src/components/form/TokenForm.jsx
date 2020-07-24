@@ -1,4 +1,4 @@
-import React, { useState, useEffect, cloneElement } from "react";
+import React, { useState, cloneElement } from "react";
 import { Formik, Form } from "formik";
 import {
   Button,
@@ -16,10 +16,7 @@ import {
 import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
-import { getOAuthToken, getNewCredentialToken } from "../../util/apiWrapper";
-
-// Time before the expiry of the credential token to request a new token in milliseconds
-const timeBeforeExpiry = 60000;
+import { getCacheToken } from "../../util/apiWrapper";
 
 /**
  * @param {param} props passes a callback function that sends the token back to the parent
@@ -28,49 +25,17 @@ const timeBeforeExpiry = 60000;
 export default function TokenForm(props) {
   const [secondLabel, setLabel] = useState("");
   const [tokenType, setTokenType] = useState("");
-  const [credentialsToken, setCredentialsToken] = useState("");
-  const [parsedCredential, setParsedCredential] = useState("");
-  const [loadedInterval, setLoadedInterval] = useState(false);
   const [tokenFormat, setTokenFormat] = useState("");
   const [requestBody, setRequestBody] = useState(null);
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
-
   /**
+   *
    * @param {string} token variable that holds the token
    */
   const sendToken = (token) => {
     props.parentCallback(token);
   };
-
-  useEffect(() => {
-    const newTokenCall = async () => {
-      const body = {
-        token: credentialsToken,
-      };
-      const response = await getNewCredentialToken(body);
-
-      setCredentialsToken(response["data"]["token"]);
-    };
-
-    if (!loadedInterval && credentialsToken.length > 0) {
-      try {
-        const credentialObject = JSON.parse(
-          atob(credentialsToken.split(".")[1])
-        )["UploadCredentials"];
-        setParsedCredential(JSON.stringify(credentialObject, null, 2));
-      } catch (error) {
-        setParsedCredential("Unable to parse credential payload");
-      }
-
-      const expTime = JSON.parse(atob(credentialsToken.split(".")[1]))["exp"];
-      const timeDelta = expTime * 1000 - Date.now();
-
-      setInterval(newTokenCall, timeDelta - timeBeforeExpiry);
-      setLoadedInterval(true);
-    }
-  }, [credentialsToken, loadedInterval]);
-
   /**
    * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
    * calls apiWrapper in order to request the token from the backend
@@ -101,7 +66,7 @@ export default function TokenForm(props) {
     setCodeOpenBox(false);
     requestBody["code"] = decodeURIComponent(code);
 
-    const Response = await getOAuthToken(requestBody);
+    const Response = await getCacheToken(requestBody);
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
     } else {
@@ -124,6 +89,21 @@ export default function TokenForm(props) {
   };
 
   const getToken = async (values) => {
+    const tokenCred = JSON.parse(values.tokenCredentials);
+    let finalCredentials;
+    if (
+      typeof tokenCred["web"] !== undefined &&
+      typeof tokenCred["installed"] === undefined
+    ) {
+      finalCredentials = tokenCred["web"];
+    } else if (
+      typeof tokenCred["web"] === undefined &&
+      typeof tokenCred["installed"] !== undefined
+    ) {
+      finalCredentials = tokenCred["installed"];
+    } else {
+      finalCredentials = tokenCred;
+    }
     let userScopes;
     let userAudience;
     if (values.tokenScopes.length === 0) {
@@ -139,73 +119,33 @@ export default function TokenForm(props) {
     }
     setTokenFormat(values.tokenFormat);
 
-    const useUploadedCredential = values.tokenCredentials.length > 0;
+    const Body = {
+      commandtype: "fetch",
+      args: {
+        scope: userScopes,
+        audience: userAudience,
+        output_format: userFormat,
+        type: values["tokenType"].toLowerCase(),
+      },
+      credential: finalCredentials,
+      cachetoken: true,
+      usetoken: false,
+    };
+    setRequestBody(Body);
 
-    let finalCredentials;
-    if (useUploadedCredential) {
-      const tokenCred = JSON.parse(values.tokenCredentials);
-      if (
-        tokenCred["web"] !== undefined &&
-        tokenCred["installed"] === undefined
-      ) {
-        finalCredentials = tokenCred["web"];
-      } else if (
-        tokenCred["web"] === undefined &&
-        tokenCred["installed"] !== undefined
-      ) {
-        finalCredentials = tokenCred["installed"];
-      } else {
-        finalCredentials = tokenCred;
-      }
+    const Response = await getCacheToken(Body);
+    if (typeof Response["error"] === undefined) {
+      sendToken(Response["error"]);
     } else {
-      finalCredentials = credentialsToken;
-    }
-
-    const body = useUploadedCredential
-      ? {
-          commandtype: "fetch",
-          args: {
-            scope: userScopes,
-            audience: userAudience,
-            output_format: userFormat,
-            type: values.tokenType.toLowerCase(),
-          },
-          credential: finalCredentials,
-          cachetoken: values.saveTokenLocally,
-          usetoken: false,
-        }
-      : {
-          commandtype: "fetch",
-          args: {
-            scope: userScopes,
-            audience: userAudience,
-            output_format: userFormat,
-            type: values.tokenType.toLowerCase(),
-          },
-          token: finalCredentials,
-          cachetoken: values.saveTokenLocally,
-          usetoken: false,
-        };
-    setRequestBody(body);
-
-    const response = await getOAuthToken(body);
-    if (typeof response["error"] === undefined) {
-      sendToken(response["error"]);
-    } else {
-      if (response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
-        const url = getURL(response["data"]["oauth2lResponse"]);
+      if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
+        const url = getURL(Response["data"]["oauth2lResponse"]);
         window.open(url);
         setCodeOpenBox(true);
-      } else if (values.saveTokenLocally) {
-        const token = response["data"]["token"];
-        setCredentialsToken(token);
-        sendToken(response["data"]["oauth2lResponse"]);
       } else {
-        sendToken(response["data"]["oauth2lResponse"]);
+        sendToken(Response["data"]["oauth2lResponse"]);
       }
     }
   };
-
   return (
     <div>
       <FormikStepper
@@ -215,7 +155,6 @@ export default function TokenForm(props) {
           tokenScopes: [],
           tokenAudience: [],
           tokenCredentials: "",
-          saveTokenLocally: false,
         }}
         onSubmit={(values) => getToken(values)}
         setSecondLabel={(value) => {
@@ -251,8 +190,6 @@ export default function TokenForm(props) {
               .min(1, "Must include credential"),
           })}
           label="Credentials"
-          tokenAvailable={credentialsToken.length > 0}
-          parsedCredential={parsedCredential}
         />
       </FormikStepper>
       <Dialog

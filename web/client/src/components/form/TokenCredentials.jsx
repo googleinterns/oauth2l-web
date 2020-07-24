@@ -7,8 +7,6 @@ import {
   Radio,
   FormControlLabel,
   Button,
-  Switch,
-  TextField as TextFieldMUI,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { TextField } from "formik-material-ui";
@@ -16,7 +14,7 @@ import PropTypes from "prop-types";
 import "../../styles/form.css";
 
 /**
- * @param {Object} props contains setFieldValue function for updating credentials field manually
+ * @param {Object} props contains setFieldValue function for updating credential field manually
  * @return {Box} containing form fields for adding scopes
  */
 export default function TokenCredentials(props) {
@@ -24,18 +22,11 @@ export default function TokenCredentials(props) {
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [success, setSuccess] = useState(false);
-  const [saveCredential, setSaveCredential] = useState(false);
 
-  const { setFieldValue, tokenAvailable, parsedCredential } = props;
+  const { setFieldValue } = props;
 
   const handleCredFormat = (e) => {
-    const format = e.currentTarget.value;
-    setCredFormat(format);
-
-    if (format === "saved") {
-      setError(false);
-      setFieldValue("tokenCredentials", parsedCredential);
-    }
+    setCredFormat(e.currentTarget.value);
   };
 
   const handleFile = (e) => {
@@ -76,33 +67,11 @@ export default function TokenCredentials(props) {
     setFieldValue("tokenCredentials", str);
   };
 
-  const toggleSave = () => {
-    setFieldValue("saveTokenLocally", !saveCredential);
-    setSaveCredential((prev) => !prev);
-  };
-
-  const saveTokenToggle = () => {
-    return (
-      <FormControlLabel
-        className="form-save-cred-toggle"
-        control={
-          <Switch
-            checked={saveCredential}
-            onChange={toggleSave}
-            color="primary"
-          />
-        }
-        label="Save credentials for future use"
-      />
-    );
-  };
-
   return (
     <Box className="form-box">
       <div className="form-text">
         <Typography variant="h5">Upload or enter credentials</Typography>
       </div>
-      {saveTokenToggle()}
       <RadioGroup
         row
         name="credentialFormat"
@@ -119,13 +88,6 @@ export default function TokenCredentials(props) {
           control={<Radio color="primary" />}
           label="Text input"
         />
-        {tokenAvailable ? (
-          <FormControlLabel
-            value="saved"
-            control={<Radio color="primary" />}
-            label="Saved credentials"
-          />
-        ) : null}
       </RadioGroup>
       {credFormat === "file" ? (
         <div>
@@ -139,7 +101,7 @@ export default function TokenCredentials(props) {
               onChange={handleFile}
             />
             <Button variant="contained" component="span">
-              Upload credentials
+              Upload credential
             </Button>
           </label>
         </div>
@@ -150,25 +112,12 @@ export default function TokenCredentials(props) {
           fullWidth
           variant="outlined"
           color="primary"
-          label="Paste credentials in JSON format"
+          label="Paste credential in JSON format"
           name="tokenCredentials"
           onKeyUp={(e) => {
             validateJSON(e.target.value);
           }}
           component={TextField}
-        />
-      ) : credFormat === "saved" ? (
-        <TextFieldMUI
-          multiline
-          rows={15}
-          fullWidth
-          variant="outlined"
-          color="primary"
-          label="This is your saved credentials"
-          defaultValue={parsedCredential}
-          InputProps={{
-            readOnly: true,
-          }}
         />
       ) : null}
       <div className="form-alert">
@@ -179,7 +128,7 @@ export default function TokenCredentials(props) {
         )}
         {success && (
           <Alert variant="outlined" severity="success">
-            Credentials ready
+            Credential ready!
           </Alert>
         )}
       </div>
@@ -189,6 +138,4 @@ export default function TokenCredentials(props) {
 
 TokenCredentials.propTypes = {
   setFieldValue: PropTypes.func,
-  tokenAvailable: PropTypes.bool,
-  parsedCredential: PropTypes.string,
 };
