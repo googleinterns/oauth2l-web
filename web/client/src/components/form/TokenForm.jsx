@@ -97,7 +97,6 @@ export default function TokenForm(props) {
   const getTokenWithCode = async () => {
     setCodeOpenBox(false);
     requestBody["code"] = decodeURIComponent(code);
-
     const Response = await getOAuthToken(requestBody);
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
@@ -140,22 +139,7 @@ export default function TokenForm(props) {
 
     let finalCredentials;
     if (useUploadedCredential) {
-      const tokenCred = JSON.parse(values.tokenCredentials);
-      if (
-        tokenCred["web"] !== undefined &&
-        tokenCred["installed"] === undefined
-      ) {
-        finalCredentials = tokenCred["web"];
-      } else if (
-        tokenCred["web"] === undefined &&
-        tokenCred["installed"] !== undefined
-      ) {
-        finalCredentials = tokenCred["installed"];
-      } else {
-        finalCredentials = tokenCred;
-      }
-    } else {
-      finalCredentials = credentialsToken;
+      finalCredentials = JSON.parse(values.tokenCredentials);
     }
 
     const body = useUploadedCredential
@@ -185,20 +169,20 @@ export default function TokenForm(props) {
         };
     setRequestBody(body);
 
-    const Response = await getOAuthToken(body);
-    if (typeof Response["error"] === undefined) {
-      sendToken(Response["error"]);
+    const response = await getOAuthToken(body);
+    if (typeof response["error"] === undefined) {
+      sendToken(response["error"]);
     } else {
-      if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
-        const url = getURL(Response["data"]["oauth2lResponse"]);
+      if (response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
+        const url = getURL(response["data"]["oauth2lResponse"]);
         window.open(url);
         setCodeOpenBox(true);
       } else if (values.saveTokenLocally) {
-        const token = Response["data"]["token"];
+        const token = response["data"]["token"];
         setCredentialsToken(token);
-        sendToken(Response["data"]["oauth2lResponse"], values);
+        sendToken(response["data"]["oauth2lResponse"], values);
       } else {
-        sendToken(Response["data"]["oauth2lResponse"], values);
+        sendToken(response["data"]["oauth2lResponse"], values);
       }
     }
   };
