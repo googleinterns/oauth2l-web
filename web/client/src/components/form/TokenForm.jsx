@@ -120,7 +120,7 @@ export default function TokenForm(props) {
     return url;
   };
 
-  const getToken = async (values, step) => {
+  const getToken = async (values) => {
     let userScopes;
     let userAudience;
     if (values.tokenScopes.length === 0) {
@@ -185,21 +185,20 @@ export default function TokenForm(props) {
         };
     setRequestBody(body);
 
-    const response = await getOAuthToken(body);
-
-    if (typeof response["error"] === undefined) {
-      sendToken(response["error"]);
+    const Response = await getOAuthToken(body);
+    if (typeof Response["error"] === undefined) {
+      sendToken(Response["error"]);
     } else {
-      if (response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
-        const url = getURL(response["data"]["oauth2lResponse"]);
+      if (Response["data"]["oauth2lResponse"].indexOf("link") !== -1) {
+        const url = getURL(Response["data"]["oauth2lResponse"]);
         window.open(url);
         setCodeOpenBox(true);
       } else if (values.saveTokenLocally) {
-        const token = response["data"]["token"];
+        const token = Response["data"]["token"];
         setCredentialsToken(token);
-        sendToken(response["data"]["oauth2lResponse"]);
+        sendToken(Response["data"]["oauth2lResponse"], values);
       } else {
-        sendToken(response["data"]["oauth2lResponse"], values, step);
+        sendToken(Response["data"]["oauth2lResponse"], values);
       }
     }
   };
