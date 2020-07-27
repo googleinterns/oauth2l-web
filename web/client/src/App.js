@@ -28,7 +28,6 @@ function App() {
   const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
-  const [isReset, setReset] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
@@ -37,15 +36,6 @@ function App() {
   const callBackToken = (childData, credentials) => {
     setResponse(childData);
     setTokenResponseVisable(false);
-  };
-
-  /**
-   *
-   * @param {bool} visibility obtains the child data back from the child component in order to change the conditional rendering
-   */
-  const resetClicked = (visibility) => {
-    setTokenResponseVisable(!visibility);
-    setReset(true);
   };
 
   /**
@@ -96,13 +86,11 @@ function App() {
               <div style={{ display: tokenResponseVisable ? "block" : "none" }}>
                 <TokenForm
                   parentCallback={(childData) => callBackToken(childData)}
-                  isReset={isReset}
                 />
               </div>
               <div style={{ display: tokenResponseVisable ? "none" : "block" }}>
                 <TokenDisplay
                   token={response}
-                  parentCallback={(visibility) => resetClicked(visibility)}
                   parentGoBack={(visibility) => backClicked(visibility)}
                   tokenResponseVisable={tokenResponseVisable}
                 />
