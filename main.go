@@ -50,6 +50,7 @@ type commandOptions struct {
 	Info   infoOptions   `command:"info" description:"Display info about an OAuth access token."`
 	Test   infoOptions   `command:"test" description:"Tests an OAuth access token. Returns 0 for valid token."`
 	Reset  resetOptions  `command:"reset" description:"Resets the cache."`
+	Web    webOptions    `command:"web" description: "Runs the docker images which deploys both frontend and backend for the OAuth2l Playground.`
 }
 
 // Common options for "fetch", "header", and "curl" commands.
@@ -107,6 +108,11 @@ type infoOptions struct {
 type resetOptions struct {
 	// Cache is declared as a pointer type and can be one of nil or a custom file path.
 	Cache *string `long:"cache" description:"Path to the credential cache file to remove. Defaults to ~/.oauth2l."`
+}
+
+//Additional options for "web" command
+type webOptions struct {
+	Stop string  `long: "stop"  description: "Stops running the OAuth2l Playground` 
 }
 
 // Reads and returns content of JSON file.
@@ -229,13 +235,24 @@ func getInfoOptions(cmdOpts commandOptions, cmd string) infoOptions {
 	return infoOpts
 }
 
+func getWebOptions(cmdOpts commandOptions, cmd string) webOptions {
+	var webOpts webOptions
+	switch cmd {
+	case "web":
+		webOpts = cmdOpts.Web
+	}
+	return webOpts
+}
+
 func main() {
 	// Parse command-line flags via "go-flags" library
 	parser := flags.NewParser(&opts, flags.Default)
-
+	fmt.Println(parser)
 	// Arguments that are not recognized by the parser are stored in remainingArgs.
 	remainingArgs, err := parser.Parse()
+	fmt.Println(remainingArgs)
 	if err != nil {
+		fmt.Println("exiting")
 		os.Exit(0)
 	}
 
@@ -255,6 +272,11 @@ func main() {
 		"test": util.Test,
 	}
 
+	//Tasks that open the website
+	webTasks := map[string](func(string)){
+		"web": util.Web,
+	}
+
 	if task, ok := fetchTasks[cmd]; ok {
 		commonOpts := getCommonFetchOptions(opts, cmd)
 		authType := getAuthTypeWithFallback(commonOpts)
@@ -267,6 +289,7 @@ func main() {
 		format := getOutputFormatWithFallback(opts.Fetch)
 		curlcli := opts.Curl.CurlCli
 		url := opts.Curl.Url
+		
 
 		if authType == "jwt" {
 			// JWT flow
@@ -372,6 +395,10 @@ func main() {
 		}
 
 		os.Exit(task(token))
+	}else if task,ok := webTasks[cmd]; ok{
+		url := "http://localhost:3000/"
+		task(url)
+		
 	} else if cmd == "reset" {
 		setCacheLocation(opts.Reset.Cache)
 		util.Reset()
