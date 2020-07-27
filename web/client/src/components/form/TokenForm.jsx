@@ -143,8 +143,7 @@ export default function TokenForm(props) {
 
     let finalCredentials;
     if (useUploadedCredential) {
-      const tokenCred = JSON.parse(values.tokenCredentials);
-      finalCredentials = tokenCred;
+      finalCredentials = JSON.parse(values.tokenCredentials);
     } else {
       finalCredentials = credentialsToken;
     }
