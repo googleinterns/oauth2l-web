@@ -99,8 +99,9 @@ func Reset() {
 }
 
 func Web(url string){
-	cmd := exec.Command("docker-compose", " up -d --build")
-	cmd.Dir = "~/oauth2l-web/web/"
+	cmd := exec.Command("docker-compose", " up -d --build .")
+	cmd.Dir = "web"
+	fmt.Println(cmd)
 	err := cmd.Start()
 	if err != nil {
 		log.Fatal(err)
