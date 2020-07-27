@@ -23,6 +23,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os/exec"
+	"runtime"
+
 )
 
 const (
@@ -95,6 +98,40 @@ func Reset() {
 		fmt.Print(err)
 	}
 }
+//Runs the OAuth2l Playground Returns 0 if ran successfully 
+//Otherwise returns 1
+func Web(url string){
+	cmd := exec.Command("docker-compose", " up -d --build .")
+	cmd.Dir = "../web/"
+	err := cmd.Start()
+	if err != nil {
+		log.Fatal(err)
+	}else{
+		runPlayground(url)
+	}
+
+
+}
+
+func runPlayground(url string) error {
+
+	var cmd string
+
+	switch runtime.GOOS {
+	case "darwin":
+		cmd = "open"
+	case "linux":
+		cmd = "xdg-open"
+	case "windows":
+		cmd = "start"
+	default:
+		cmd = "Not currently supported"
+	}
+
+	return exec.Command(cm,url).Start()
+
+}
+
 
 // Returns the given token in standard header format.
 func BuildHeader(tokenType string, token string) string {
