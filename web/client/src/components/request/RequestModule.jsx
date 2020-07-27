@@ -65,8 +65,8 @@ export default function RequestModule(props) {
       headers: {
         Authorization: "Bearer " + values.token,
         ...(values.contentType ? { "Content-Type": values.contentType } : null),
-        ...(values.reqBody ? { data: values.reqBody } : null),
       },
+      ...(values.reqBody ? { data: JSON.parse(values.reqBody) } : null),
     };
     for (let i = 0; i < values.headers.length; i++) {
       if (
