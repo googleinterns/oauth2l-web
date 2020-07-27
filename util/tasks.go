@@ -25,7 +25,6 @@ import (
 	"net/http"
 	"os/exec"
 	"runtime"
-
 )
 
 const (
@@ -98,23 +97,19 @@ func Reset() {
 		fmt.Print(err)
 	}
 }
-//Runs the OAuth2l Playground Returns 0 if ran successfully 
-//Otherwise returns 1
+
 func Web(url string){
-	cmd := exec.Command("docker-compose", " up -d --build .")
-	cmd.Dir = "../web/"
+	cmd := exec.Command("docker-compose", " up -d --build")
+	cmd.Dir = "~/oauth2l-web/web/"
 	err := cmd.Start()
 	if err != nil {
 		log.Fatal(err)
 	}else{
 		runPlayground(url)
 	}
-
-
 }
 
 func runPlayground(url string) error {
-
 	var cmd string
 
 	switch runtime.GOOS {
@@ -128,8 +123,7 @@ func runPlayground(url string) error {
 		cmd = "Not currently supported"
 	}
 
-	return exec.Command(cm,url).Start()
-
+	return exec.Command(cmd,url).Start()
 }
 
 
