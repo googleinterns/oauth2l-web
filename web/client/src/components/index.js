@@ -1,5 +1,5 @@
 import Head from "./Head";
-import WelcomeBox from "./WelcomeBox"
+import WelcomeBox from "./WelcomeBox";
 import TokenForm from "./form/TokenForm";
 import TokenType from "./form/TokenType";
 import TokenAccess from "./form/TokenAccess";

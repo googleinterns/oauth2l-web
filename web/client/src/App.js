@@ -67,6 +67,19 @@ function App() {
                   "To obtain a JWT access token, a service account key must be used as the credentials file",
                   "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application",
                 ]}
+                hasLinks={true}
+                links={[
+                  {
+                    name: "List of Scopes",
+                    url:
+                      "https://developers.google.com/identity/protocols/oauth2/scopes",
+                  },
+                  {
+                    name: "Creating a Client-ID",
+                    url:
+                      "https://support.google.com/googleapi/answer/6158849?hl=en",
+                  },
+                ]}
               />
               <Grid item className="main-content">
                 <TokenForm
@@ -96,6 +109,8 @@ function App() {
                   ]}
                   hasNote={true}
                   note={["The info for a JWT Token cannot be requested"]}
+                  hasLinks={false}
+                  links={[]}
                 />
                 <Grid item xs className="main-content">
                   <ValidateToken />
@@ -113,6 +128,8 @@ function App() {
                   ]}
                   hasNote={false}
                   note={[]}
+                  hasLinks={true}
+                  links={[]}
                 />
                 <Grid item xs className="main-content">
                   {/* <RequestModule /> */}
@@ -138,7 +155,7 @@ function App() {
         </Grid>
       </Grid>
       <MaterialUI>
-        <WelcomeBox />
+        <WelcomeBox boxOpen={true} />
       </MaterialUI>
     </div>
   );

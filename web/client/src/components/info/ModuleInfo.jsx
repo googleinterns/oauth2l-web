@@ -8,6 +8,7 @@ import {
   Typography,
   Grid,
   IconButton,
+  Link,
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PropTypes from "prop-types";
@@ -19,7 +20,7 @@ import "../../styles/info.css";
  * @return {Grid} returns Grid component that contains the page
  */
 export default function ModuleInfo(props) {
-  const { title, content, hasNote, note } = props;
+  const { title, content, hasNote, note, hasLinks, links } = props;
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -52,12 +53,24 @@ export default function ModuleInfo(props) {
           ))}
           {hasNote &&
             note.map((text, index) => (
-              <Typography variant="body2" key={index}>
+              <Typography variant="body2" key={index} gutterBottom>
                 <strong>NOTE: </strong>
                 {text}
               </Typography>
             ))}
         </DialogContent>
+        {hasLinks && (
+          <div>
+            <DialogTitle>Helpful Links</DialogTitle>
+            <DialogContent>
+              {links.map((link, index) => (
+                <Typography variant="body2" key={index}>
+                  <Link href={link.url}>{link.name}</Link>
+                </Typography>
+              ))}
+            </DialogContent>
+          </div>
+        )}
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Close
@@ -73,4 +86,6 @@ ModuleInfo.propTypes = {
   content: PropTypes.array,
   hasNote: PropTypes.bool,
   note: PropTypes.array,
+  hasLinks: PropTypes.bool,
+  links: PropTypes.object,
 };
