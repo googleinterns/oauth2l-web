@@ -15,20 +15,20 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const defaultValues = {
-    tokenType: "",
-    tokenFormat: "",
-    tokenScopes: [],
-    tokenAudience: [],
-    tokenCredentials: "",
-    saveTokenLocally: false,
-  };
-  const [values, setValues] = useState(defaultValues);
+  // const defaultValues = {
+  //   tokenType: "",
+  //   tokenFormat: "",
+  //   tokenScopes: [],
+  //   tokenAudience: [],
+  //   tokenCredentials: "",
+  //   saveTokenLocally: false,
+  // };
+  // const [values, setValues] = useState(defaultValues);
   const [response, setResponse] = useState(null); // holds the response from the backend
   const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
-  const [isReset, setReset] = useState(true); // the state resets the form
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
+  const [isReset, setReset] = useState(false);
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
@@ -37,7 +37,6 @@ function App() {
   const callBackToken = (childData, credentials) => {
     setResponse(childData);
     setTokenResponseVisable(false);
-    setValues(credentials);
   };
 
   /**
@@ -47,7 +46,6 @@ function App() {
   const resetClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
     setReset(true);
-    setValues(defaultValues);
   };
 
   /**
@@ -57,7 +55,6 @@ function App() {
 
   const backClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
-    setReset(false);
   };
   /**
    * @param {string} childData holds the response of the HTTP request.
@@ -99,7 +96,6 @@ function App() {
               <div style={{ display: tokenResponseVisable ? "block" : "none" }}>
                 <TokenForm
                   parentCallback={(childData) => callBackToken(childData)}
-                  values={values}
                   isReset={isReset}
                 />
               </div>

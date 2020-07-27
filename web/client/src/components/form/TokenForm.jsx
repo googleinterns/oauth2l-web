@@ -17,6 +17,7 @@ import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
 import { getOAuthToken, getNewCredentialToken } from "../../util/apiWrapper";
+import "../../styles/form.css";
 
 // Time before the expiry of the credential token to request a new token in milliseconds
 const timeBeforeExpiry = 60000;
@@ -35,11 +36,11 @@ export default function TokenForm(props) {
   const [requestBody, setRequestBody] = useState(null);
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
-  const { parentCallback, values, isReset } = props;
-  const sentValues = useState(values);
+  const { parentCallback } = props;
   /**
    * @param {string} token variable that holds the token
    * @param {object} values variable that holds the previous answers that the user provided
+   * function that sends the token back to the parent component
    */
   const sendToken = (token, values) => {
     parentCallback(token, values);
@@ -102,7 +103,7 @@ export default function TokenForm(props) {
       sendToken(Response["error"]);
     } else {
       const token = extractToken(Response["data"]["oauth2lResponse"]);
-      sendToken(token, sentValues);
+      sendToken(token);
     }
   };
 
@@ -207,7 +208,6 @@ export default function TokenForm(props) {
             setLabel("Audience");
           }
         }}
-        isReset={isReset}
       >
         <TokenType
           validationSchema={object({
@@ -272,14 +272,18 @@ export default function TokenForm(props) {
  * @return {Formik} component for showing one child form at a time
  */
 export function FormikStepper(props) {
-  const { children, isReset } = props;
+  const { children } = props;
   const childrenArray = React.Children.toArray(children);
-  const [step, setStep] = useState(isReset ? 0 : childrenArray.length - 1);
+  const [step, setStep] = useState(0);
 
   const [done, setDone] = useState(false);
   const currentChild = childrenArray[step];
   const isLastStep = () => {
     return step === childrenArray.length - 1;
+  };
+
+  const handleReset = () => {
+    setStep(0);
   };
 
   return (
@@ -297,6 +301,8 @@ export function FormikStepper(props) {
           setStep((currStep) => currStep + 1);
         }
       }}
+      // ref = {formik}
+      onReset={handleReset}
     >
       {({ isSubmitting, setFieldValue, errors, touched }) => (
         <Form>
@@ -338,6 +344,13 @@ export function FormikStepper(props) {
                   : "Next"}
               </Button>
             </Grid>
+            <Grid item>
+              {isLastStep() ? (
+                <Button variant="contained" type="reset">
+                  Reset
+                </Button>
+              ) : null}
+            </Grid>
           </Grid>
         </Form>
       )}
@@ -347,7 +360,6 @@ export function FormikStepper(props) {
 
 FormikStepper.propTypes = {
   children: PropTypes.node,
-  isReset: PropTypes.bool,
   onSubmit: PropTypes.func,
   setSecondLabel: PropTypes.func,
 };
@@ -355,5 +367,4 @@ FormikStepper.propTypes = {
 TokenForm.propTypes = {
   parentCallback: PropTypes.func,
   values: PropTypes.object,
-  isReset: PropTypes.bool,
 };
