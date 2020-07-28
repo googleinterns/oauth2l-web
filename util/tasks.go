@@ -102,10 +102,10 @@ func Reset() {
 func Web(url string) {
 	cmd := exec.Command("docker-compose", "up", "-d", "--build")
 	cmd.Dir = "web"
-	output, err := cmd.CombinedOutput()
+	err := cmd.Run()
+	fmt.Println("Fnished stuff")
 	if err != nil {
 		fmt.Println(string(cmd.Dir))
-		fmt.Println(fmt.Sprint(err) + ": " + string(output))
 		log.Fatal(err)
 	} else {
 		runPlayground(url)
