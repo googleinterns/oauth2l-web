@@ -9,6 +9,7 @@ import {
   Grid,
   IconButton,
   Link,
+  Divider,
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PropTypes from "prop-types";
@@ -43,28 +44,39 @@ export default function ModuleInfo(props) {
         <HelpOutlineIcon />
       </IconButton>
 
-      <Dialog onClose={handleClose} open={open}>
+      <Dialog fullWidth maxWidth="sm" onClose={handleClose} open={open}>
         <DialogTitle onClose={handleClose}>{title}</DialogTitle>
-        <DialogContent dividers>
+        <DialogContent>
           {content.map((text, index) => (
             <Typography key={index} variant="body1" gutterBottom>
               {text}
             </Typography>
           ))}
-          {hasNote &&
-            note.map((text, index) => (
-              <Typography variant="body2" key={index} gutterBottom>
-                <strong>NOTE: </strong>
-                {text}
-              </Typography>
-            ))}
         </DialogContent>
+        {hasNote && (
+          <div>
+            <Divider />
+            <DialogTitle>Notes</DialogTitle>
+            <DialogContent>
+              <ul>
+                {note.map((text, index) => (
+                  <li key={index}>
+                    <Typography variant="body1" gutterBottom>
+                      {text}
+                    </Typography>
+                  </li>
+                ))}
+              </ul>
+            </DialogContent>
+          </div>
+        )}
         {hasLinks && (
           <div>
+            <Divider />
             <DialogTitle>Helpful Links</DialogTitle>
             <DialogContent>
               {links.map((link, index) => (
-                <Typography variant="body2" key={index}>
+                <Typography variant="body1" key={index}>
                   <Link href={link.url}>{link.name}</Link>
                 </Typography>
               ))}

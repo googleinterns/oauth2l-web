@@ -7,7 +7,7 @@ import {
   RequestModule,
   RequestDisplay,
   ModuleInfo,
-  WelcomeBox,
+  Head,
 } from "./components";
 import { Grid } from "@material-ui/core";
 import "./styles/app.css";
@@ -51,6 +51,9 @@ function App() {
 
   return (
     <div>
+      <MaterialUI>
+        <Head />
+      </MaterialUI>
       <Grid container>
         <Grid item xs>
           <Grid container direction="column">
@@ -59,25 +62,27 @@ function App() {
                 title="Requesting a token"
                 content={[
                   "This module is used to generate an OAuth access token. It is equivalent to using the fetch and header OAuth2l requests.",
-                  "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body",
+                  "To obtain the token, you must first choose the type and format of the token, as well as enter the access details for the token. Then, a credentials file must be submitted, either as a JSON file or a JSON body.",
                   "Once all the requirements are submitted, an access token will be returned based on the format requested.",
                 ]}
                 hasNote={true}
                 note={[
-                  "To obtain a JWT access token, a service account key must be used as the credentials file",
-                  "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application",
+                  "To obtain a JWT access token, a service account key must be used as the credentials file.",
+                  "When using a client-id credentials file, after consenting, copy the code in the url to the redirected page and paste it into the dialog box that appears in the application.",
+                  "If you want to reuse a credentials file, on the third step, click on the toggle to save the credentials file for future use.",
                 ]}
                 hasLinks={true}
                 links={[
                   {
-                    name: "List of Scopes",
+                    name: "OAuth 2.0 Scopes for Google APIs",
                     url:
                       "https://developers.google.com/identity/protocols/oauth2/scopes",
                   },
                   {
-                    name: "Creating a Client-ID",
+                    name:
+                      "Obtain an access token with the Google Authorization Server",
                     url:
-                      "https://support.google.com/googleapi/answer/6158849?hl=en",
+                      "https://developers.google.com/identity/protocols/oauth2#2.-obtain-an-access-token-from-the-google-authorization-server.",
                   },
                 ]}
               />
@@ -108,7 +113,7 @@ function App() {
                     "If the token is valid, an information button will appear, which will display the info of the token when clicked.",
                   ]}
                   hasNote={true}
-                  note={["The info for a JWT Token cannot be requested"]}
+                  note={["The info for a JWT Token cannot be requested."]}
                   hasLinks={false}
                   links={[]}
                 />
@@ -129,7 +134,13 @@ function App() {
                   hasNote={false}
                   note={[]}
                   hasLinks={true}
-                  links={[]}
+                  links={[
+                    {
+                      name: "Sending an Access Token to an API.",
+                      url:
+                        "https://developers.google.com/identity/protocols/oauth2#4.-send-the-access-token-to-an-api.",
+                    },
+                  ]}
                 />
                 <Grid item xs className="main-content">
                   {/* <RequestModule /> */}
@@ -154,9 +165,9 @@ function App() {
           </Grid>
         </Grid>
       </Grid>
-      <MaterialUI>
+      {/* <MaterialUI>
         <WelcomeBox boxOpen={true} />
-      </MaterialUI>
+      </MaterialUI> */}
     </div>
   );
 }
