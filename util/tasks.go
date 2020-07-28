@@ -19,12 +19,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/google/oauth2l/sgauth"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
 	"runtime"
+
+	"github.com/google/oauth2l/sgauth"
 )
 
 const (
@@ -98,13 +99,15 @@ func Reset() {
 	}
 }
 
-func Web(url string){
-	cmd := exec.Command("docker-compose", "up -d --build")
+func Web(url string) {
+	cmd := exec.Command("docker-compose", "up", "-d", "--build")
 	cmd.Dir = "web"
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println(string(cmd.Dir))
+		fmt.Println(fmt.Sprint(err) + ": " + string(output))
 		log.Fatal(err)
-	}else{
+	} else {
 		runPlayground(url)
 	}
 }
@@ -123,9 +126,8 @@ func runPlayground(url string) error {
 		cmd = "Not currently supported"
 	}
 
-	return exec.Command(cmd,url).Start()
+	return exec.Command(cmd, url).Start()
 }
-
 
 // Returns the given token in standard header format.
 func BuildHeader(tokenType string, token string) string {

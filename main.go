@@ -233,6 +233,7 @@ func getInfoOptions(cmdOpts commandOptions, cmd string) infoOptions {
 	}
 	return infoOpts
 }
+
 //Extracts the web options based on the chosen command
 func getWebOptions(cmdOpts commandOptions, cmd string) webOptions {
 	var webOpts webOptions
@@ -390,11 +391,11 @@ func main() {
 		}
 
 		os.Exit(task(token))
-	} else if task,ok := webTasks[cmd]; ok{
+	} else if task, ok := webTasks[cmd]; ok {
 		url := "http://localhost:3000/"
 		task(url)
 
-	}else if cmd == "reset" {
+	} else if cmd == "reset" {
 		setCacheLocation(opts.Reset.Cache)
 		util.Reset()
 	}
