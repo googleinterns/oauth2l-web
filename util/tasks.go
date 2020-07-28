@@ -99,37 +99,6 @@ func Reset() {
 	}
 }
 
-func Web(url string) {
-	cmd := exec.Command("docker-compose", "up", "-d", "--build")
-	cmd.Dir = "web"
-	output, err := cmd.CombinedOutput()
-	fmt.Println("Fnished Process")
-	if err != nil {
-		fmt.Println(string(cmd.Dir))
-		fmt.Println(fmt.Sprint(err) + ": " + string(output))
-		log.Fatal(err)
-	} else {
-		runPlayground(url)
-	}
-}
-
-func runPlayground(url string) error {
-	var cmd string
-
-	switch runtime.GOOS {
-	case "darwin":
-		cmd = "open"
-	case "linux":
-		cmd = "xdg-open"
-	case "windows":
-		cmd = "start"
-	default:
-		cmd = "Not currently supported"
-	}
-
-	return exec.Command(cmd, url).Start()
-}
-
 // Returns the given token in standard header format.
 func BuildHeader(tokenType string, token string) string {
 	return fmt.Sprintf("Authorization: %s %s", tokenType, token)

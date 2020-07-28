@@ -50,7 +50,7 @@ type commandOptions struct {
 	Info   infoOptions   `command:"info" description:"Display info about an OAuth access token."`
 	Test   infoOptions   `command:"test" description:"Tests an OAuth access token. Returns 0 for valid token."`
 	Reset  resetOptions  `command:"reset" description:"Resets the cache."`
-	Web    webOptions    `command:"web"   description:"Runs the docker images which deploys both frontend and backend for the OAuth2l Playground"`
+	Web    webOptions    `command:"web"   description:"Launches a local instance of the OAuth2l Playground web app. This feature is experimental."`
 }
 
 // Common options for "fetch", "header", and "curl" commands.
@@ -111,7 +111,7 @@ type resetOptions struct {
 }
 
 type webOptions struct {
-	Stop string `long:"stop" description:"Stops the OAuth2l Playground"`
+	Stop string `long:"stop" description:"Stops the OAuth2l Playground."`
 }
 
 // Reads and returns content of JSON file.
@@ -234,16 +234,6 @@ func getInfoOptions(cmdOpts commandOptions, cmd string) infoOptions {
 	return infoOpts
 }
 
-//Extracts the web options based on the chosen command
-func getWebOptions(cmdOpts commandOptions, cmd string) webOptions {
-	var webOpts webOptions
-	switch cmd {
-	case "web":
-		webOpts = cmdOpts.Web
-	}
-	return webOpts
-}
-
 func main() {
 	// Parse command-line flags via "go-flags" library
 	parser := flags.NewParser(&opts, flags.Default)
@@ -268,10 +258,6 @@ func main() {
 	infoTasks := map[string](func(string) int){
 		"info": util.Info,
 		"test": util.Test,
-	}
-
-	webTasks := map[string](func(string)){
-		"web": util.Web,
 	}
 
 	if task, ok := fetchTasks[cmd]; ok {
@@ -391,9 +377,10 @@ func main() {
 		}
 
 		os.Exit(task(token))
-	} else if task, ok := webTasks[cmd]; ok {
+	} else if cmd == "web" {
 		url := "http://localhost:3000/"
-		task(url)
+
+		util.Web(url)
 
 	} else if cmd == "reset" {
 		setCacheLocation(opts.Reset.Cache)
