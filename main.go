@@ -378,9 +378,7 @@ func main() {
 
 		os.Exit(task(token))
 	} else if cmd == "web" {
-		url := "http://localhost:3000/"
-
-		util.Web(url)
+		util.Web()
 
 	} else if cmd == "reset" {
 		setCacheLocation(opts.Reset.Cache)

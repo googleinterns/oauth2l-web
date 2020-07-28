@@ -22,8 +22,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os/exec"
-	"runtime"
 
 	"github.com/google/oauth2l/sgauth"
 )

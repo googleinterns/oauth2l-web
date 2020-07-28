@@ -17,7 +17,9 @@ package util
 import (
 	"fmt"
 	"os/exec"
+	"io/ioutil"
 	"runtime"
+	"log"
 )
 
 const (
@@ -26,6 +28,13 @@ const (
 
 //Runs the frontend/backend for OAuth2l Playground
 func Web() {
+	_,err :=ioutil.ReadDir("web")
+	if err != nil {
+		fmt.Println("Currently Web is not installed, updating repository.")
+		cmd := exec.Command("git","clone", "https://github.com/google/oauth2l.git")
+		cmd.Run()
+
+	}
 	cmd := exec.Command("docker-compose", "up", "-d", "--build")
 	cmd.Dir = "web"
 	output, err := cmd.CombinedOutput()
