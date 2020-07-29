@@ -1,13 +1,16 @@
-package handler
+package main
 
 import (
 	"encoding/json"
 	"io"
 	"log"
 	"net/http"
+	"os/exec"
 	"reflect"
 	"strings"
 	"time"
+
+	"runtime"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -35,6 +38,11 @@ type Response struct {
 type Claims struct {
 	UploadCredentials map[string]interface{}
 	jwt.StandardClaims
+}
+
+// CredentialsToken struct represents the request that the backend will recieve when a new JWT token is requested.
+type CredentialsToken struct {
+	Token string
 }
 
 // secret key to make the uploadCredentials token
@@ -258,7 +266,32 @@ func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responseBody)
 }
 
+func compileOauth2l() {
+	var binaryURL string
+
+	switch runtime.GOOS {
+	case "darwin":
+		binaryURL = "https://storage.googleapis.com/oauth2l/latest/darwin_amd64.tgz"
+	case "linux":
+		binaryURL = "https://storage.googleapis.com/oauth2l/latest/linux_amd64.tgz"
+	case "windows":
+		binaryURL = "https://storage.googleapis.com/oauth2l/latest/windows_amd64.tgz"
+	default:
+		log.Println("not currently supported")
+		return
+	}
+
+	cmd := exec.Command("bash", "-c", "mkdir binaries| wget "+binaryURL+" -O - | tar -xz -C binaries --strip-components=1")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("err %v", err)
+		return
+	}
+
+}
+
 func main() {
+	compileOauth2l()
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
 	router.HandleFunc("/api", Handler)
