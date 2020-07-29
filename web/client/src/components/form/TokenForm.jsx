@@ -284,6 +284,7 @@ export function FormikStepper(props) {
 
   const handleReset = () => {
     setStep(0);
+    setDone(false);
   };
 
   return (
