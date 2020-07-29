@@ -16,10 +16,10 @@ package util
 
 import (
 	"fmt"
-	"os/exec"
-	"io/ioutil"
-	"runtime"
 	"log"
+	"os"
+	"os/exec"
+	"runtime"
 )
 
 const (
@@ -28,17 +28,17 @@ const (
 
 //Runs the frontend/backend for OAuth2l Playground
 func Web() {
-	_,err :=ioutil.ReadDir("web")
-	if err != nil {
+	if _, err := os.Stat("./oauth2l-web"); os.IsNotExist(err) { // not done, this is not what we want
 		fmt.Println("Currently Web is not installed, updating repository.")
-		cmd := exec.Command("git","clone", "https://github.com/google/oauth2l.git")
+		cmd := exec.Command("go", "get", "https://github.com/googleinterns/oauth2l-web.git")
 		cmd.Run()
+		fmt.Println("Web binary installed")
 
 	}
 	cmd := exec.Command("docker-compose", "up", "-d", "--build")
 	cmd.Dir = "web"
 	output, err := cmd.CombinedOutput()
-	fmt.Println("Fnished Process")
+
 	if err != nil {
 		fmt.Println(string(cmd.Dir))
 		fmt.Println(fmt.Sprint(err) + ": " + string(output))
