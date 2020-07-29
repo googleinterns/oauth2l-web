@@ -10,6 +10,10 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.14.x
+    - name: GitHub Action for Homebrew
+      uses: artemnovichkov/action-homebrew@0.1.0
+    - name: Install oauth2l
+      run: brew install oauth2l
     - name: Cache dependencies
       uses: actions/cache@v2
       with:
