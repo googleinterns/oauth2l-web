@@ -225,7 +225,6 @@ export default function TokenForm(props) {
               : {}),
           })}
           label={secondLabel}
-        
         />
         <TokenCredentials
           validationSchema={object({
