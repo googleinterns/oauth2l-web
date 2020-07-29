@@ -31,9 +31,8 @@ function App() {
   /**
    *
    * @param {string} childData obtains the token value from the TokenForm component
-   * @param {object} credentials contains the previous states filled out by the user
    */
-  const callBackToken = (childData, credentials) => {
+  const callBackToken = (childData) => {
     setResponse(childData);
     setTokenResponseVisable(false);
   };

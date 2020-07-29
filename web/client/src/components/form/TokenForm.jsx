@@ -181,9 +181,9 @@ export default function TokenForm(props) {
       } else if (values.saveTokenLocally) {
         const token = response["data"]["token"];
         setCredentialsToken(token);
-        sendToken(response["data"]["oauth2lResponse"], values);
+        sendToken(response["data"]["oauth2lResponse"]);
       } else {
-        sendToken(response["data"]["oauth2lResponse"], values);
+        sendToken(response["data"]["oauth2lResponse"]);
       }
     }
   };
@@ -225,6 +225,7 @@ export default function TokenForm(props) {
               : {}),
           })}
           label={secondLabel}
+        
         />
         <TokenCredentials
           validationSchema={object({
