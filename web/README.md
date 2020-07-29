@@ -25,22 +25,34 @@ $ cd oauth2l-web/web
 ### Docker
 Download [Docker](https://docs.docker.com/get-docker/) if not already installed. 
 
-Create the image by running the following command:
+#### Running the Web Application
+Create the images for the backend and the frontend by running the following command:
 ```bash
-$ docker build -t oauth2l-web .
+$ docker-compose up -d --build .
 ```
-Then run the container with the following command:
-```bash
-$ docker run --detatch --name oauth2l-web 3000:8000 -d oauth2l-web
-```
-The application should be running on http://localhost:3000.
+The application should then be running on http://localhost:3000.
 
 To stop the application, run the following commands:
 ```bash
-$ docker container stop oauth2l-web
-$ docker container rm oauth2l-web
+$ docker-compose container stop
+$ docker-compose container rm -f
 ```
+#### Running just the Frontend or Backend
+For the frontend, go into the `web/client` folder. For the backend, go into the `web/api` folder. Then to build the image, run the following command:
 
+```bash
+$ docker build -t oauth2l-web-<frontend/backend>
+```
+Then run the image with the following command:
+```bash
+$ docker run --detach --name oauth2l-web-frontend 3000:3000 -d oauth2l-web #frontend
+$ docker run --detach --name oauth2l-web-backend 8080:8080 -d oauth2l-web #backend
+```
+To stop the image, run the following command
+```bash
+$ docker container stop oauth2l-web-<frontend/backend>
+$ docker container rm oauth2l-web-<frontend/backend>
+```
 ### Everywhere else
 #### Requirements
 
