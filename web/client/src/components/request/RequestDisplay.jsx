@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, TextField, Box, Button } from "@material-ui/core";
 import PropTypes from "prop-types";
 import "../../styles/form.css";
+import "../../styles/request.css";
 
 /**
  *
@@ -21,7 +22,7 @@ export default function RequestDisplay(props) {
   };
 
   return (
-    <Box className="form-box">
+    <Box>
       <div className="form-text">
         <Typography variant="h5">Response/Request</Typography>
       </div>
