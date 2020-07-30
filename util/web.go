@@ -30,7 +30,7 @@ const (
 func Web() {
 	if _, err := os.Stat("./oauth2l-web"); os.IsNotExist(err) { // not done, this is not what we want
 		fmt.Println("Currently Web is not installed, updating repository.")
-		cmd := exec.Command("go", "get", "https://github.com/googleinterns/oauth2l-web.git")
+		cmd := exec.Command("git", "clone", "https://github.com/googleinterns/oauth2l-web.git")
 		cmd.Run()
 		fmt.Println("Web binary installed")
 
@@ -64,4 +64,12 @@ func openWeb() error {
 	}
 
 	return exec.Command(cmd, defaultServer).Start()
+}
+
+func WebStop() {
+	cmd := exec.Command("docker-compose", "container", "stop")
+	remcontainerCmd := exec.Command("docker-compose", "rm", "-f")
+	cmd.Run()
+	remcontainerCmd.Run()
+	fmt.Println("OAuth2l Playground has stopped")
 }

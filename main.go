@@ -378,8 +378,16 @@ func main() {
 
 		os.Exit(task(token))
 	} else if cmd == "web" {
-		util.Web()
-
+		if len(remainingArgs) > 0 {
+			stop := remainingArgs[0]
+			if stop == "stop" {
+				util.WebStop()
+			} else {
+				fmt.Println("Missing flag to run command")
+			}
+		} else {
+			util.Web()
+		}
 	} else if cmd == "reset" {
 		setCacheLocation(opts.Reset.Cache)
 		util.Reset()
