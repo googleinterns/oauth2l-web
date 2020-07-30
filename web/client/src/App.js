@@ -15,9 +15,8 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const [token, setToken] = useState("");
-  const [responseVisable, setResponseVisable] = useState(false);
-
+  const [response, setResponse] = useState(null); // holds the response from the backend
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
@@ -25,12 +24,19 @@ function App() {
    * @param {string} childData obtains the token value from the TokenForm component
    */
   const callBackToken = (childData) => {
-    setToken(childData);
-    setResponseVisable(true);
+    setResponse(childData);
+    setTokenResponseVisable(false);
   };
 
   /**
    *
+   * @param {bool} visibility obtains the bool to render the form back and if clicked it resets to the last component
+   */
+
+  const backClicked = (visibility) => {
+    setTokenResponseVisable(!visibility);
+  };
+  /**
    * @param {string} childData holds the response of the HTTP request.
    * displaying the page with the HTTP response.
    */
@@ -67,16 +73,18 @@ function App() {
               ]}
             />
             <Grid item className="main-content">
-              <TokenForm
-                parentCallback={(childData) => callBackToken(childData)}
-              />
-            </Grid>
-          </MaterialUI>
-        </Grid>
-        <Grid item xs>
-          <MaterialUI paperClass="paper-bottom">
-            <Grid item className="main-content token-display-grid">
-              <TokenDisplay token={token} responseVisable={responseVisable} />
+              <div style={{ display: tokenResponseVisable ? "block" : "none" }}>
+                <TokenForm
+                  parentCallback={(childData) => callBackToken(childData)}
+                />
+              </div>
+              <div style={{ display: tokenResponseVisable ? "none" : "block" }}>
+                <TokenDisplay
+                  token={response}
+                  parentGoBack={(visibility) => backClicked(visibility)}
+                  tokenResponseVisable={tokenResponseVisable}
+                />
+              </div>
             </Grid>
           </MaterialUI>
         </Grid>
