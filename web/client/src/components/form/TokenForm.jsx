@@ -83,7 +83,7 @@ export default function TokenForm(props) {
     // Getting rid of white space.
     cmdResponse = cmdResponse.replace(/\s+/g, "");
     // Extracting the token from the cmd Response.
-    let token = cmdResponse.match(/(?<=code:)(.*)/)[1];
+    let token = cmdResponse.match(/code:(.*)/)[1];
     // Prettifying if token format is JSON or JSON Compact
     if (tokenFormat === "JSON" || tokenFormat === "JSON Compact") {
       token = JSON.stringify(JSON.parse(token), null, 2);
@@ -116,7 +116,7 @@ export default function TokenForm(props) {
     // Getting rid of whitespace.
     cmdResponse = cmdResponse.replace(/\s+/g, "");
     // Extracting url from cmd response.
-    const url = cmdResponse.match(/(?<=browser:)(.*)(?=Enter)/)[1];
+    const url = cmdResponse.match(/browser:(.*)Enter/)[1];
     return url;
   };
 
@@ -141,6 +141,8 @@ export default function TokenForm(props) {
     let finalCredentials;
     if (useUploadedCredential) {
       finalCredentials = JSON.parse(values.tokenCredentials);
+    } else {
+      finalCredentials = credentialsToken;
     }
 
     const body = useUploadedCredential

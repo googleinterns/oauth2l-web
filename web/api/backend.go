@@ -223,7 +223,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 // CredentialsTokenHandler takes as an input a json body with the old token
 // and returns a new token with a new expiration date only if the old token has not expired yet.
-// It returns a 400 status if the new token cannot be created or a 401 status if the uploadCredentials 
+// It returns a 400 status if the new token cannot be created or a 401 status if the uploadCredentials
 // token cannot be validated.
 func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
 	// Request object to store information about request.
@@ -260,7 +260,7 @@ func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Writing response in json format.
 	w.Header().Set("Content-Type", "application/json")
-	responseBody := map[string]string {
+	responseBody := map[string]string{
 		"token": newToken,
 	}
 	json.NewEncoder(w).Encode(responseBody)
