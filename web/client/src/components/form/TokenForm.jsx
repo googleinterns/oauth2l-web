@@ -275,9 +275,9 @@ export function FormikStepper(props) {
   const { children } = props;
   const childrenArray = React.Children.toArray(children);
   const [step, setStep] = useState(0);
-
   const [done, setDone] = useState(false);
   const currentChild = childrenArray[step];
+
   const isLastStep = () => {
     return step === childrenArray.length - 1;
   };
@@ -302,7 +302,6 @@ export function FormikStepper(props) {
           setStep((currStep) => currStep + 1);
         }
       }}
-      // ref = {formik}
       onReset={handleReset}
     >
       {({ isSubmitting, setFieldValue, errors, touched }) => (
