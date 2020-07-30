@@ -30,4 +30,7 @@ npm-debug.log*
 TODOS.txt
 
 # api
-./web/api/.env
+./api/.env
+
+#binaries
+./api/binaries
