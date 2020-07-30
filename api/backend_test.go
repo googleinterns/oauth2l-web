@@ -5,10 +5,22 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
 )
+
+func TestMain(m *testing.M) {
+	cmd := exec.Command("python3", "get_binaries.py")
+	err := cmd.Run()
+	if err != nil {
+		os.Exit(1)
+	}
+	os.Exit(m.Run())
+
+}
 
 func TestHandlerAuthenticateCredentialsTokenValid(t *testing.T) {
 	jsonStr := []byte(`{

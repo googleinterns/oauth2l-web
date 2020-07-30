@@ -3,9 +3,21 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"os/exec"
 	"reflect"
 	"testing"
 )
+
+func TestMain(m *testing.M) {
+	cmd := exec.Command("python3", "get_binaries.py")
+	err := cmd.Run()
+	if err != nil {
+		os.Exit(1)
+	}
+	os.Exit(m.Run())
+
+}
 
 func TestWrapperCommandStructSingleArg(t *testing.T) {
 	const expectedRequest = "test"
