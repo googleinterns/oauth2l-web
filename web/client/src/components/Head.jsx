@@ -15,7 +15,14 @@ import "../styles/head.css";
  * @return {AppBar} with Google Cloud logo
  */
 export default function Head() {
-  const [open, setOpen] = useState(true);
+  let openBox;
+  if (localStorage.getItem("hasOpened")) {
+    openBox = false;
+  } else {
+    openBox = true;
+    localStorage.setItem("hasOpened", true);
+  }
+  const [open, setOpen] = useState(openBox);
   return (
     <AppBar className="header">
       <Toolbar>
