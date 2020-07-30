@@ -1,3 +1,7 @@
 .header {
   padding: 0.2rem;
 }
+
+.welcome-body {
+  font-size: 1.2rem !important;
+}

@@ -40,9 +40,10 @@ export default function Head() {
           setOpen(false);
         }}
         fullWidth
+        maxWidth="md"
       >
         <DialogContent dividers>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" className="welcome-body" gutterBottom>
             Welcome to the OAuth2l Authentication Playground! This application
             is based upon the Google&apos;s{" "}
             <Link href="https://github.com/google/oauth2l/blob/master/README.md">
@@ -58,7 +59,7 @@ export default function Head() {
             </Link>
             .
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" className="welcome-body" gutterBottom>
             Before getting started, please obtain an OAuth credential file
             (either an OAuth client ID or a Service Account key). You can
             download the files from the Google Cloud Console or create new OAuth
@@ -72,7 +73,7 @@ export default function Head() {
             <strong>application_default_credentials.json</strong> file found in{" "}
             <strong>~/.config/gcloud</strong> folder.
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" className="welcome-body" gutterBottom>
             To view this box at anytime, click on the button labeled
             <strong> OAuth2l Playground </strong>on the upper lefthand corner.
           </Typography>

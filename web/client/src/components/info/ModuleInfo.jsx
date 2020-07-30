@@ -44,11 +44,20 @@ export default function ModuleInfo(props) {
         <HelpOutlineIcon />
       </IconButton>
 
-      <Dialog fullWidth maxWidth="sm" onClose={handleClose} open={open}>
-        <DialogTitle onClose={handleClose}>{title}</DialogTitle>
+      <Dialog fullWidth maxWidth="md" onClose={handleClose} open={open}>
+        <DialogTitle onClose={handleClose} disableTypography={true}>
+          <Typography className="dialog-title" variant="h6">
+            {title}
+          </Typography>
+        </DialogTitle>
         <DialogContent>
           {content.map((text, index) => (
-            <Typography key={index} variant="body1" gutterBottom>
+            <Typography
+              key={index}
+              variant="body1"
+              className="dialog-content"
+              gutterBottom
+            >
               {text}
             </Typography>
           ))}
@@ -56,12 +65,20 @@ export default function ModuleInfo(props) {
         {hasNote && (
           <div>
             <Divider />
-            <DialogTitle>Notes</DialogTitle>
+            <DialogTitle disableTypography={true}>
+              <Typography className="subtitle" variant="h6">
+                Notes
+              </Typography>
+            </DialogTitle>
             <DialogContent>
               <ul>
                 {note.map((text, index) => (
                   <li key={index}>
-                    <Typography variant="body1" gutterBottom>
+                    <Typography
+                      variant="body1"
+                      className="dialog-content"
+                      gutterBottom
+                    >
                       {text}
                     </Typography>
                   </li>
@@ -73,10 +90,18 @@ export default function ModuleInfo(props) {
         {hasLinks && (
           <div>
             <Divider />
-            <DialogTitle>Helpful Links</DialogTitle>
+            <DialogTitle disableTypography={true}>
+              <Typography variant="h6" className="subtitle">
+                Helpful Links
+              </Typography>
+            </DialogTitle>
             <DialogContent>
               {links.map((link, index) => (
-                <Typography variant="body1" key={index}>
+                <Typography
+                  variant="body1"
+                  className="dialog-content"
+                  key={index}
+                >
                   <Link href={link.url}>{link.name}</Link>
                 </Typography>
               ))}
