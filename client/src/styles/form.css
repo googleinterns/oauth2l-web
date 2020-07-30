@@ -28,5 +28,12 @@
 }
 
 .form-reset {
+  float: right;
+  margin-bottom: 5rem !important;
+}
+
+.form-back {
+  float: right;
+
   margin-top: 1rem !important;
 }
