@@ -16,9 +16,8 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const [response, setResponse] = useState("");
-  const [tokenresponseVisable, setTokenResponseVisable] = useState(false);
-
+  const [response, setResponse] = useState(null); // holds the response from the backend
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
@@ -27,19 +26,18 @@ function App() {
    */
   const callBackToken = (childData) => {
     setResponse(childData);
-    setTokenResponseVisable(true);
+    setTokenResponseVisable(false);
   };
 
   /**
    *
    * @param {bool} visibility obtains the bool to render the form back and if clicked it resets to the last component
    */
+
   const backClicked = (visibility) => {
     setTokenResponseVisable(!visibility);
   };
-
   /**
-   *
    * @param {string} childData holds the response of the HTTP request.
    * displaying the page with the HTTP response.
    */
