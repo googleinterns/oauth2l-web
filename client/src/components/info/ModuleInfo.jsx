@@ -10,7 +10,6 @@ import {
   IconButton,
   Link,
   Divider,
-  createMuiTheme,
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PropTypes from "prop-types";
@@ -32,7 +31,7 @@ export default function ModuleInfo(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   return (
     <Grid
       container

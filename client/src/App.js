@@ -93,16 +93,22 @@ function App() {
                 ]}
               />
               <Grid item className="main-content">
-                <TokenForm
-                  parentCallback={(childData) => callBackToken(childData)}
-                />
-              </Grid>
-            </MaterialUI>
-          </Grid>
-          <Grid item xs>
-            <MaterialUI paperClass="paper-bottom">
-              <Grid item className="main-content token-display-grid">
-                <TokenDisplay token={token} responseVisable={responseVisable} />
+                <div
+                  style={{ display: tokenResponseVisable ? "block" : "none" }}
+                >
+                  <TokenForm
+                    parentCallback={(childData) => callBackToken(childData)}
+                  />
+                </div>
+                <div
+                  style={{ display: tokenResponseVisable ? "none" : "block" }}
+                >
+                  <TokenDisplay
+                    token={response}
+                    parentGoBack={(visibility) => backClicked(visibility)}
+                    tokenResponseVisable={tokenResponseVisable}
+                  />
+                </div>
               </Grid>
             </MaterialUI>
           </Grid>
