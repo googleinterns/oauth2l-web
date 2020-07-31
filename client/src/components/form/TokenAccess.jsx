@@ -14,7 +14,7 @@ import "../../styles/form.css";
  */
 export default function TokenAccess(props) {
   const { label } = props;
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue } = useFormikContext();
 
   return (
     <Box className="form-box">
@@ -29,11 +29,6 @@ export default function TokenAccess(props) {
         onChange={(e, value) => {
           setFieldValue(`token${label}`, value);
         }}
-        defaultValue={
-          values["tokenScopes"].length > 0
-            ? values["tokenScopes"]
-            : values["tokenAudience"]
-        }
         renderInput={(params) => (
           <Field
             {...params}

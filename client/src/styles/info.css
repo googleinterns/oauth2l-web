@@ -8,3 +8,15 @@
   margin-top: 0.5rem;
   margin-left: 0.5rem;
 }
+
+.dialog-title {
+  font-size: 2rem !important;
+}
+
+.dialog-content {
+  font-size: 1.2rem !important;
+}
+
+.subtitle {
+  font-size: 1.3rem !important;
+}
