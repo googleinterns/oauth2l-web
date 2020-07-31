@@ -177,69 +177,6 @@ function App() {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs>
-          <Grid container direction="column">
-            <Grid item xs>
-              <MaterialUI paperClass="paper-top">
-                <ModuleInfo
-                  title="Validating your token"
-                  content={[
-                    "This module is used for validating an OAuth access token and getting the info from a valid token. It is the equivalent of using the test and info OAuth2l command.",
-                    "When an OAuth access token is submitted, an icon will appear, stating whether the token is valid or not.",
-                    "If the token is valid, an information button will appear, which will display the info of the token when clicked.",
-                  ]}
-                  hasNote={true}
-                  note={["The info for a JWT Token cannot be requested."]}
-                  hasLinks={false}
-                  links={[]}
-                />
-                <Grid item xs className="main-content">
-                  <ValidateToken />
-                </Grid>
-              </MaterialUI>
-            </Grid>
-            <Grid item xs>
-              <MaterialUI paperClass="paper-bottom">
-                <ModuleInfo
-                  title="Use your token for an HTTP request"
-                  content={[
-                    "This module is used for using a OAuth2l access token to make a HTTP request. It is the equivalent of using the curl OAuth2l command.",
-                    "To make the request, you must submit the URL to the request, the method of the request, and the token you will be using in the request. You also have the option of entering a request body, headers, and content type of the reponse.",
-                    "Once that is all submitted, the request will be made and the response will be displayed.",
-                  ]}
-                  hasNote={false}
-                  note={[]}
-                  hasLinks={true}
-                  links={[
-                    {
-                      name: "Sending an Access Token to an API.",
-                      url:
-                        "https://developers.google.com/identity/protocols/oauth2#4.-send-the-access-token-to-an-api.",
-                    },
-                  ]}
-                />
-                <Grid item xs className="main-content">
-                  {/* <RequestModule /> */}
-                  {!httpresponseVisable ? (
-                    <RequestModule
-                      parentCallback={(childData) =>
-                        callBackHttpResponse(childData)
-                      }
-                    />
-                  ) : (
-                    <RequestDisplay
-                      httpResponse={httpResponse}
-                      parentCallback={(httpresponseVisable) =>
-                        resetHttpRequest(httpresponseVisable)
-                      }
-                      responseVisable={httpresponseVisable}
-                    />
-                  )}
-                </Grid>
-              </MaterialUI>
-            </Grid>
-          </Grid>
-        </Grid>
       </Grid>
     </div>
   );
