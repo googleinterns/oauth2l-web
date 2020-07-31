@@ -34,3 +34,4 @@ TODOS.txt
 
 # binaries
 ./api/binaries
+./api/binaries/oauth2l
