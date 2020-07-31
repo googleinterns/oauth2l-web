@@ -271,7 +271,7 @@ func getBinaries() {
 	cmd := exec.Command("python3", "get_binaries.py")
 	err := cmd.Run()
 	if err != nil {
-		log.Fatalf("error:%v", err)
+		log.Fatalf("error: %v", err)
 		return
 	}
 }
