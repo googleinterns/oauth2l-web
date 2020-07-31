@@ -15,7 +15,7 @@ def main():
     print("Platform not supported.")
     return
     
-  os.system("mkdir binaries| wget " +binaryURL+" -O - | tar -xz -C binaries --strip-components=1")
+  os.system("mkdir binaries| wget " + binaryURL + " -O - | tar -xz -C binaries --strip-components=1")
 
 if __name__ == '__main__':
   main()
