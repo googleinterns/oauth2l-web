@@ -31,6 +31,14 @@ function App() {
 
   /**
    *
+   * @param {bool} visibility obtains the bool to render the form back and if clicked it resets to the last component
+   */
+  const backClicked = (visibility) => {
+    setTokenResponseVisable(!visibility);
+  };
+
+  /**
+   *
    * @param {string} childData holds the response of the HTTP request.
    * displaying the page with the HTTP response.
    */
