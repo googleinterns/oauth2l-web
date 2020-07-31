@@ -33,5 +33,5 @@ TODOS.txt
 ./api/.env
 
 # binaries
-./api/binaries/
-./api/binaries/oauth2l
+api/binaries/
+api/binaries/oauth2l
