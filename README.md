@@ -45,8 +45,8 @@ $ docker build -t oauth2l-web-<frontend/backend>
 ```
 Then run the image with the following command:
 ```bash
-$ docker run --detach --name oauth2l-web-frontend 3000:3000 -d oauth2l-web #frontend
-$ docker run --detach --name oauth2l-web-backend 8080:8080 -d oauth2l-web #backend
+$ docker run --detach --name oauth2l-web-frontend -p 3000:3000 -d oauth2l-web-frontend #frontend
+$ docker run --detach --name oauth2l-web-backend -p 8080:8080 -d oauth2l-web-backend #backend
 ```
 To stop the image, run the following command
 ```bash
