@@ -25,8 +25,8 @@ function App() {
    * @param {string} childData obtains the token value from the TokenForm component
    */
   const callBackToken = (childData) => {
-    setToken(childData);
-    setResponseVisable(true);
+    setResponse(childData);
+    setTokenResponseVisable(false);
   };
 
   /**
