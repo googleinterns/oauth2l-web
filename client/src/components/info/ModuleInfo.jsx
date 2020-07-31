@@ -11,7 +11,6 @@ import {
   Link,
   Divider,
   createMuiTheme,
-  ThemeProvider,
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PropTypes from "prop-types";
@@ -33,13 +32,7 @@ export default function ModuleInfo(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const theme = createMuiTheme({
-    typography: {
-      fontSize: 20,
-    },
-  });
-
+  
   return (
     <Grid
       container

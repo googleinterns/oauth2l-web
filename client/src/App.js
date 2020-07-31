@@ -171,9 +171,6 @@ function App() {
           </Grid>
         </Grid>
       </Grid>
-      {/* <MaterialUI>
-        <WelcomeBox boxOpen={true} />
-      </MaterialUI> */}
     </div>
   );
 }
