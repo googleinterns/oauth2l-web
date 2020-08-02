@@ -5,7 +5,6 @@ import {
   render,
   waitForElement,
 } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
 import { act } from "react-dom/test-utils";
 
 import { ValidateToken } from "../components";
@@ -20,7 +19,7 @@ describe("Token Validation Component", () => {
     expect(wrapper).toBeDefined();
   });
 
-  it("displays an error when form in submitted without a token", async () => {
+  it("displays an error when form is submitted without a token", async () => {
     const { getByText, queryByText, container } = render(<ValidateToken />);
     const button = await waitForElement(() => container.querySelector("Form"));
 
@@ -40,7 +39,7 @@ describe("Token Validation Component", () => {
     await wait(() => {
       fireEvent.change(input, {
         target: {
-          value: "ya.thisisatest",
+          value: "ya.testtoken",
         },
       });
     });

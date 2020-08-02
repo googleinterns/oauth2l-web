@@ -27,7 +27,7 @@ describe("Request Module Component", () => {
     expect(getByText("URL required.")).not.toBeNull();
   });
 
-  it("displays optional dialog box when clicked", async () => {
+  it("displays optional dialog box when option button is clicked", async () => {
     const { getByText, getByTestId } = render(<RequestModule />);
     const button = await waitForElement(() => getByText("Options"));
     await wait(() => {
@@ -36,7 +36,7 @@ describe("Request Module Component", () => {
     expect(getByTestId("option-menu")).not.toBeNull();
   });
 
-  it("displays optional header box when clicked", async () => {
+  it("displays optional header box when 'Add Header' is clicked in the options menu", async () => {
     const { getByText, getByTestId } = render(<RequestModule />);
     const button = await waitForElement(() => getByText("Options"));
     await wait(() => {
@@ -49,7 +49,7 @@ describe("Request Module Component", () => {
     expect(getByTestId("header-box")).not.toBeNull();
   });
 
-  it("displays optional body box when clicked", async () => {
+  it("displays optional body box when 'Add Body' is clicked in the options menu", async () => {
     const { getByText, getByTestId } = render(<RequestModule />);
     const button = await waitForElement(() => getByText("Options"));
     await wait(() => {
@@ -62,7 +62,7 @@ describe("Request Module Component", () => {
     expect(getByTestId("body-box")).not.toBeNull();
   });
 
-  it("displays optional content box when clicked", async () => {
+  it("displays optional content box when clicked when 'Add Content' is clicked in the options menu", async () => {
     const { getByText, getByTestId } = render(<RequestModule />);
     const button = await waitForElement(() => getByText("Options"));
     await wait(() => {

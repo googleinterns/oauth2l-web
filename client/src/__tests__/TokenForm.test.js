@@ -9,10 +9,6 @@ import { act } from "react-dom/test-utils";
 
 import { TokenForm } from "../components";
 
-// test applications use-cases from user's pov. Users access information on a web page and interact with available controls
-// assert pm react dom state
-// shallow rendering is not used for this as we need to be able to test the child components
-
 describe("Token Form Component", () => {
   it("renders the page", () => {
     const wrapper = render(<TokenForm />);
@@ -32,7 +28,7 @@ describe("Token Form Component", () => {
     expect(getByText("Must select a token format")).not.toBeNull();
   });
 
-  it("renders enter scopes component if token type and token format has been entered and token type is OAuth", async () => {
+  it("renders scopes step if token type and token format has been entered and token type is OAuth", async () => {
     const { getByText, container, getByLabelText } = render(<TokenForm />);
     const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
     const FormatInput = await waitForElement(() => getByLabelText("Bare"));
@@ -53,7 +49,7 @@ describe("Token Form Component", () => {
     expect(getByText("Enter scopes")).not.toBeNull();
   });
 
-  it("renders enter scopes component if token type and token format has been entered and token type is OAuth", async () => {
+  it("renders enter audience step if token type and token format has been entered and token type is JWT", async () => {
     const { getByText, container, getByLabelText } = render(<TokenForm />);
     const TypeInput = await waitForElement(() => getByLabelText("JWT"));
     const FormatInput = await waitForElement(() => getByLabelText("Bare"));
@@ -74,7 +70,7 @@ describe("Token Form Component", () => {
     expect(getByText("Enter audience")).not.toBeNull();
   });
 
-  it("will not continue if scopes has not been entered", async () => {
+  it("will not continue if scopes has not been entered when token type is OAuth", async () => {
     const { container, getByLabelText, getByText } = render(<TokenForm />);
     const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
     const FormatInput = await waitForElement(() => getByLabelText("Bare"));
@@ -99,7 +95,7 @@ describe("Token Form Component", () => {
     expect(getByText("Must include scopes")).not.toBeNull();
   });
 
-  it("will not continue if audience has not been entered", async () => {
+  it("will not continue if audience has not been entered when token type is JWT", async () => {
     const { container, getByLabelText, getByText } = render(<TokenForm />);
     const TypeInput = await waitForElement(() => getByLabelText("JWT"));
     const FormatInput = await waitForElement(() => getByLabelText("Bare"));
@@ -203,59 +199,6 @@ describe("Token Form Component", () => {
 
     expect(getByText("Upload or enter credentials")).not.toBeNull();
     expect(getByText("Get Token")).not.toBeNull();
-  });
-
-  it("will show an error if inputted credentials is not in JSON format", async () => {
-    const { container, getByLabelText, getByRole, queryByText } = render(
-      <TokenForm />
-    );
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
-    const button = await waitForElement(() => container.querySelector("Form"));
-
-    await wait(() => {
-      fireEvent.click(TypeInput);
-    });
-
-    await wait(() => {
-      fireEvent.click(FormatInput);
-    });
-
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    const ScopesInput = await waitForElement(() => getByRole("textbox"));
-
-    await wait(() => {
-      fireEvent.change(ScopesInput, { target: { value: "a" } });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "Enter" });
-    });
-
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    const CredentialsSelect = await waitForElement(() =>
-      getByLabelText("Text input")
-    );
-
-    await wait(() => {
-      fireEvent.click(CredentialsSelect);
-    });
-
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    expect(queryByText("Must include credential")).not.toBeNull();
   });
 
   it("it will show an error if inputted credentials are not in JSON format", async () => {
