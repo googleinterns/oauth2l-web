@@ -22,6 +22,7 @@ export default function TokenAccess(props) {
         <Typography variant="h5">Enter {label.toLowerCase()}</Typography>
       </div>
       <Autocomplete
+        data-testid="token-access-field"
         multiple
         name={`token${label}`}
         options={label === "Scopes" ? scopes.map((option) => option.scope) : []}

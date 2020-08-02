@@ -43,7 +43,7 @@ export default function ValidateToken() {
   const [errMessage, setErrMessage] = useState("");
   const classes = useStyles();
 
-  const testToken = async (values) => {
+  async function testToken(values) {
     setInfo("");
     setInfoVisable(false);
     // Sets the credentialsToken to be the inputted token so that it can be used in the future if user wants the information of the token.
@@ -74,7 +74,7 @@ export default function ValidateToken() {
         setValid(false);
       }
     }
-  };
+  }
 
   const getTokenInfo = async (e) => {
     e.preventDefault();
@@ -167,6 +167,7 @@ export default function ValidateToken() {
               <Form>
                 <Box className="form-box">
                   <TextField
+                    inputProps={{ "data-testid": "token-field" }}
                     multiline
                     fullWidth
                     variant="outlined"

@@ -145,6 +145,7 @@ export default function TokenCredentials(props) {
         </div>
       ) : credFormat === "json" ? (
         <Field
+          inputProps={{ "data-testid": "credentials-field" }}
           multiline
           rows={15}
           fullWidth
