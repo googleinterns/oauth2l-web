@@ -14,106 +14,17 @@ describe("Request Module Component", () => {
     expect(wrapper).toBeDefined();
   });
 
-  it("displays errors when form is submitted without a token", async () => {
-    const { getByText, container, getByTestId, queryByText } = render(
-      <RequestModule />
-    );
+  it("displays errors when form is submitted without a token, url, and HTTP method.", async () => {
+    const { getByText, container } = render(<RequestModule />);
     const button = await waitForElement(() => container.querySelector("Form"));
-    const URLinput = await waitForElement(() => getByTestId("url-field"));
-    const HTTPinput = await waitForElement(() => getByTestId("http-field"));
-
-    await wait(() => {
-      fireEvent.change(URLinput, {
-        target: {
-          value: "testurl",
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.change(HTTPinput, {
-        target: {
-          value: "GET",
-        },
-      });
-    });
 
     await wait(() => {
       fireEvent.submit(button);
     });
 
     expect(getByText("Token required.")).not.toBeNull();
-    expect(queryByText("HTTP method required.")).toBeNull();
-    expect(queryByText("URL required.")).toBeNull();
-    expect(queryByText("Submitting")).toBeNull();
-  });
-
-  it("displays errors when form is submitted without a URL", async () => {
-    const { getByText, container, getByTestId, queryByText } = render(
-      <RequestModule />
-    );
-    const button = await waitForElement(() => container.querySelector("Form"));
-    const Tokeninput = await waitForElement(() => getByTestId("token-field"));
-    const HTTPinput = await waitForElement(() => getByTestId("http-field"));
-
-    await wait(() => {
-      fireEvent.change(Tokeninput, {
-        target: {
-          value: "ya.testtoken",
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.change(HTTPinput, {
-        target: {
-          value: "GET",
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    expect(getByText("URL required.")).not.toBeNull();
-    expect(queryByText("HTTP method required.")).toBeNull();
-    expect(queryByText("Token required.")).toBeNull();
-    expect(queryByText("Submitting")).toBeNull();
-  });
-
-  it("displays errors when form is submitted without a HTTP method", async () => {
-    const { getByText, container, getByTestId, queryByText } = render(
-      <RequestModule />
-    );
-    const button = await waitForElement(() => container.querySelector("Form"));
-    const Tokeninput = await waitForElement(() => getByTestId("token-field"));
-    const URLinput = await waitForElement(() => getByTestId("url-field"));
-
-    await wait(() => {
-      fireEvent.change(Tokeninput, {
-        target: {
-          value: "ya.testtoken",
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.change(URLinput, {
-        target: {
-          value: "testurl",
-        },
-      });
-    });
-
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
     expect(getByText("HTTP method required.")).not.toBeNull();
-    expect(queryByText("URL required.")).toBeNull();
-    expect(queryByText("Token required.")).toBeNull();
-    expect(queryByText("Submitting")).toBeNull();
+    expect(getByText("URL required.")).not.toBeNull();
   });
 
   it("displays optional dialog box when clicked", async () => {
@@ -165,10 +76,9 @@ describe("Request Module Component", () => {
     });
     expect(getByTestId("content-box")).not.toBeNull();
   });
-  it("displays errors when form is submitted without a HTTP method", async () => {
-    const { getByText, container, getByTestId, queryByText } = render(
-      <RequestModule />
-    );
+
+  it("is submits form when URL, HTTP Method, and Token has been submitted", async () => {
+    const { getByText, container, getByTestId } = render(<RequestModule />);
     const button = await waitForElement(() => container.querySelector("Form"));
     const Tokeninput = await waitForElement(() => getByTestId("token-field"));
     const URLinput = await waitForElement(() => getByTestId("url-field"));

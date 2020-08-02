@@ -145,18 +145,17 @@ describe("Token Form Component", () => {
     });
 
     const ScopesInput = await waitForElement(() => getByRole("textbox"));
-    ScopesInput.focus();
 
     await wait(() => {
-      fireEvent.change(document.activeElement, { target: { value: "a" } });
+      fireEvent.change(ScopesInput, { target: { value: "a" } });
     });
 
     await wait(() => {
-      fireEvent.keyDown(document.activeElement, { key: "ArrowDown" });
+      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
     });
 
     await wait(() => {
-      fireEvent.keyDown(document.activeElement, { key: "Enter" });
+      fireEvent.keyDown(ScopesInput, { key: "Enter" });
     });
 
     await wait(() => {
@@ -187,10 +186,9 @@ describe("Token Form Component", () => {
     });
 
     const ScopesInput = await waitForElement(() => getByRole("textbox"));
-    ScopesInput.focus();
 
     await wait(() => {
-      fireEvent.change(document.activeElement, {
+      fireEvent.change(ScopesInput, {
         target: { value: "testaudience" },
       });
     });
@@ -207,7 +205,7 @@ describe("Token Form Component", () => {
     expect(getByText("Get Token")).not.toBeNull();
   });
 
-  it("will not continue if credentials have not been submitted", async () => {
+  it("will show an error if inputted credentials is not in JSON format", async () => {
     const { container, getByLabelText, getByRole, queryByText } = render(
       <TokenForm />
     );
@@ -228,41 +226,47 @@ describe("Token Form Component", () => {
     });
 
     const ScopesInput = await waitForElement(() => getByRole("textbox"));
-    ScopesInput.focus();
 
     await wait(() => {
-      fireEvent.change(document.activeElement, { target: { value: "a" } });
+      fireEvent.change(ScopesInput, { target: { value: "a" } });
     });
 
     await wait(() => {
-      fireEvent.keyDown(document.activeElement, { key: "ArrowDown" });
+      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
     });
 
     await wait(() => {
-      fireEvent.keyDown(document.activeElement, { key: "Enter" });
-    });
-
-    await wait(() => {
-      fireEvent.submit(button);
+      fireEvent.keyDown(ScopesInput, { key: "Enter" });
     });
 
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    expect(queryByText("Submitting")).toBeNull();
+    const CredentialsSelect = await waitForElement(() =>
+      getByLabelText("Text input")
+    );
+
+    await wait(() => {
+      fireEvent.click(CredentialsSelect);
+    });
+
+    await wait(() => {
+      fireEvent.submit(button);
+    });
+
+    expect(queryByText("Must include credential")).not.toBeNull();
   });
 
-  it("will continue if credentials are inputted", async () => {
+  it("it will show an error if inputted credentials are not in JSON format", async () => {
     const {
       container,
       getByLabelText,
       getByRole,
       queryByText,
       getByTestId,
-      getByText,
-      debug,
     } = render(<TokenForm />);
+
     const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
     const FormatInput = await waitForElement(() => getByLabelText("Bare"));
     const button = await waitForElement(() => container.querySelector("Form"));
@@ -280,18 +284,79 @@ describe("Token Form Component", () => {
     });
 
     const ScopesInput = await waitForElement(() => getByRole("textbox"));
-    ScopesInput.focus();
 
     await wait(() => {
-      fireEvent.change(document.activeElement, { target: { value: "a" } });
+      fireEvent.change(ScopesInput, { target: { value: "a" } });
     });
 
     await wait(() => {
-      fireEvent.keyDown(document.activeElement, { key: "ArrowDown" });
+      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
     });
 
     await wait(() => {
-      fireEvent.keyDown(document.activeElement, { key: "Enter" });
+      fireEvent.keyDown(ScopesInput, { key: "Enter" });
+    });
+
+    await wait(() => {
+      fireEvent.submit(button);
+    });
+
+    const CredentialsSelect = await waitForElement(() =>
+      getByLabelText("Text input")
+    );
+
+    await wait(() => {
+      fireEvent.click(CredentialsSelect);
+    });
+
+    const CredentialsInput = await waitForElement(() =>
+      getByTestId("credentials-field")
+    );
+
+    await wait(() => {
+      fireEvent.keyUp(CredentialsInput, { key: "h" });
+    });
+
+    expect(queryByText("Unable to parse JSON")).not.toBeNull();
+  });
+
+  it("it will not show an error if inputted credentials are in JSON format", async () => {
+    const {
+      container,
+      getByLabelText,
+      getByRole,
+      queryByText,
+      getByTestId,
+    } = render(<TokenForm />);
+
+    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
+    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    const button = await waitForElement(() => container.querySelector("Form"));
+
+    await wait(() => {
+      fireEvent.click(TypeInput);
+    });
+
+    await wait(() => {
+      fireEvent.click(FormatInput);
+    });
+
+    await wait(() => {
+      fireEvent.submit(button);
+    });
+
+    const ScopesInput = await waitForElement(() => getByRole("textbox"));
+
+    await wait(() => {
+      fireEvent.change(ScopesInput, { target: { value: "a" } });
+    });
+
+    await wait(() => {
+      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
+    });
+
+    await wait(() => {
+      fireEvent.keyDown(ScopesInput, { key: "Enter" });
     });
 
     await wait(() => {
@@ -314,6 +379,72 @@ describe("Token Form Component", () => {
       fireEvent.change(CredentialsInput, {
         target: { value: JSON.stringify({ test: "test" }) },
       });
+      fireEvent.keyUp(CredentialsInput, { key: "Enter" });
+    });
+
+    expect(queryByText("Credentials ready")).not.toBeNull();
+  });
+
+  it("it will submit form when credentials has been entered.", async () => {
+    const {
+      container,
+      getByLabelText,
+      getByRole,
+      queryByText,
+      getByTestId,
+    } = render(<TokenForm />);
+
+    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
+    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    const button = await waitForElement(() => container.querySelector("Form"));
+
+    await wait(() => {
+      fireEvent.click(TypeInput);
+    });
+
+    await wait(() => {
+      fireEvent.click(FormatInput);
+    });
+
+    await wait(() => {
+      fireEvent.submit(button);
+    });
+
+    const ScopesInput = await waitForElement(() => getByRole("textbox"));
+
+    await wait(() => {
+      fireEvent.change(ScopesInput, { target: { value: "a" } });
+    });
+
+    await wait(() => {
+      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
+    });
+
+    await wait(() => {
+      fireEvent.keyDown(ScopesInput, { key: "Enter" });
+    });
+
+    await wait(() => {
+      fireEvent.submit(button);
+    });
+
+    const CredentialsSelect = await waitForElement(() =>
+      getByLabelText("Text input")
+    );
+
+    await wait(() => {
+      fireEvent.click(CredentialsSelect);
+    });
+
+    const CredentialsInput = await waitForElement(() =>
+      getByTestId("credentials-field")
+    );
+
+    await wait(() => {
+      fireEvent.change(CredentialsInput, {
+        target: { value: JSON.stringify({ test: "test" }) },
+      });
+      fireEvent.keyUp(CredentialsInput, { key: "Enter" });
     });
 
     await act(async () => {
