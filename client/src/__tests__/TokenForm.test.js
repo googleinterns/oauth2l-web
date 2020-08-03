@@ -17,9 +17,10 @@ describe("Token Form Component", () => {
 
   it("will not continue if token type and token format is not selected", async () => {
     const { getByText, container } = render(<TokenForm />);
-
+    // Finding the button to go to next step in getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Clicking button to go to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -30,18 +31,24 @@ describe("Token Form Component", () => {
 
   it("renders scopes step if token type and token format has been entered and token type is OAuth", async () => {
     const { getByText, container, getByLabelText } = render(<TokenForm />);
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting OAuth for the token type.
+    const typeInput = await waitForElement(() => getByLabelText("OAuth"));
+    // Selecting Bare for the token format.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to go to next step in getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting the token type.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(typeInput);
     });
 
+    // Selecting the token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
+    // Clicking button to go to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -51,18 +58,24 @@ describe("Token Form Component", () => {
 
   it("renders enter audience step if token type and token format has been entered and token type is JWT", async () => {
     const { getByText, container, getByLabelText } = render(<TokenForm />);
-    const TypeInput = await waitForElement(() => getByLabelText("JWT"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be JWT.
+    const inputType = await waitForElement(() => getByLabelText("JWT"));
+    // Selecting the token format to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to go to next step in getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting the token type.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(inputType);
     });
 
+    // Selecting the token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
+    // Clicking button to go to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -72,22 +85,29 @@ describe("Token Form Component", () => {
 
   it("will not continue if scopes has not been entered when token type is OAuth", async () => {
     const { container, getByLabelText, getByText } = render(<TokenForm />);
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting the token type to be OAuth.
+    const inputType = await waitForElement(() => getByLabelText("OAuth"));
+    // Selecting the token format to be bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to go to next step in getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting the token type.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(inputType);
     });
 
+    // Selecting the token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
+    // Pressing button to go to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
+    // Pressing button to go to the token credentials step.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -97,22 +117,29 @@ describe("Token Form Component", () => {
 
   it("will not continue if audience has not been entered when token type is JWT", async () => {
     const { container, getByLabelText, getByText } = render(<TokenForm />);
-    const TypeInput = await waitForElement(() => getByLabelText("JWT"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be JWT.
+    const inputType = await waitForElement(() => getByLabelText("JWT"));
+    // Selecting token format to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding button to go on to the next step of getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting token type.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(inputType);
     });
 
+    // Selecting token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
+    // Clicking on button to go on the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
+    // Clicking on button to go on to the token credentials step.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -124,36 +151,47 @@ describe("Token Form Component", () => {
     const { container, getByLabelText, getByText, getByRole } = render(
       <TokenForm />
     );
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be OAuth.
+    const inputType = await waitForElement(() => getByLabelText("OAuth"));
+    // Selecting token type to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to be clicked to go to the next step of getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting token input.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(inputType);
     });
 
+    // Selecting token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
+    // Clicking button to go to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    const ScopesInput = await waitForElement(() => getByRole("textbox"));
+    // Finding textbox to input the scopes.
+    const scopesInput = await waitForElement(() => getByRole("textbox"));
 
+    // Pressing the key "a" in the textbox
     await wait(() => {
-      fireEvent.change(ScopesInput, { target: { value: "a" } });
+      fireEvent.change(scopesInput, { target: { value: "a" } });
     });
 
+    // Pressing the down key in the autocomplete popup.
     await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
+      fireEvent.keyDown(scopesInput, { key: "ArrowDown" });
     });
 
+    // Pressing enter key to select scope.
     await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "Enter" });
+      fireEvent.keyDown(scopesInput, { key: "Enter" });
     });
 
+    // Pressing the button to go on to the token credentials step.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -161,44 +199,63 @@ describe("Token Form Component", () => {
     expect(getByText("Upload or enter credentials")).not.toBeNull();
   });
 
-  it("will not continue if credentials has not been entered", async () => {
+  it("will show an error if credentials has not been entered", async () => {
     const { container, getByLabelText, getByText, getByRole } = render(
       <TokenForm />
     );
-    const TypeInput = await waitForElement(() => getByLabelText("JWT"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be JWT.
+    const inputType = await waitForElement(() => getByLabelText("JWT"));
+    // Selecting token format to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding button to go on to the next step of getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting token type.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(inputType);
     });
 
+    // Selecting token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
+    // Clicking button to go to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    const ScopesInput = await waitForElement(() => getByRole("textbox"));
+    // Finding text box to enter audience.
+    const audienceInput = await waitForElement(() => getByRole("textbox"));
 
+    // Entering audience.
     await wait(() => {
-      fireEvent.change(ScopesInput, {
+      fireEvent.change(audienceInput, {
         target: { value: "testaudience" },
       });
     });
 
+    // Clicking button to go to the token credentials step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
+    // Selecting to input credentials as text.
+    const credentialsSelect = await waitForElement(() =>
+      getByLabelText("Text input")
+    );
+
+    // Selecting method to input credentials.
+    await wait(() => {
+      fireEvent.click(credentialsSelect);
+    });
+
+    // Clicking button to get the token.
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    expect(getByText("Upload or enter credentials")).not.toBeNull();
-    expect(getByText("Get Token")).not.toBeNull();
+    expect(getByText("Must include credential")).not.toBeNull();
   });
 
   it("it will show an error if inputted credentials are not in JSON format", async () => {
@@ -210,54 +267,70 @@ describe("Token Form Component", () => {
       getByTestId,
     } = render(<TokenForm />);
 
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be OAuth.
+    const inputType = await waitForElement(() => getByLabelText("OAuth"));
+    // Selecting token format to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to be clicked to go to the next step of getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    // Selecting token type.
     await wait(() => {
-      fireEvent.click(TypeInput);
+      fireEvent.click(inputType);
     });
 
+    // Selecting token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    const ScopesInput = await waitForElement(() => getByRole("textbox"));
-
-    await wait(() => {
-      fireEvent.change(ScopesInput, { target: { value: "a" } });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "Enter" });
-    });
-
+    // Clicking button to go on to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    const CredentialsSelect = await waitForElement(() =>
+   // Finding textbox to input the scopes.
+   const scopesInput = await waitForElement(() => getByRole("textbox"));
+
+   // Pressing the key "a" in the textbox
+   await wait(() => {
+     fireEvent.change(scopesInput, { target: { value: "a" } });
+   });
+
+   // Pressing the down key in the autocomplete popup.
+   await wait(() => {
+     fireEvent.keyDown(scopesInput, { key: "ArrowDown" });
+   });
+
+   // Pressing enter key to select scope.
+   await wait(() => {
+     fireEvent.keyDown(scopesInput, { key: "Enter" });
+   });
+
+   // Pressing the button to go on to the token credentials step.
+   await wait(() => {
+     fireEvent.submit(button);
+   });
+
+
+    // Selecting to input credentials as text.
+    const credentialsSelect = await waitForElement(() =>
       getByLabelText("Text input")
     );
 
+    // Selecting method to input credentials.
     await wait(() => {
-      fireEvent.click(CredentialsSelect);
+      fireEvent.click(credentialsSelect);
     });
 
-    const CredentialsInput = await waitForElement(() =>
+    // Finding textbox to input credentials.
+    const credentialsInput = await waitForElement(() =>
       getByTestId("credentials-field")
     );
 
+    // Inputting credentials. 
     await wait(() => {
-      fireEvent.keyUp(CredentialsInput, { key: "h" });
+      fireEvent.keyUp(credentialsInput, { key: "h" });
     });
 
     expect(queryByText("Unable to parse JSON")).not.toBeNull();
@@ -272,57 +345,74 @@ describe("Token Form Component", () => {
       getByTestId,
     } = render(<TokenForm />);
 
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be OAuth.
+    const inputType = await waitForElement(() => getByLabelText("OAuth"));
+    // Selecting token format to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to be clicked to go to the next step of getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
-    await wait(() => {
-      fireEvent.click(TypeInput);
+    
+     // Selecting token type.
+     await wait(() => {
+      fireEvent.click(inputType);
     });
 
+    // Selecting token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    const ScopesInput = await waitForElement(() => getByRole("textbox"));
-
-    await wait(() => {
-      fireEvent.change(ScopesInput, { target: { value: "a" } });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "Enter" });
-    });
-
+    // Clicking button to go on to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    const CredentialsSelect = await waitForElement(() =>
+   // Finding textbox to input the scopes.
+   const scopesInput = await waitForElement(() => getByRole("textbox"));
+
+   // Pressing the key "a" in the textbox
+   await wait(() => {
+     fireEvent.change(scopesInput, { target: { value: "a" } });
+   });
+
+   // Pressing the down key in the autocomplete popup.
+   await wait(() => {
+     fireEvent.keyDown(scopesInput, { key: "ArrowDown" });
+   });
+
+   // Pressing enter key to select scope.
+   await wait(() => {
+     fireEvent.keyDown(scopesInput, { key: "Enter" });
+   });
+
+   // Pressing the button to go on to the token credentials step.
+   await wait(() => {
+     fireEvent.submit(button);
+   });
+
+
+    // Selecting to input credentials as text.
+    const credentialsSelect = await waitForElement(() =>
       getByLabelText("Text input")
     );
 
+    // Selecting method to input credentials.
     await wait(() => {
-      fireEvent.click(CredentialsSelect);
+      fireEvent.click(credentialsSelect);
     });
 
-    const CredentialsInput = await waitForElement(() =>
+    // Finding textbox to input credentials.
+    const credentialsInput = await waitForElement(() =>
       getByTestId("credentials-field")
     );
 
+    // Inputting credentials.
     await wait(() => {
-      fireEvent.change(CredentialsInput, {
+      fireEvent.change(credentialsInput, {
         target: { value: JSON.stringify({ test: "test" }) },
       });
-      fireEvent.keyUp(CredentialsInput, { key: "Enter" });
+      fireEvent.keyUp(credentialsInput, { key: "Enter" });
     });
 
     expect(queryByText("Credentials ready")).not.toBeNull();
@@ -337,59 +427,77 @@ describe("Token Form Component", () => {
       getByTestId,
     } = render(<TokenForm />);
 
-    const TypeInput = await waitForElement(() => getByLabelText("OAuth"));
-    const FormatInput = await waitForElement(() => getByLabelText("Bare"));
+    // Selecting token type to be OAuth.
+    const inputType = await waitForElement(() => getByLabelText("OAuth"));
+    // Selecting token format to be Bare.
+    const inputFormat = await waitForElement(() => getByLabelText("Bare"));
+    // Finding the button to be clicked to go to the next step of getting a token.
     const button = await waitForElement(() => container.querySelector("Form"));
 
-    await wait(() => {
-      fireEvent.click(TypeInput);
+    
+     // Selecting token type.
+     await wait(() => {
+      fireEvent.click(inputType);
     });
 
+    // Selecting token format.
     await wait(() => {
-      fireEvent.click(FormatInput);
+      fireEvent.click(inputFormat);
     });
 
-    await wait(() => {
-      fireEvent.submit(button);
-    });
-
-    const ScopesInput = await waitForElement(() => getByRole("textbox"));
-
-    await wait(() => {
-      fireEvent.change(ScopesInput, { target: { value: "a" } });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "ArrowDown" });
-    });
-
-    await wait(() => {
-      fireEvent.keyDown(ScopesInput, { key: "Enter" });
-    });
-
+    // Clicking button to go on to the token access step.
     await wait(() => {
       fireEvent.submit(button);
     });
 
-    const CredentialsSelect = await waitForElement(() =>
+   // Finding textbox to input the scopes.
+   const scopesInput = await waitForElement(() => getByRole("textbox"));
+
+   // Pressing the key "a" in the textbox
+   await wait(() => {
+     fireEvent.change(scopesInput, { target: { value: "a" } });
+   });
+
+   // Pressing the down key in the autocomplete popup.
+   await wait(() => {
+     fireEvent.keyDown(scopesInput, { key: "ArrowDown" });
+   });
+
+   // Pressing enter key to select scope.
+   await wait(() => {
+     fireEvent.keyDown(scopesInput, { key: "Enter" });
+   });
+
+   // Pressing the button to go on to the token credentials step.
+   await wait(() => {
+     fireEvent.submit(button);
+   });
+
+
+    // Selecting to input credentials as text.
+    const credentialsSelect = await waitForElement(() =>
       getByLabelText("Text input")
     );
 
+    // Selecting method to input credentials.
     await wait(() => {
-      fireEvent.click(CredentialsSelect);
+      fireEvent.click(credentialsSelect);
     });
 
-    const CredentialsInput = await waitForElement(() =>
+    // Finding textbox to input credentials.
+    const credentialsInput = await waitForElement(() =>
       getByTestId("credentials-field")
     );
 
+    // Inputting credentials.
     await wait(() => {
-      fireEvent.change(CredentialsInput, {
+      fireEvent.change(credentialsInput, {
         target: { value: JSON.stringify({ test: "test" }) },
       });
-      fireEvent.keyUp(CredentialsInput, { key: "Enter" });
+      fireEvent.keyUp(credentialsInput, { key: "Enter" });
     });
 
+    // Pressing button to get button.
     await act(async () => {
       fireEvent.submit(button);
     });

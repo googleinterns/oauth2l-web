@@ -167,6 +167,7 @@ export default function ValidateToken() {
               <Form>
                 <Box className="form-box">
                   <TextField
+                    // props to identify component in test suite.
                     inputProps={{ "data-testid": "token-field" }}
                     multiline
                     fullWidth

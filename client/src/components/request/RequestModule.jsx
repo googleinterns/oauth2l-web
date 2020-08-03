@@ -125,6 +125,7 @@ export default function RequestModule(props) {
                 >
                   <InputLabel id="http">HTTP Request</InputLabel>
                   <Field
+                    // props to identify component in test suite.
                     inputProps={{ "data-testid": "http-field" }}
                     name="httpMethod"
                     input={<OutlinedInput label="HTTP Request"></OutlinedInput>}
@@ -156,6 +157,7 @@ export default function RequestModule(props) {
             </Grid>
 
             <Menu
+              // props to identify component in test suite.
               data-testid="option-menu"
               anchorEl={anchorEl}
               keepMounted
@@ -174,6 +176,7 @@ export default function RequestModule(props) {
             </Menu>
 
             <Dialog
+              // props to identify component in test suite.
               data-testid="header-box"
               open={openHeaderBox}
               onClose={() => setOpenHeaderBox(false)}
@@ -236,6 +239,7 @@ export default function RequestModule(props) {
             </Dialog>
 
             <Dialog
+              // props to identify component in test suite.
               data-testid="body-box"
               open={openRequestBodyBox}
               onClose={() => setOpenRequestBodyBox(false)}
@@ -262,6 +266,7 @@ export default function RequestModule(props) {
             </Dialog>
 
             <Dialog
+              // props to identify component in test suite.
               data-testid="content-box"
               open={openContentTypeBox}
               onClose={() => setOpenContentTypeBox(false)}
@@ -299,6 +304,7 @@ export default function RequestModule(props) {
 
             <Field
               name="url"
+              // props to identify component in test suite.
               inputProps={{ "data-testid": "url-field" }}
               label="URL"
               as={TextField}
@@ -310,6 +316,7 @@ export default function RequestModule(props) {
             />
 
             <Field
+              // props to identify component in test suite.
               inputProps={{ "data-testid": "token-field" }}
               name="token"
               label="Token"

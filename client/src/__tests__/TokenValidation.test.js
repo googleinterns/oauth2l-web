@@ -21,8 +21,10 @@ describe("Token Validation Component", () => {
 
   it("displays an error when form is submitted without a token", async () => {
     const { getByText, container } = render(<ValidateToken />);
+    // Finding submit button of Token Validation form.
     const button = await waitForElement(() => container.querySelector("Form"));
 
+    //Clicking submit button.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -32,17 +34,21 @@ describe("Token Validation Component", () => {
 
   it("submits properly when submitted with a token", async () => {
     const { getByTestId, getByText, container } = render(<ValidateToken />);
+    // Finding submit button of Token Validation form.
     const button = await waitForElement(() => container.querySelector("Form"));
-    const input = await waitForElement(() => getByTestId("token-field"));
+    // Finding textfield of Token Validation form.
+    const tokenInput = await waitForElement(() => getByTestId("token-field"));
 
+    // Entering in token in the texfield.
     await wait(() => {
-      fireEvent.change(input, {
+      fireEvent.change(tokenInput, {
         target: {
           value: "ya.testtoken",
         },
       });
     });
 
+    // Submitting the form.
     await act(async () => {
       fireEvent.submit(button);
     });

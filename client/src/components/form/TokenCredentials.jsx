@@ -145,6 +145,7 @@ export default function TokenCredentials(props) {
         </div>
       ) : credFormat === "json" ? (
         <Field
+          // props to identify component in test suite.
           inputProps={{ "data-testid": "credentials-field" }}
           multiline
           rows={15}
