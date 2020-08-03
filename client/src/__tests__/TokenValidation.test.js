@@ -20,7 +20,7 @@ describe("Token Validation Component", () => {
   });
 
   it("displays an error when form is submitted without a token", async () => {
-    const { getByText, queryByText, container } = render(<ValidateToken />);
+    const { getByText, container } = render(<ValidateToken />);
     const button = await waitForElement(() => container.querySelector("Form"));
 
     await wait(() => {
@@ -28,7 +28,6 @@ describe("Token Validation Component", () => {
     });
 
     expect(getByText("Token Required.")).not.toBeNull();
-    expect(queryByText("Submitting")).toBeNull();
   });
 
   it("submits properly when submitted with a token", async () => {
