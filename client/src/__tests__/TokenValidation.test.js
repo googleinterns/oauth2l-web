@@ -24,7 +24,7 @@ describe("Token Validation Component", () => {
     // Finding submit button of Token Validation form.
     const button = await waitForElement(() => container.querySelector("Form"));
 
-    //Clicking submit button.
+    // Clicking submit button.
     await wait(() => {
       fireEvent.submit(button);
     });

@@ -19,7 +19,7 @@ describe("Request Module Component", () => {
     // Finding button to submit request form.
     const button = await waitForElement(() => container.querySelector("Form"));
 
-    // Submitting the form. 
+    // Submitting the form.
     await wait(() => {
       fireEvent.submit(button);
     });
@@ -106,7 +106,7 @@ describe("Request Module Component", () => {
     const { getByText, container, getByTestId } = render(<RequestModule />);
     // Finding button to submit request form.
     const button = await waitForElement(() => container.querySelector("Form"));
-    // Finding the input for the token. 
+    // Finding the input for the token.
     const tokenInput = await waitForElement(() => getByTestId("token-field"));
     // Finding the input for the URL.
     const urlInput = await waitForElement(() => getByTestId("url-field"));
