@@ -102,7 +102,7 @@ describe("Request Module Component", () => {
     expect(getByTestId("content-box")).not.toBeNull();
   });
 
-  it("is submits form when URL, HTTP Method, and Token has been submitted", async () => {
+  it("it submits form when URL, HTTP Method, and Token has been submitted", async () => {
     const { getByText, container, getByTestId } = render(<RequestModule />);
     // Finding button to submit request form.
     const button = await waitForElement(() => container.querySelector("Form"));
