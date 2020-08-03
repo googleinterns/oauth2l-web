@@ -28,19 +28,7 @@ jobs:
         run: |
           npm install
           npm run lint
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: npm run build
-        working-directory: ./client
-        run: |
-          npm install
-          npm run build
+          
   build:
     runs-on: ubuntu-latest
     steps:
