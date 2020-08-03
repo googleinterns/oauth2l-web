@@ -21,7 +21,7 @@ export default function RequestDisplay(props) {
   };
 
   return (
-    <Box className="form-box">
+    <Box className="form-box" aria-label="Request Container">
       <div className="form-text">
         <Typography variant="h5">Response/Request</Typography>
       </div>

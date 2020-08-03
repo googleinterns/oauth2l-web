@@ -12,7 +12,7 @@ import {
 import "../styles/head.css";
 
 /**
- * @return {AppBar} with Google Cloud logo
+ * @return {AppBar} with Google OAuth2l Playground logo
  */
 export default function Head() {
   let openBox;
@@ -24,13 +24,13 @@ export default function Head() {
   }
   const [open, setOpen] = useState(openBox);
   return (
-    <AppBar className="header">
+    <AppBar className="header" aria-label="Web Page Header">
       <Toolbar>
         <Button onClick={() => setOpen(true)}>
           <img
             src="clogo.png"
             width="250"
-            alt="This is a logo for Google Cloud"
+            alt="This is a logo for OAuth2l Playground"
           />
         </Button>
       </Toolbar>
@@ -42,7 +42,7 @@ export default function Head() {
         fullWidth
         maxWidth="md"
       >
-        <DialogContent dividers>
+        <DialogContent dividers aria-label="Welcome Container">
           <Typography variant="body1" className="welcome-body" gutterBottom>
             Welcome to the OAuth2l Authentication Playground! This application
             is based upon the Google&apos;s{" "}

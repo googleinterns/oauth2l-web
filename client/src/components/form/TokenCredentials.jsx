@@ -98,7 +98,7 @@ export default function TokenCredentials(props) {
   };
 
   return (
-    <Box className="form-box">
+    <Box className="form-box" aria-label="Upload Credentials Container">
       <div className="form-text">
         <Typography variant="h5">Upload or enter credentials</Typography>
       </div>
@@ -138,7 +138,11 @@ export default function TokenCredentials(props) {
               accept=".json"
               onChange={handleFile}
             />
-            <Button variant="contained" component="span">
+            <Button
+              variant="contained"
+              component="span"
+              aria-label="Upload Credentials Button"
+            >
               Upload credentials
             </Button>
           </label>

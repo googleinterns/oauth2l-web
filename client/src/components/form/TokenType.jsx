@@ -15,7 +15,7 @@ export default function TokenType(props) {
 
   return (
     <div>
-      <Box className="form-box">
+      <Box className="form-box" arial-label="Form Container">
         <div className="form-text">
           <Typography variant="h5">Choose token type </Typography>
         </div>

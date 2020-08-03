@@ -17,7 +17,7 @@ export default function TokenAccess(props) {
   const { setFieldValue } = useFormikContext();
 
   return (
-    <Box className="form-box">
+    <Box className="form-box" aria-label="Scopes/Audience Content">
       <div className="form-text">
         <Typography variant="h5">Enter {label.toLowerCase()}</Typography>
       </div>

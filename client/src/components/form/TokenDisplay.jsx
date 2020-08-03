@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Button,
@@ -19,9 +19,9 @@ import CloseIcon from "@material-ui/icons/Close";
  */
 export default function TokenDisplay(props) {
   const { token, responseVisable } = props;
-  const [copy, setCopy] = React.useState(false);
+  const [copy, setCopy] = useState(false);
   return (
-    <Grid>
+    <Grid aria-label="Token Informatin Container">
       <Typography variant="h5">OAuth2l Response:</Typography>
 
       {responseVisable && (
@@ -38,7 +38,12 @@ export default function TokenDisplay(props) {
         </form>
       )}
       <CopyToClipboard text={token} onCopy={() => setCopy(true)}>
-        <Button variant="contained" color="primary" className="copy-button">
+        <Button
+          variant="contained"
+          color="primary"
+          className="copy-button"
+          arial-label="Copy to Clipboard Button"
+        >
           Copy to Clipboard
         </Button>
       </CopyToClipboard>
@@ -58,7 +63,7 @@ export default function TokenDisplay(props) {
             </IconButton>
           }
         >
-          Successfully pasted the token to your clipboard!
+          Token copied to clipboard
         </Alert>
       </Collapse>
     </Grid>
