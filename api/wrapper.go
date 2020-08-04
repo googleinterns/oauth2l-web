@@ -45,6 +45,11 @@ func (wc WrapperCommand) Execute() (output string, err error) {
 		args = append(args, "--credentials", path)
 	}
 
+	// Disables cache by setting the cache location to an empty string
+	if wc.CommandType == "fetch" {
+		args = append(args, "--cache", "")
+	}
+
 	// Execute command and capture output
 	command := exec.Command("./binaries/oauth2l", args...)
 
