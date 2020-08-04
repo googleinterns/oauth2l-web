@@ -28,14 +28,14 @@ Download [Docker](https://docs.docker.com/get-docker/) if not already installed.
 #### Running the Web Application
 Create the images for the backend and the frontend by running the following command:
 ```bash
-$ docker-compose up -d --build .
+$ docker-compose up -d --build
 ```
 The application should then be running on http://localhost:3000.
 
 To stop the application, run the following commands:
 ```bash
-$ docker-compose container stop
-$ docker-compose container rm -f
+$ docker-compose stop
+$ docker-compose rm -f
 ```
 #### Running just the Frontend or Backend
 For the frontend, go into the `web/client` folder. For the backend, go into the `web/api` folder. Then to build the image, run the following command:
