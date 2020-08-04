@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os/exec"
 	"reflect"
 	"strings"
 	"time"
@@ -266,7 +267,17 @@ func CredentialsTokenHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responseBody)
 }
 
+func getBinaries() {
+	cmd := exec.Command("python3", "get_binaries.py")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("error: %v", err)
+		return
+	}
+}
+
 func main() {
+	getBinaries()
 	router := mux.NewRouter()
 	log.Println("Authorization Playground")
 	router.HandleFunc("/api", Handler)

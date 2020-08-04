@@ -125,6 +125,8 @@ export default function RequestModule(props) {
                 >
                   <InputLabel id="http">HTTP Request</InputLabel>
                   <Field
+                    // props to identify component in test suite.
+                    inputProps={{ "data-testid": "http-field" }}
                     name="httpMethod"
                     input={<OutlinedInput label="HTTP Request"></OutlinedInput>}
                     display="flex"
@@ -155,6 +157,8 @@ export default function RequestModule(props) {
             </Grid>
 
             <Menu
+              // props to identify component in test suite.
+              data-testid="option-menu"
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
@@ -172,6 +176,8 @@ export default function RequestModule(props) {
             </Menu>
 
             <Dialog
+              // props to identify component in test suite.
+              data-testid="header-box"
               open={openHeaderBox}
               onClose={() => setOpenHeaderBox(false)}
               fullWidth
@@ -233,6 +239,8 @@ export default function RequestModule(props) {
             </Dialog>
 
             <Dialog
+              // props to identify component in test suite.
+              data-testid="body-box"
               open={openRequestBodyBox}
               onClose={() => setOpenRequestBodyBox(false)}
               fullWidth
@@ -258,6 +266,8 @@ export default function RequestModule(props) {
             </Dialog>
 
             <Dialog
+              // props to identify component in test suite.
+              data-testid="content-box"
               open={openContentTypeBox}
               onClose={() => setOpenContentTypeBox(false)}
               fullWidth
@@ -294,6 +304,8 @@ export default function RequestModule(props) {
 
             <Field
               name="url"
+              // props to identify component in test suite.
+              inputProps={{ "data-testid": "url-field" }}
               label="URL"
               as={TextField}
               variant="outlined"
@@ -304,6 +316,8 @@ export default function RequestModule(props) {
             />
 
             <Field
+              // props to identify component in test suite.
+              inputProps={{ "data-testid": "token-field" }}
               name="token"
               label="Token"
               as={TextField}

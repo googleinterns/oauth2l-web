@@ -26,7 +26,7 @@ function App() {
    */
   const callBackToken = (childData) => {
     setResponse(childData);
-    setTokenResponseVisable(false);
+    setTokenResponseVisable(true);
   };
 
   /**
@@ -102,14 +102,14 @@ function App() {
                 aria-label="TokenForm/TokenDisplay content"
               >
                 <div
-                  style={{ display: tokenResponseVisable ? "block" : "none" }}
+                  style={{ display: tokenResponseVisable ? "none" : "block" }}
                 >
                   <TokenForm
                     parentCallback={(childData) => callBackToken(childData)}
                   />
                 </div>
                 <div
-                  style={{ display: tokenResponseVisable ? "none" : "block" }}
+                  style={{ display: tokenResponseVisable ? "block" : "none" }}
                 >
                   <TokenDisplay
                     token={response}
