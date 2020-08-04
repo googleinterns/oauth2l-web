@@ -124,5 +124,5 @@ ModuleInfo.propTypes = {
   hasNote: PropTypes.bool,
   note: PropTypes.array,
   hasLinks: PropTypes.bool,
-  links: PropTypes.object,
+  links: PropTypes.array,
 };
