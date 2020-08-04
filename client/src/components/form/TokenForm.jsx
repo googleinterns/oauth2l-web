@@ -289,7 +289,6 @@ export function FormikStepper(props) {
     setDone(false);
   };
 
-
   return (
     <Formik
       {...props}
