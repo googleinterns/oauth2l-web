@@ -17,7 +17,7 @@ import "./styles/app.css";
  */
 function App() {
   const [response, setResponse] = useState(null); // holds the response from the backend
-  const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(false); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
@@ -26,7 +26,7 @@ function App() {
    */
   const callBackToken = (childData) => {
     setResponse(childData);
-    setTokenResponseVisable(false);
+    setTokenResponseVisable(true);
   };
 
   /**
@@ -95,14 +95,14 @@ function App() {
               />
               <Grid item className="main-content">
                 <div
-                  style={{ display: tokenResponseVisable ? "block" : "none" }}
+                  style={{ display: tokenResponseVisable ? "none" : "block" }}
                 >
                   <TokenForm
                     parentCallback={(childData) => callBackToken(childData)}
                   />
                 </div>
                 <div
-                  style={{ display: tokenResponseVisable ? "none" : "block" }}
+                  style={{ display: tokenResponseVisable ? "block" : "none" }}
                 >
                   <TokenDisplay
                     token={response}
