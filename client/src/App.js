@@ -16,7 +16,7 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const [response, setResponse] = useState(null); // holds the response from the backend
+  const [response, setResponse] = useState(""); // holds the response from the backend
   const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
