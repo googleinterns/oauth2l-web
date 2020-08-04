@@ -287,6 +287,10 @@ export function FormikStepper(props) {
     return step === childrenArray.length - 1;
   };
 
+  const handleReset = () => {
+    setDone(false);
+    setStep(0);
+  };
   return (
     <Formik
       {...props}
@@ -302,6 +306,7 @@ export function FormikStepper(props) {
           setStep((currStep) => currStep + 1);
         }
       }}
+      onReset={handleReset}
     >
       {({ isSubmitting, setFieldValue, errors, touched }) => (
         <Form>
@@ -342,6 +347,13 @@ export function FormikStepper(props) {
                   ? "Get Token"
                   : "Next"}
               </Button>
+            </Grid>
+            <Grid item>
+              {isLastStep() ? (
+                <Button type="reset" variant="contained">
+                  Reset
+                </Button>
+              ) : null}
             </Grid>
           </Grid>
         </Form>
