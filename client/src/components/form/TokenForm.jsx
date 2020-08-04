@@ -191,7 +191,7 @@ export default function TokenForm(props) {
   };
 
   return (
-    <div>
+    <div aria-label="Form Stepper Container">
       <FormikStepper
         initialValues={{
           tokenType: "",

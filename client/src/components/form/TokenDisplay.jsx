@@ -24,10 +24,10 @@ export default function TokenDisplay(props) {
   const sendBack = (tokenResponseVisable) => {
     parentGoBack(tokenResponseVisable);
   };
-  return (
-    <Grid>
-      <Typography variant="h5">OAuth2l Response:</Typography>
 
+  return (
+    <Grid aria-label="Token Informatin Container">
+      <Typography variant="h5">OAuth2l Response:</Typography>
       <form noValidate autoComplete="off" className="response-box">
         <TextField
           multiline

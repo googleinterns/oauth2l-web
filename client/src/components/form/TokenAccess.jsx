@@ -14,10 +14,10 @@ import "../../styles/form.css";
  */
 export default function TokenAccess(props) {
   const { label } = props;
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, values } = useFormikContext();
 
   return (
-    <Box className="form-box">
+    <Box className="form-box" aria-label="Scopes/Audience Content">
       <div className="form-text">
         <Typography variant="h5">Enter {label.toLowerCase()}</Typography>
       </div>
@@ -29,6 +29,11 @@ export default function TokenAccess(props) {
         onChange={(e, value) => {
           setFieldValue(`token${label}`, value);
         }}
+        defaultValue={
+          values["tokenScopes"].length > 0
+            ? values["tokenScopes"]
+            : values["tokenAudience"]
+        }
         renderInput={(params) => (
           <Field
             {...params}

@@ -39,8 +39,12 @@ export default function ModuleInfo(props) {
       alignItems="flex-start"
       className="step-grid"
       direction="row"
+      aria-label="Information Page"
     >
-      <IconButton onClick={handleClickOpen}>
+      <IconButton
+        onClick={handleClickOpen}
+        aria-label={`${title} Information Page`}
+      >
         <HelpOutlineIcon />
       </IconButton>
 

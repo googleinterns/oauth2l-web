@@ -16,8 +16,8 @@ import "./styles/app.css";
  * @return {MaterialUI} themed app
  */
 function App() {
-  const [response, setResponse] = useState(null); // holds the response from the backend
-  const [tokenResponseVisable, setTokenResponseVisable] = useState(false); // the state that decides which component to hide/show
+  const [response, setResponse] = useState(""); // holds the response from the backend
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
@@ -64,7 +64,10 @@ function App() {
       <Grid container>
         <Grid item xs>
           <Grid container direction="column">
-            <MaterialUI paperClass="paper-top">
+            <MaterialUI
+              paperClass="paper-top"
+              aria-label="TokenForm/TokenDisplay Container"
+            >
               <ModuleInfo
                 title="Requesting a token"
                 content={[
@@ -93,7 +96,11 @@ function App() {
                   },
                 ]}
               />
-              <Grid item className="main-content">
+              <Grid
+                item
+                className="main-content"
+                aria-label="TokenForm/TokenDisplay content"
+              >
                 <div
                   style={{ display: tokenResponseVisable ? "none" : "block" }}
                 >
@@ -117,7 +124,10 @@ function App() {
         <Grid item xs>
           <Grid container direction="column">
             <Grid item xs>
-              <MaterialUI paperClass="paper-top">
+              <MaterialUI
+                paperClass="paper-top"
+                aria-label="Token Validation Container"
+              >
                 <ModuleInfo
                   title="Validating your token"
                   content={[
@@ -130,13 +140,21 @@ function App() {
                   hasLinks={false}
                   links={[]}
                 />
-                <Grid item xs className="main-content">
+                <Grid
+                  item
+                  xs
+                  className="main-content"
+                  arial-label="Token Validation Content"
+                >
                   <ValidateToken />
                 </Grid>
               </MaterialUI>
             </Grid>
             <Grid item xs>
-              <MaterialUI paperClass="paper-bottom">
+              <MaterialUI
+                paperClass="paper-bottom"
+                aria-label="HTTP Request Container"
+              >
                 <ModuleInfo
                   title="Use your token for an HTTP request"
                   content={[
@@ -155,7 +173,12 @@ function App() {
                     },
                   ]}
                 />
-                <Grid item xs className="main-content">
+                <Grid
+                  item
+                  xs
+                  className="main-content"
+                  aria-label="HTTP Request Content"
+                >
                   {/* <RequestModule /> */}
                   {!httpresponseVisable ? (
                     <RequestModule
