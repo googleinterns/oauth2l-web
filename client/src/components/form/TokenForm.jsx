@@ -17,6 +17,7 @@ import { TokenType, TokenAccess, TokenCredentials } from "../";
 import { object, string } from "yup";
 import PropTypes from "prop-types";
 import { getOAuthToken, getNewCredentialToken } from "../../util/apiWrapper";
+import "../../styles/form.css";
 
 // Time before the expiry of the credential token to request a new token in milliseconds
 const timeBeforeExpiry = 60000;
@@ -35,12 +36,14 @@ export default function TokenForm(props) {
   const [requestBody, setRequestBody] = useState(null);
   const [openCodeBox, setCodeOpenBox] = useState(false);
   const [code, setCode] = useState("");
-
+  const { parentCallback } = props;
   /**
    * @param {string} token variable that holds the token
+   * @param {object} values variable that holds the previous answers that the user provided
+   * function that sends the token back to the parent component
    */
-  const sendToken = (token) => {
-    props.parentCallback(token);
+  const sendToken = (token, values) => {
+    parentCallback(token, values);
   };
 
   useEffect(() => {
@@ -72,11 +75,6 @@ export default function TokenForm(props) {
   }, [credentialsToken, loadedInterval]);
 
   /**
-   * @param {JSON} values contains the scopes/audience, type, format and credentials that the user put
-   * calls apiWrapper in order to request the token from the backend
-   */
-
-  /**
    *
    * @param {string} cmdResponse holds the response from the backend.
    * @return {string} OAuth2l access token from the backend.
@@ -100,7 +98,6 @@ export default function TokenForm(props) {
   const getTokenWithCode = async () => {
     setCodeOpenBox(false);
     requestBody["code"] = decodeURIComponent(code);
-
     const Response = await getOAuthToken(requestBody);
     if (typeof Response["error"] === undefined) {
       sendToken(Response["error"]);
@@ -287,14 +284,19 @@ export function FormikStepper(props) {
     return step === childrenArray.length - 1;
   };
 
+  const handleReset = () => {
+    setStep(0);
+    setDone(false);
+  };
+
   return (
     <Formik
       {...props}
       validationSchema={currentChild.props.validationSchema}
-      onSubmit={async (values, helpers) => {
+      onSubmit={async (values) => {
         if (isLastStep()) {
-          await props.onSubmit(values, helpers);
           setDone(true);
+          await props.onSubmit(values);
         } else {
           if (step === 0) {
             props.setSecondLabel(values.tokenType);
@@ -302,6 +304,7 @@ export function FormikStepper(props) {
           setStep((currStep) => currStep + 1);
         }
       }}
+      onReset={handleReset}
     >
       {({ isSubmitting, setFieldValue, errors, touched }) => (
         <Form>
@@ -343,6 +346,13 @@ export function FormikStepper(props) {
                   : "Next"}
               </Button>
             </Grid>
+            <Grid item>
+              {isLastStep() ? (
+                <Button variant="contained" type="reset">
+                  Reset
+                </Button>
+              ) : null}
+            </Grid>
           </Grid>
         </Form>
       )}
@@ -358,4 +368,5 @@ FormikStepper.propTypes = {
 
 TokenForm.propTypes = {
   parentCallback: PropTypes.func,
+  values: PropTypes.object,
 };
