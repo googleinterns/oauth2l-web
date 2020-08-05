@@ -15,6 +15,10 @@
   padding-top: 1rem;
 }
 
+.form-reset {
+  margin-top: 1rem !important;
+}
+
 .token-display {
   word-wrap: break-word;
 }
