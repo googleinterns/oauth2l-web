@@ -17,7 +17,7 @@ import "./styles/app.css";
  */
 function App() {
   const [response, setResponse] = useState(""); // holds the response from the backend
-  const [tokenResponseVisable, setTokenResponseVisable] = useState(true); // the state that decides which component to hide/show
+  const [tokenResponseVisable, setTokenResponseVisable] = useState(false); // the state that decides which component to hide/show
   const [httpResponse, setHttpResponse] = useState("");
   const [httpresponseVisable, setHttpResponseVisable] = useState(false);
   /**
