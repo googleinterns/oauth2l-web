@@ -1,10 +1,7 @@
 import axios from "axios";
 
 // TODO: Deploy backend on a Google Cloud service
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://yousefa-step-2020.uc.r.appspot.com/api"
-    : "http://localhost:8080/api";
+const BASE_URL = "http://localhost:8080/api";
 
 export const getOAuthToken = (credentials) => {
   const requestString = `${BASE_URL}`;
