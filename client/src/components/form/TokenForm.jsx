@@ -126,7 +126,7 @@ export default function TokenForm(props) {
     if (values.tokenScopes.length === 0) {
       userAudience = values.tokenAudience;
     } else {
-      userScopes = values.tokenScopes;
+      userScopes = values.tokenScopes.join(",");
     }
     let userFormat;
     if (values.tokenFormat === "JSON Compact") {
