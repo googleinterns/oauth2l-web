@@ -19,7 +19,7 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^5.0.1",
     "waait": "^1.0.5",
     "yup": "^0.29.1"
   },
@@ -54,7 +54,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.11.0",
-    "prettier-eslint": "^11.0.0",
+    "prettier-eslint": "^16.4.2",
     "typescript": "^3.9.5"
   }
 }
